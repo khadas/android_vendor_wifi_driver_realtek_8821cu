@@ -33,8 +33,12 @@
 						 ODM_RTL8821C | \
 						 ODM_RTL8822B | \
 						 ODM_RTL8721D | \
+						 ODM_RTL8723D | \
 						 ODM_RTL8710C)
 #define ODM_RECEIVER_BLOCKING_SUPPORT	(ODM_RTL8188E | ODM_RTL8192E)
+#define ODM_DYM_BW_INDICATION_SUPPORT	(ODM_RTL8821C | \
+					 ODM_RTL8822B | \
+					 ODM_RTL8822C)
 
 /*@20170103 YuChen add for FW API*/
 #define PHYDM_FW_API_ENABLE_8822B		1
@@ -53,24 +57,26 @@
 #define PHYDM_FW_API_FUNC_ENABLE_8812F 1
 #define PHYDM_FW_API_ENABLE_8197G 1
 #define PHYDM_FW_API_FUNC_ENABLE_8197G 1
+#define PHYDM_FW_API_ENABLE_8723F 1
+#define PHYDM_FW_API_FUNC_ENABLE_8723F 1
 
 #define CONFIG_POWERSAVING 0
 
 #ifdef BEAMFORMING_SUPPORT
 #if (BEAMFORMING_SUPPORT)
-#define PHYDM_BEAMFORMING_SUPPORT
+	#define PHYDM_BEAMFORMING_SUPPORT
 #endif
 #endif
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#include	"phydm_features_win.h"
+	#include	"phydm_features_win.h"
 #elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
-#include	"phydm_features_ce.h"
-/*@#include	"phydm_features_ce2_kernel.h"*/
+	#include	"phydm_features_ce.h"
+	/*@#include	"phydm_features_ce2_kernel.h"*/
 #elif (DM_ODM_SUPPORT_TYPE == ODM_AP)
-#include	"phydm_features_ap.h"
+	#include	"phydm_features_ap.h"
 #elif (DM_ODM_SUPPORT_TYPE == ODM_IOT)
-#include	"phydm_features_iot.h"
+	#include	"phydm_features_iot.h"
 #endif
 
 #endif

@@ -18,7 +18,7 @@
 #define C2H_TYPE_REG 0
 #define C2H_TYPE_PKT 1
 
-/*
+/* 
 * C2H event format:
 * Fields    TRIGGER    PAYLOAD    SEQ    PLEN    ID
 * BITS     [127:120]    [119:16]   [15:8]  [7:4]  [3:0]
@@ -32,7 +32,7 @@
 #define SET_C2H_PLEN(_c2h, _val)	SET_BITS_TO_LE_1BYTE(((u8*)(_c2h)), 4, 4, _val)
 #define SET_C2H_SEQ(_c2h, _val)		SET_BITS_TO_LE_1BYTE(((u8*)(_c2h)) + 1 , 0, 8, _val)
 
-/*
+/* 
 * C2H event format:
 * Fields    TRIGGER     PLEN      PAYLOAD    SEQ      ID
 * BITS    [127:120]  [119:112]  [111:16]   [15:8]   [7:0]
@@ -48,39 +48,40 @@
 #define SET_C2H_PLEN_88XX(_c2h, _val)	SET_BITS_TO_LE_1BYTE(((u8*)(_c2h)) + 14, 0, 8, _val)
 
 typedef enum _C2H_EVT {
-    C2H_DBG = 0x00,
-    C2H_LB = 0x01,
-    C2H_TXBF = 0x02,
-    C2H_CCX_TX_RPT = 0x03,
-    C2H_AP_REQ_TXRPT = 0x04,
-    C2H_FW_SCAN_COMPLETE = 0x7,
-    C2H_BT_INFO = 0x09,
-    C2H_BT_MP_INFO = 0x0B,
-    C2H_RA_RPT = 0x0C,
-    C2H_SPC_STAT = 0x0D,
-    C2H_RA_PARA_RPT = 0x0E,
-    C2H_FW_CHNL_SWITCH_COMPLETE = 0x10,
-    C2H_IQK_FINISH = 0x11,
-    C2H_MAILBOX_STATUS = 0x15,
-    C2H_P2P_RPORT = 0x16,
-    C2H_MCC = 0x17,
-    C2H_MAC_HIDDEN_RPT = 0x19,
-    C2H_MAC_HIDDEN_RPT_2 = 0x1A,
-    C2H_BCN_EARLY_RPT = 0x1E,
-    C2H_DEFEATURE_DBG = 0x22,
-    C2H_CUSTOMER_STR_RPT = 0x24,
-    C2H_CUSTOMER_STR_RPT_2 = 0x25,
-    C2H_WLAN_INFO = 0x27,
+	C2H_DBG = 0x00,
+	C2H_LB = 0x01,
+	C2H_TXBF = 0x02,
+	C2H_CCX_TX_RPT = 0x03,
+	C2H_AP_REQ_TXRPT = 0x04,
+	C2H_FW_SCAN_COMPLETE = 0x7,
+	C2H_BT_INFO = 0x09,
+	C2H_BT_MP_INFO = 0x0B,
+	C2H_RA_RPT = 0x0C,
+	C2H_SPC_STAT = 0x0D,
+	C2H_RA_PARA_RPT = 0x0E,
+	C2H_FW_CHNL_SWITCH_COMPLETE = 0x10,
+	C2H_IQK_FINISH = 0x11,
+	C2H_MAILBOX_STATUS = 0x15,
+	C2H_P2P_RPORT = 0x16,
+	C2H_MCC = 0x17,
+	C2H_MAC_HIDDEN_RPT = 0x19,
+	C2H_MAC_HIDDEN_RPT_2 = 0x1A,
+	C2H_BCN_EARLY_RPT = 0x1E,
+	C2H_DEFEATURE_DBG = 0x22,
+	C2H_CUSTOMER_STR_RPT = 0x24,
+	C2H_CUSTOMER_STR_RPT_2 = 0x25,
+	C2H_WLAN_INFO = 0x27,
 #ifdef RTW_PER_CMD_SUPPORT_FW
-    C2H_PER_RATE_RPT = 0x2c,
+	C2H_PER_RATE_RPT = 0x2c,
 #endif
-    C2H_LPS_STATUS_RPT = 0x32,
-    C2H_DEFEATURE_RSVD = 0xFD,
-    C2H_EXTEND = 0xff,
+	C2H_LPS_STATUS_RPT = 0x32,
+	C2H_SET_TXPWR_FINISH = 0x70,
+	C2H_DEFEATURE_RSVD = 0xFD,
+	C2H_EXTEND = 0xff,
 } C2H_EVT;
 
 typedef enum _EXTEND_C2H_EVT {
-    EXTEND_C2H_DBG_PRINT = 0
+	EXTEND_C2H_DBG_PRINT = 0
 } EXTEND_C2H_EVT;
 
 #define C2H_REG_LEN 16
@@ -128,4 +129,14 @@ int c2h_per_rate_rpt_hdl(_adapter *adapter, u8 *data, u8 len);
 #define LPS_STATUS_RPT_LEN 2
 int c2h_lps_status_rpt(PADAPTER adapter, u8 *data, u8 len);
 #endif /* CONFIG_LPS_ACK */
+
+#ifdef CONFIG_FW_OFFLOAD_SET_TXPWR_IDX
+/* C2H_SET_TXPWR_FINISH, 0x70 */
+#define SET_TXPWR_FINISH_LEN 1
+void c2h_txpwr_idx_offload_done(_adapter *adapter, u8 *data, u8 len);
+int c2h_txpwr_idx_offload_wait(_adapter *adapter);
+#endif
+
+void rtw_hal_bcn_early_rpt_c2h_handler(_adapter *adapter);
+
 #endif /* __COMMON_C2H_H__ */

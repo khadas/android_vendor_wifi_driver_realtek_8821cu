@@ -40,10 +40,10 @@
 
 #if !(DM_ODM_SUPPORT_TYPE & ODM_AP)
 void do_iqk_8821c(void *dm_void, u8 delta_thermal_index, u8 thermal_value,
-                  u8 threshold);
+		  u8 threshold);
 #else
 void do_iqk_8821c(void *dm_void, u8 delta_thermal_index, u8 thermal_value,
-                  u8 threshold);
+		  u8 threshold);
 #endif
 
 void phy_iq_calibrate_8821c(void *dm_void, boolean clear, boolean segment_iqk);

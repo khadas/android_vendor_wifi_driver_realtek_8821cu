@@ -83,10 +83,10 @@
 #define HALMAC_WL_DPDT_SEL		37
 #define HALMAC_BT_PAPE_SEL		38
 #define HALMAC_SW_PAPE_SEL		39
-#define HALMAC_WLBT_PAPE_SEL		40
+#define HALMAC_WL_PAPE_SEL		40
 #define HALMAC_SW_LNAON_SET		41
 #define HALMAC_BT_LNAON_SEL		42
-#define HALMAC_WLBT_LNAON_SEL		43
+#define HALMAC_WL_LNAON_SEL		43
 #define HALMAC_SWR_CTRL_EN		44
 #define HALMAC_UART_BRIDGE		45
 #define HALMAC_BT_I2C			46
@@ -97,12 +97,12 @@
 #define HALMAC_DATA_CPU_UART		51
 
 struct halmac_gpio_pimux_list {
-    u16 func;
-    u8 id;
-    u8 type;
-    u16 offset;
-    u8 msk;
-    u8 value;
+	u16 func;
+	u8 id;
+	u8 type;
+	u16 offset;
+	u8 msk;
+	u8 value;
 };
 
 #endif

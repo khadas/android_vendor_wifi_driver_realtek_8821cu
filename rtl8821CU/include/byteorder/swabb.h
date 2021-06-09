@@ -67,24 +67,24 @@
  * provide defaults when no architecture-specific optimization is detected
  */
 #ifndef __arch__swahw32
-#define __arch__swahw32(x) ___swahw32(x)
+	#define __arch__swahw32(x) ___swahw32(x)
 #endif
 #ifndef __arch__swahb32
-#define __arch__swahb32(x) ___swahb32(x)
+	#define __arch__swahb32(x) ___swahb32(x)
 #endif
 
 #ifndef __arch__swahw32p
-#define __arch__swahw32p(x) __swahw32(*(x))
+	#define __arch__swahw32p(x) __swahw32(*(x))
 #endif
 #ifndef __arch__swahb32p
-#define __arch__swahb32p(x) __swahb32(*(x))
+	#define __arch__swahb32p(x) __swahb32(*(x))
 #endif
 
 #ifndef __arch__swahw32s
-#define __arch__swahw32s(x) do { *(x) = __swahw32p((x)); } while (0)
+	#define __arch__swahw32s(x) do { *(x) = __swahw32p((x)); } while (0)
 #endif
 #ifndef __arch__swahb32s
-#define __arch__swahb32s(x) do { *(x) = __swahb32p((x)); } while (0)
+	#define __arch__swahb32s(x) do { *(x) = __swahb32p((x)); } while (0)
 #endif
 
 
@@ -108,44 +108,44 @@
 
 __inline static__ __const__ __u32 __fswahw32(__u32 x)
 {
-    return __arch__swahw32(x);
+	return __arch__swahw32(x);
 }
 __inline static__ __u32 __swahw32p(__u32 *x)
 {
-    return __arch__swahw32p(x);
+	return __arch__swahw32p(x);
 }
 __inline static__ void __swahw32s(__u32 *addr)
 {
-    __arch__swahw32s(addr);
+	__arch__swahw32s(addr);
 }
 
 
 __inline static__ __const__ __u32 __fswahb32(__u32 x)
 {
-    return __arch__swahb32(x);
+	return __arch__swahb32(x);
 }
 __inline static__ __u32 __swahb32p(__u32 *x)
 {
-    return __arch__swahb32p(x);
+	return __arch__swahb32p(x);
 }
 __inline static__ void __swahb32s(__u32 *addr)
 {
-    __arch__swahb32s(addr);
+	__arch__swahb32s(addr);
 }
 
 #ifdef __BYTEORDER_HAS_U64__
-/*
-* Not supported yet
-*/
+	/*
+	* Not supported yet
+	*/
 #endif /* __BYTEORDER_HAS_U64__ */
 
 #if defined(PLATFORM_LINUX)
-#define swahw32 __swahw32
-#define swahb32 __swahb32
-#define swahw32p __swahw32p
-#define swahb32p __swahb32p
-#define swahw32s __swahw32s
-#define swahb32s __swahb32s
+	#define swahw32 __swahw32
+	#define swahb32 __swahb32
+	#define swahw32p __swahw32p
+	#define swahb32p __swahb32p
+	#define swahw32s __swahw32s
+	#define swahb32s __swahb32s
 #endif
 
 #endif /* _LINUX_BYTEORDER_SWABB_H */

@@ -22,11 +22,11 @@
 
 enum halmac_ret_status
 get_hw_value_8821c(struct halmac_adapter *adapter, enum halmac_hw_id hw_id,
-                   void *value);
+		   void *value);
 
 enum halmac_ret_status
 set_hw_value_8821c(struct halmac_adapter *adapter, enum halmac_hw_id hw_id,
-                   void *value);
+		   void *value);
 
 enum halmac_ret_status
 fill_txdesc_check_sum_8821c(struct halmac_adapter *adapter, u8 *txdesc);

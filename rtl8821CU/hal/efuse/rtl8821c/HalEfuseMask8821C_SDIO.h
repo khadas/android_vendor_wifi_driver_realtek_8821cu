@@ -25,10 +25,10 @@ EFUSE_GetArrayLen_MP_8821C_MSDIO(void);
 
 void
 EFUSE_GetMaskArray_MP_8821C_MSDIO(
-    u8 *Array
+		u8 *Array
 );
 
 BOOLEAN
 EFUSE_IsAddressMasked_MP_8821C_MSDIO(/* TC: Test Chip, MP: MP Chip */
-    u16 Offset
+		u16 Offset
 );

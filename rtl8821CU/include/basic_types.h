@@ -20,80 +20,80 @@
 #define FAIL	(-1)
 
 #ifndef TRUE
-#define _TRUE	1
+	#define _TRUE	1
 #else
-#define _TRUE	TRUE
+	#define _TRUE	TRUE
 #endif
 
 #ifndef FALSE
-#define _FALSE	0
+	#define _FALSE	0
 #else
-#define _FALSE	FALSE
+	#define _FALSE	FALSE
 #endif
 
 #ifdef PLATFORM_WINDOWS
 
-typedef signed char s8;
-typedef unsigned char u8;
+	typedef signed char s8;
+	typedef unsigned char u8;
 
-typedef signed short s16;
-typedef unsigned short u16;
+	typedef signed short s16;
+	typedef unsigned short u16;
 
-typedef signed long s32;
-typedef unsigned long u32;
+	typedef signed long s32;
+	typedef unsigned long u32;
 
-typedef unsigned int	uint;
-typedef	signed int		sint;
+	typedef unsigned int	uint;
+	typedef	signed int		sint;
 
 
-typedef signed long long s64;
-typedef unsigned long long u64;
+	typedef signed long long s64;
+	typedef unsigned long long u64;
 
-#ifdef NDIS50_MINIPORT
+	#ifdef NDIS50_MINIPORT
 
-#define NDIS_MAJOR_VERSION       5
-#define NDIS_MINOR_VERSION       0
+		#define NDIS_MAJOR_VERSION       5
+		#define NDIS_MINOR_VERSION       0
 
-#endif
+	#endif
 
-#ifdef NDIS51_MINIPORT
+	#ifdef NDIS51_MINIPORT
 
-#define NDIS_MAJOR_VERSION       5
-#define NDIS_MINOR_VERSION       1
+		#define NDIS_MAJOR_VERSION       5
+		#define NDIS_MINOR_VERSION       1
 
-#endif
+	#endif
 
-typedef NDIS_PROC proc_t;
+	typedef NDIS_PROC proc_t;
 
-typedef LONG atomic_t;
+	typedef LONG atomic_t;
 
 #endif
 
 
 #ifdef PLATFORM_LINUX
-#include <linux/version.h>
-#include <linux/types.h>
-#include <linux/module.h>
-#include <linux/kernel.h>
-#include <linux/init.h>
-#include <linux/utsname.h>
+	#include <linux/version.h>
+	#include <linux/types.h>
+	#include <linux/module.h>
+	#include <linux/kernel.h>
+	#include <linux/init.h>
+	#include <linux/utsname.h>
 
-typedef	signed int sint;
+	typedef	signed int sint;
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 19))
 typedef _Bool bool;
 
 enum {
-    false	= 0,
-    true	= 1
+	false	= 0,
+	true	= 1
 };
 #endif
 
-typedef void (*proc_t)(void *);
+	typedef void (*proc_t)(void *);
 
-typedef	__kernel_size_t	SIZE_T;
-typedef	__kernel_ssize_t	SSIZE_T;
-#define FIELD_OFFSET(s, field)	((SSIZE_T)&((s *)(0))->field)
+	typedef	__kernel_size_t	SIZE_T;
+	typedef	__kernel_ssize_t	SSIZE_T;
+	#define FIELD_OFFSET(s, field)	((SSIZE_T)&((s *)(0))->field)
 
 #define NDIS_OID uint
 #endif /*PLATFORM_LINUX*/
@@ -101,32 +101,32 @@ typedef	__kernel_ssize_t	SSIZE_T;
 
 #ifdef PLATFORM_FREEBSD
 
-typedef signed char s8;
-typedef unsigned char u8;
+	typedef signed char s8;
+	typedef unsigned char u8;
 
-typedef signed short s16;
-typedef unsigned short u16;
+	typedef signed short s16;
+	typedef unsigned short u16;
 
-typedef signed int s32;
-typedef unsigned int u32;
+	typedef signed int s32;
+	typedef unsigned int u32;
 
-typedef unsigned int	uint;
-typedef	signed int		sint;
-typedef long atomic_t;
+	typedef unsigned int	uint;
+	typedef	signed int		sint;
+	typedef long atomic_t;
 
-typedef signed long long s64;
-typedef unsigned long long u64;
+	typedef signed long long s64;
+	typedef unsigned long long u64;
 
-typedef u32 dma_addr_t;
+	typedef u32 dma_addr_t;
 
-typedef void (*proc_t)(void *);
+	typedef void (*proc_t)(void *);
 
-typedef unsigned int __kernel_size_t;
-typedef int __kernel_ssize_t;
+	typedef unsigned int __kernel_size_t;
+	typedef int __kernel_ssize_t;
 
-typedef	__kernel_size_t	SIZE_T;
-typedef	__kernel_ssize_t	SSIZE_T;
-#define FIELD_OFFSET(s, field)	((SSIZE_T)&((s *)(0))->field)
+	typedef	__kernel_size_t	SIZE_T;
+	typedef	__kernel_ssize_t	SSIZE_T;
+	#define FIELD_OFFSET(s, field)	((SSIZE_T)&((s *)(0))->field)
 
 #endif
 

@@ -28,32 +28,32 @@
 #ifdef PHYDM_BEAMFORMING_SUPPORT
 
 void hal_txbf_8812a_set_ndpa_rate(
-    void *dm_void,
-    u8 BW,
-    u8 rate);
+	void *dm_void,
+	u8 BW,
+	u8 rate);
 
 void hal_txbf_jaguar_enter(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_jaguar_leave(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_jaguar_status(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_jaguar_fw_txbf(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_jaguar_patch(
-    void *dm_void,
-    u8 operation);
+	void *dm_void,
+	u8 operation);
 
 void hal_txbf_jaguar_clk_8812a(
-    void *dm_void);
+	void *dm_void);
 #else
 
 #define hal_txbf_8812a_set_ndpa_rate(dm_void, BW, rate)

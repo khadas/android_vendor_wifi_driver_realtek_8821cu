@@ -23,6 +23,7 @@
 /* 8188E PKT_BUFF_ACCESS_CTRL value */
 #define TXPKT_BUF_SELECT				0x69
 #define RXPKT_BUF_SELECT				0xA5
+#define TXREPORT_BUF_SELECT			0x7F
 #define DISABLE_TRXPKT_BUF_ACCESS		0x0
 
 #ifndef RTW_HALMAC
@@ -510,9 +511,12 @@
 #define REG_WLAN_ACT_MASK_CTRL_1		0x076C
 
 /* GPIO Control */
-#define REG_SW_GPIO_SHARE_CTRL			0x1038
+#define REG_SW_GPIO_SHARE_CTRL_0		0x1038
+#define REG_SW_GPIO_SHARE_CTRL_1		0x103C
 #define REG_SW_GPIO_A_OUT				0x1040
 #define REG_SW_GPIO_A_OEN				0x1044
+#define REG_SW_GPIO_B_OEN				0x1058
+#define REG_SW_GPIO_B_OUT				0x105C
 
 /* Hardware Port 2 */
 #define REG_MACID2						0x1620
@@ -1252,9 +1256,13 @@ Current IOREG MAP
 /* 2 REG_LED_CFG				(Offset 0x004C) */
 #define BIT_SW_SPDT_SEL			BIT(22)
 
-/* 2 REG_SW_GPIO_SHARE_CTRL		(Offset 0x1038) */
+/* 2 REG_SW_GPIO_SHARE_CTRL_0	(Offset 0x1038) */
 #define BIT_BTGP_WAKE_LOC		(BIT(10) | BIT(11))
 #define BIT_SW_GPIO_FUNC 		BIT(0)
+
+/* 2 REG_SW_GPIO_SHARE_CTRL_1	(Offset 0x103C) */
+#define 	BIT_WLMAC_DBG_LOC	(BIT(9) | BIT(10))
+#define 	BIT_WL_GPIO_SEL		(BIT(30) | BIT(31))
 
 /* 2 8051FWDL
  * 2 MCUFWDL */
@@ -1784,10 +1792,10 @@ Current IOREG MAP
 #endif/*CONFIG_SDIO_INDIRECT_ACCESS*/
 
 #ifdef CONFIG_SDIO_HCI
-#define MAX_TX_AGG_PACKET_NUMBER	0x8
+	#define MAX_TX_AGG_PACKET_NUMBER	0x8
 #else
-#define MAX_TX_AGG_PACKET_NUMBER	0xFF
-#define MAX_TX_AGG_PACKET_NUMBER_8812	64
+	#define MAX_TX_AGG_PACKET_NUMBER	0xFF
+	#define MAX_TX_AGG_PACKET_NUMBER_8812	64
 #endif
 
 /* -----------------------------------------------------
@@ -1850,9 +1858,9 @@ Current IOREG MAP
  * ******************************************************** */
 
 #ifdef CONFIG_USB_HCI
-#define LAST_ENTRY_OF_TX_PKT_BUFFER_8188E(__Adapter)	(175)
+	#define LAST_ENTRY_OF_TX_PKT_BUFFER_8188E(__Adapter)	(175)
 #else
-#define LAST_ENTRY_OF_TX_PKT_BUFFER_8188E(__Adapter)	(IS_VENDOR_8188E_I_CUT_SERIES(__Adapter) ? 255 : 175)
+	#define LAST_ENTRY_OF_TX_PKT_BUFFER_8188E(__Adapter)	(IS_VENDOR_8188E_I_CUT_SERIES(__Adapter) ? 255 : 175)
 #endif
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8812			255
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8723B		255
@@ -1864,11 +1872,12 @@ Current IOREG MAP
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8723D		255
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8710B		255
 #define LAST_ENTRY_OF_TX_PKT_BUFFER_8192F		255
+#define LAST_ENTRY_OF_TX_PKT_BUFFER_8723F		255
 #define POLLING_LLT_THRESHOLD				20
 #if defined(CONFIG_RTL8723B) && defined(CONFIG_PCI_HCI)
-#define POLLING_READY_TIMEOUT_COUNT		6000
+	#define POLLING_READY_TIMEOUT_COUNT		6000
 #else
-#define POLLING_READY_TIMEOUT_COUNT		1000
+	#define POLLING_READY_TIMEOUT_COUNT		1000
 #endif
 
 

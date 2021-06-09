@@ -73,7 +73,8 @@ void ClearInterrupt8821AS(PADAPTER padapter);
 #endif /* CONFIG_RTL8821A */
 
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-#if defined(CONFIG_RTL8821C) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8822C)
+#if defined(CONFIG_RTL8821C) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8822C) \
+    || defined(CONFIG_RTL8723F)
 u8 rtw_hal_enable_cpwm2(_adapter *adapter);
 #endif
 extern u8 RecvOnePkt(PADAPTER padapter);
@@ -176,7 +177,7 @@ extern void ClearInterrupt8188GTVSdio(PADAPTER padapter);
  */
 static inline u32 rtw_sdio_get_block_size(struct dvobj_priv *d)
 {
-    return d->intf_data.block_transfer_len;
+	return d->intf_data.block_transfer_len;
 }
 
 /**
@@ -193,14 +194,14 @@ static inline u32 rtw_sdio_get_block_size(struct dvobj_priv *d)
  */
 static inline size_t rtw_sdio_cmd53_align_size(struct dvobj_priv *d, size_t len)
 {
-    u32 blk_sz;
+	u32 blk_sz;
 
 
-    blk_sz = rtw_sdio_get_block_size(d);
-    if (len <= blk_sz)
-        return len;
+	blk_sz = rtw_sdio_get_block_size(d);
+	if (len <= blk_sz)
+		return len;
 
-    return _RND(len, blk_sz);
+	return _RND(len, blk_sz);
 }
 
 #endif /* !__SDIO_OPS_H__ */

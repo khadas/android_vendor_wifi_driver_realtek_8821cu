@@ -24,31 +24,31 @@
  */
 int platform_wifi_power_on(void)
 {
-    int ret = 0;
+	int ret = 0;
 
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 14, 0))
-    ret = wifi_setup_dt();
-    if (ret) {
-        pr_err("%s: setup dt failed!!(%d)\n", __func__, ret);
-        return -1;
-    }
+	ret = wifi_setup_dt();
+	if (ret) {
+		pr_err("%s: setup dt failed!!(%d)\n", __func__, ret);
+		return -1;
+	}
 #endif /* kernel < 3.14.0 */
 
 #if 0 /* Seems redundancy? Already done before insert driver */
-    pr_info("######%s:\n", __func__);
-    extern_wifi_set_enable(0);
-    msleep(500);
-    extern_wifi_set_enable(1);
-    msleep(500);
-    sdio_reinit();
+	pr_info("######%s:\n", __func__);
+	extern_wifi_set_enable(0);
+	msleep(500);
+	extern_wifi_set_enable(1);
+	msleep(500);
+	sdio_reinit();
 #endif
 
-    return ret;
+	return ret;
 }
 
 void platform_wifi_power_off(void)
 {
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 14, 0))
-    wifi_teardown_dt();
+	wifi_teardown_dt();
 #endif /* kernel < 3.14.0 */
 }

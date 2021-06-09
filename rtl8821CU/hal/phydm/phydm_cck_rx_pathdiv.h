@@ -37,13 +37,13 @@
  * 1 ============================================================
  */
 struct phydm_cck_rx_pathdiv {
-    boolean en_cck_rx_pathdiv;
-    u32	path_a_sum;
-    u32	path_b_sum;
-    u16	path_a_cnt;
-    u16	path_b_cnt;
-    u8	rssi_fa_th;
-    u8	rssi_th;
+	boolean en_cck_rx_pathdiv;
+	u32	path_a_sum;
+	u32	path_b_sum;
+	u16	path_a_cnt;
+	u16	path_b_cnt;
+	u8	rssi_fa_th;
+	u8	rssi_th;
 };
 
 /* @1 ============================================================
@@ -60,8 +60,8 @@ void phydm_cck_rx_pathdiv_watchdog(void *dm_void);
 void phydm_cck_rx_pathdiv_init(void *dm_void);
 
 void phydm_process_rssi_for_cck_rx_pathdiv(void *dm_void, void *phy_info_void,
-        void *pkt_info_void);
+					   void *pkt_info_void);
 
 void phydm_cck_rx_pathdiv_dbg(void *dm_void, char input[][16], u32 *_used,
-                              char *output, u32 *_out_len);
+			      char *output, u32 *_out_len);
 #endif

@@ -27,10 +27,10 @@
 #define INTERRUPT_MSG_FORMAT_LEN 60
 
 #if defined(CONFIG_VENDOR_REQ_RETRY) && defined(CONFIG_USB_VENDOR_REQ_MUTEX)
-/* vendor req retry should be in the situation when each vendor req is atomically submitted from others */
-#define MAX_USBCTRL_VENDORREQ_TIMES	10
+	/* vendor req retry should be in the situation when each vendor req is atomically submitted from others */
+	#define MAX_USBCTRL_VENDORREQ_TIMES	10
 #else
-#define MAX_USBCTRL_VENDORREQ_TIMES	1
+	#define MAX_USBCTRL_VENDORREQ_TIMES	1
 #endif
 
 #define RTW_USB_BULKOUT_TIMEOUT	5000/* ms */
@@ -78,7 +78,7 @@ void usb_write_port_cancel(struct intf_hdl *pintfhdl);
 int usbctrl_vendorreq(struct intf_hdl *pintfhdl, u8 request, u16 value, u16 index, void *pdata, u16 len, u8 requesttype);
 #ifdef CONFIG_USB_SUPPORT_ASYNC_VDN_REQ
 int _usbctrl_vendorreq_async_write(struct usb_device *udev, u8 request,
-                                   u16 value, u16 index, void *pdata, u16 len, u8 requesttype);
+		u16 value, u16 index, void *pdata, u16 len, u8 requesttype);
 #endif /* CONFIG_USB_SUPPORT_ASYNC_VDN_REQ */
 
 u8 usb_read8(struct intf_hdl *pintfhdl, u32 addr);

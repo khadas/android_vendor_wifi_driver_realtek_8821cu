@@ -31,7 +31,7 @@
  * 1 ============================================================
  */
 
-#define LNA_SAT_VERSION "1.0"
+#define LNA_SAT_VERSION "1.1"
 
 /*@LNA saturation check*/
 #define	OFDM_AGC_TAB_0			0
@@ -55,27 +55,42 @@
  */
 
 enum lna_sat_timer_state {
-    INIT_LNA_SAT_CHK_TIMMER,
-    CANCEL_LNA_SAT_CHK_TIMMER,
-    RELEASE_LNA_SAT_CHK_TIMMER
+	INIT_LNA_SAT_CHK_TIMMER,
+	CANCEL_LNA_SAT_CHK_TIMMER,
+	RELEASE_LNA_SAT_CHK_TIMMER
 };
 
 #ifdef PHYDM_LNA_SAT_CHK_TYPE2
 enum lna_sat_chk_type2_status {
-    ORI_TABLE_MONITOR,
-    ORI_TABLE_TRAINING,
-    SAT_TABLE_MONITOR,
-    SAT_TABLE_TRAINING,
-    SAT_TABLE_TRY_FAIL,
-    ORI_TABLE_TRY_FAIL
+	ORI_TABLE_MONITOR,
+	ORI_TABLE_TRAINING,
+	SAT_TABLE_MONITOR,
+	SAT_TABLE_TRAINING,
+	SAT_TABLE_TRY_FAIL,
+	ORI_TABLE_TRY_FAIL
 };
 
 #endif
 
 enum lna_sat_type {
-    LNA_SAT_WITH_PEAK_DET	= 1,	/*type1*/
-    LNA_SAT_WITH_TRAIN	= 2,	/*type2*/
+	LNA_SAT_WITH_PEAK_DET	= 1,	/*type1*/
+	LNA_SAT_WITH_TRAIN	= 2,	/*type2*/
 };
+
+#ifdef PHYDM_HW_SWITCH_AGC_TAB
+enum lna_pd_th_level {
+	LNA_PD_TH_LEVEL0	= 0,
+	LNA_PD_TH_LEVEL1	= 1,
+	LNA_PD_TH_LEVEL2	= 2,
+	LNA_PD_TH_LEVEL3	= 3
+};
+
+enum agc_tab_switch_state {
+	AGC_SWH_IDLE,
+	AGC_SWH_CCK,
+	AGC_SWH_OFDM
+};
+#endif
 
 /* @1 ============================================================
  * 1  structure
@@ -84,55 +99,59 @@ enum lna_sat_type {
 
 struct phydm_lna_sat_t {
 #ifdef PHYDM_LNA_SAT_CHK_TYPE1
-    u8			chk_cnt;
-    u8			chk_duty_cycle;
-    u32			chk_period;/*@ms*/
-    boolean			is_disable_lna_sat_chk;
-    boolean			dis_agc_table_swh;
+	u8			chk_cnt;
+	u8			chk_duty_cycle;
+	u32			chk_period;/*@ms*/
+	boolean			is_disable_lna_sat_chk;
+	boolean			dis_agc_table_swh;
 #endif
 #ifdef PHYDM_LNA_SAT_CHK_TYPE2
-    u8			force_traget_macid;
-    u32			snr_var_thd;
-    u32			delta_snr_mean;
-    u16			ori_table_try_fail_times;
-    u16			cnt_lower_snr_statistic;
-    u16			sat_table_monitor_times;
-    u16			force_change_period;
-    u8			is_snr_detail_en;
-    u8			is_force_lna_sat_table;
-    u8			lwr_snr_ratio_bit_shift;
-    u8			cnt_snr_statistic;
-    u16			snr_statistic_sqr[SNR_RPT_MAX];
-    u8			snr_statistic[SNR_RPT_MAX];
-    u8			is_sm_done;
-    u8			is_snr_done;
-    u32			cur_snr_var;
-    u8			total_bit_shift;
-    u8			total_cnt_snr;
-    u32			cur_snr_mean;
-    u8			cur_snr_var0;
-    u32			cur_lower_snr_mean;
-    u32			pre_snr_mean;
-    u32			pre_snr_var;
-    u32			pre_lower_snr_mean;
-    u8			nxt_state;
-    u8			pre_state;
+	u8			force_traget_macid;
+	u32			snr_var_thd;
+	u32			delta_snr_mean;
+	u16			ori_table_try_fail_times;
+	u16			cnt_lower_snr_statistic;
+	u16			sat_table_monitor_times;
+	u16			force_change_period;
+	u8			is_snr_detail_en;
+	u8			is_force_lna_sat_table;
+	u8			lwr_snr_ratio_bit_shift;
+	u8			cnt_snr_statistic;
+	u16			snr_statistic_sqr[SNR_RPT_MAX];
+	u8			snr_statistic[SNR_RPT_MAX];
+	u8			is_sm_done;
+	u8			is_snr_done;
+	u32			cur_snr_var;
+	u8			total_bit_shift;
+	u8			total_cnt_snr;
+	u32			cur_snr_mean;
+	u8			cur_snr_var0;
+	u32			cur_lower_snr_mean;
+	u32			pre_snr_mean;
+	u32			pre_snr_var;
+	u32			pre_lower_snr_mean;
+	u8			nxt_state;
+	u8			pre_state;
 #endif
-    enum lna_sat_type	lna_sat_type;
-    u32			sat_cnt_acc_patha;
-    u32			sat_cnt_acc_pathb;
+	enum lna_sat_type	lna_sat_type;
+	u32			sat_cnt_acc_patha;
+	u32			sat_cnt_acc_pathb;
 #ifdef PHYDM_IC_ABOVE_3SS
-    u32			sat_cnt_acc_pathc;
+	u32			sat_cnt_acc_pathc;
 #endif
 #ifdef PHYDM_IC_ABOVE_4SS
-    u32			sat_cnt_acc_pathd;
+	u32			sat_cnt_acc_pathd;
 #endif
-    u32			check_time;
-    boolean			pre_sat_status;
-    boolean			cur_sat_status;
-    struct phydm_timer_list	phydm_lna_sat_chk_timer;
-    u32			cur_timer_check_cnt;
-    u32			pre_timer_check_cnt;
+	u32			check_time;
+	boolean			pre_sat_status;
+	boolean			cur_sat_status;
+#ifdef PHYDM_HW_SWITCH_AGC_TAB
+	boolean			hw_swh_tab_on;
+	enum odm_rf_band	cur_rf_band;
+#endif
+	struct phydm_timer_list	phydm_lna_sat_chk_timer;
+	u32			cur_timer_check_cnt;
+	u32			pre_timer_check_cnt;
 };
 
 /* @1 ============================================================
@@ -152,7 +171,7 @@ void phydm_lna_sat_chk_timers(void *dm_void, u8 state);
 void phydm_lna_sat_chk_bb_init(void *dm_void);
 
 void phydm_set_ofdm_agc_tab_path(void *dm_void,
-                                 u8 tab_sel, enum rf_path path);
+				 u8 tab_sel, enum rf_path path);
 
 u8 phydm_get_ofdm_agc_tab_path(void *dm_void, enum rf_path path);
 #endif /*@#if (RTL8198F_SUPPORT || RTL8814B_SUPPORT)*/
@@ -163,11 +182,15 @@ void phydm_parsing_snr(void *dm_void, void *pktinfo_void, s8 *rx_snr);
 #endif
 
 void phydm_lna_sat_debug(void *dm_void, char input[][16], u32 *_used,
-                         char *output, u32 *_out_len);
+			 char *output, u32 *_out_len);
 
 void phydm_lna_sat_chk_watchdog(void *dm_void);
 
 void phydm_lna_sat_check_init(void *dm_void);
 
+#ifdef PHYDM_HW_SWITCH_AGC_TAB
+void phydm_auto_agc_tab_debug(void *dm_void, char input[][16], u32 *_used,
+			      char *output, u32 *_out_len);
+#endif
 #endif /*@#if (PHYDM_LNA_SAT_CHK_SUPPORT == 1)*/
 #endif

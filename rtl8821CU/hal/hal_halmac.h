@@ -1,6 +1,6 @@
 /******************************************************************************
  *
- * Copyright(c) 2015 - 2018 Realtek Corporation.
+ * Copyright(c) 2015 - 2019 Realtek Corporation.
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of version 2 of the GNU General Public License as
@@ -33,68 +33,68 @@
 #define EX_MESSAGE_BOX_SIZE 4
 
 typedef enum _RTW_HALMAC_MODE {
-    RTW_HALMAC_MODE_NORMAL,
-    RTW_HALMAC_MODE_WIFI_TEST,
+	RTW_HALMAC_MODE_NORMAL,
+	RTW_HALMAC_MODE_WIFI_TEST,
 } RTW_HALMAC_MODE;
 
 union rtw_phy_para_data {
-    struct _mac {
-        u32	value;	/* value to be set in bit mask(msk) */
-        u32	msk;	/* bit mask */
-        u16	offset; /* address */
-        u8	msk_en;	/* 0/1 for msk invalid/valid */
-        u8	size;	/* Unit is bytes, and value should be 1/2/4 */
-    } mac;
-    struct _bb {
-        u32	value;
-        u32	msk;
-        u16	offset;
-        u8	msk_en;
-        u8	size;
-    } bb;
-    struct _rf {
-        u32	value;
-        u32	msk;
-        u8	offset;
-        u8	msk_en;
-        /*
-         * 0: path A
-         * 1: path B
-         * 2: path C
-         * 3: path D
-         */
-        u8	path;
-    } rf;
-    struct _delay {
-        /*
-         * 0: microsecond (us)
-         * 1: millisecond (ms)
-         */
-        u8	unit;
-        u16	value;
-    } delay;
+	struct _mac {
+		u32	value;	/* value to be set in bit mask(msk) */
+		u32	msk;	/* bit mask */
+		u16	offset; /* address */
+		u8	msk_en;	/* 0/1 for msk invalid/valid */
+		u8	size;	/* Unit is bytes, and value should be 1/2/4 */
+	} mac;
+	struct _bb {
+		u32	value;
+		u32	msk;
+		u16	offset;
+		u8	msk_en;
+		u8	size;
+	} bb;
+	struct _rf {
+		u32	value;
+		u32	msk;
+		u8	offset;
+		u8	msk_en;
+		/*
+		 * 0: path A
+		 * 1: path B
+		 * 2: path C
+		 * 3: path D
+		 */
+		u8	path;
+	} rf;
+	struct _delay {
+		/*
+		 * 0: microsecond (us)
+		 * 1: millisecond (ms)
+		 */
+		u8	unit;
+		u16	value;
+	} delay;
 };
 
 struct rtw_phy_parameter {
-    /*
-     * 0: MAC register
-     * 1: BB register
-     * 2: RF register
-     * 3: Delay
-     * 0xFF: Latest(End) command
-     */
-    u8 cmd;
-    union rtw_phy_para_data data;
+	/*
+	 * 0: MAC register
+	 * 1: BB register
+	 * 2: RF register
+	 * 3: Delay
+	 * 0xFF: Latest(End) command
+	 */
+	u8 cmd;
+	union rtw_phy_para_data data;
 };
 
 struct rtw_halmac_bcn_ctrl {
-    u8 rx_bssid_fit:1;	/* 0:HW handle beacon, 1:ignore */
-    u8 txbcn_rpt:1;		/* Enable TXBCN report in ad hoc and AP mode */
-    u8 tsf_update:1;	/* Update TSF when beacon or probe response */
-    u8 enable_bcn:1;	/* Enable beacon related functions */
-    u8 rxbcn_rpt:1;		/* Enable RXBCNOK report */
-    u8 p2p_ctwin:1;		/* Enable P2P CTN WINDOWS function */
-    u8 p2p_bcn_area:1;	/* Enable P2P BCN area on function */
+	u8 rx_bssid_fit:1;	/* 0:HW handle beacon, 1:ignore */
+	u8 txbcn_rpt:1;		/* Enable TXBCN report in ad hoc and AP mode */
+	u8 tsf_update:1;	/* Update TSF when beacon or probe response */
+	u8 enable_bcn:1;	/* Enable beacon related functions */
+	u8 rxbcn_rpt:1;		/* Enable RXBCNOK report */
+	u8 p2p_ctwin:1;		/* Enable P2P CTN WINDOWS function */
+	u8 p2p_bcn_area:1;	/* Enable P2P BCN area on function */
 };
 
 extern struct halmac_platform_api rtw_halmac_platform_api;
@@ -198,10 +198,12 @@ int rtw_halmac_download_rsvd_page(struct dvobj_priv *dvobj, u8 pg_offset, u8 *pb
 int rtw_halmac_fill_hal_spec(struct dvobj_priv *, struct hal_spec_t *);
 int rtw_halmac_p2pps(struct dvobj_priv *dvobj, PHAL_P2P_PS_PARA pp2p_ps_para);
 int rtw_halmac_iqk(struct dvobj_priv *d, u8 clear, u8 segment);
+int rtw_halmac_dpk(struct dvobj_priv *d, u8 *buf, u32 bufsz);
 int rtw_halmac_cfg_phy_para(struct dvobj_priv *d, struct rtw_phy_parameter *para);
 int rtw_halmac_led_cfg(struct dvobj_priv *d, u8 enable, u8 mode);
 void rtw_halmac_led_switch(struct dvobj_priv *d, u8 on);
 int rtw_halmac_bt_wake_cfg(struct dvobj_priv *d, u8 enable);
+int rtw_halmac_rfe_ctrl_cfg(struct dvobj_priv *d, u8 gpio);
 #ifdef CONFIG_PNO_SUPPORT
 int rtw_halmac_pno_scanoffload(struct dvobj_priv *d, u32 enable);
 #endif
@@ -228,19 +230,19 @@ void dump_trx_share_mode(void *sel, _adapter *adapter);
 #ifdef CONFIG_BEAMFORMING
 #ifdef RTW_BEAMFORMING_VERSION_2
 int rtw_halmac_bf_add_mu_bfer(struct dvobj_priv *d, u16 paid, u16 csi_para,
-                              u16 my_aid, enum halmac_csi_seg_len sel, u8 *addr);
+		u16 my_aid, enum halmac_csi_seg_len sel, u8 *addr);
 int rtw_halmac_bf_del_mu_bfer(struct dvobj_priv *d);
 
 int rtw_halmac_bf_cfg_sounding(struct dvobj_priv *d, enum halmac_snd_role role,
-                               enum halmac_data_rate rate);
+		enum halmac_data_rate rate);
 int rtw_halmac_bf_del_sounding(struct dvobj_priv *d, enum halmac_snd_role role);
 
 int rtw_halmac_bf_cfg_csi_rate(struct dvobj_priv *d, u8 rssi, u8 current_rate,
-                               u8 fixrate_en, u8 *new_rate, u8 *bmp_ofdm54);
+		u8 fixrate_en, u8 *new_rate, u8 *bmp_ofdm54);
 
 int rtw_halmac_bf_cfg_mu_mimo(struct dvobj_priv *d, enum halmac_snd_role role,
-                              u8 *sounding_sts, u16 grouping_bitmap, u8 mu_tx_en,
-                              u32 *given_gid_tab, u32 *given_user_pos);
+		u8 *sounding_sts, u16 grouping_bitmap, u8 mu_tx_en,
+		u32 *given_gid_tab, u32 *given_user_pos);
 #define rtw_halmac_bf_cfg_mu_bfee(d, gid_tab, user_pos) \
 	rtw_halmac_bf_cfg_mu_mimo(d, HAL_BFEE, NULL, 0, 0, gid_tab, user_pos)
 

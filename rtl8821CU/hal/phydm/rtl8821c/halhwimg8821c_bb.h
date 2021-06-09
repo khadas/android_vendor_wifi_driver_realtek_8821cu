@@ -23,7 +23,7 @@
  *
  *****************************************************************************/
 
-/*Image2HeaderVersion: R3 1.5.8*/
+/*Image2HeaderVersion: R3 1.5.10.1*/
 #if (RTL8821C_SUPPORT == 1)
 #ifndef __INC_MP_BB_HW_IMG_8821C_H
 #define __INC_MP_BB_HW_IMG_8821C_H
@@ -45,8 +45,8 @@ extern const u32	array_mp_8821c_agc_tab_diff_wlg[780];
 extern const u32	array_mp_8821c_agc_tab_diff_btg[780];
 void
 odm_read_and_config_mp_8821c_agc_tab_diff(struct dm_struct *dm,
-        const u32 array[],
-        u32 array_len);
+					  const u32 array[],
+					  u32 array_len);
 u32 odm_get_version_mp_8821c_agc_tab_diff(void);
 
 /******************************************************************************

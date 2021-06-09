@@ -83,115 +83,115 @@
 #define USB_TXAGG_NUM_SHT	24
 
 typedef struct txdescriptor_8812 {
-    /* Offset 0 */
-    u32 pktlen:16;
-    u32 offset:8;
-    u32 bmc:1;
-    u32 htc:1;
-    u32 ls:1;
-    u32 fs:1;
-    u32 linip:1;
-    u32 noacm:1;
-    u32 gf:1;
-    u32 own:1;
+	/* Offset 0 */
+	u32 pktlen:16;
+	u32 offset:8;
+	u32 bmc:1;
+	u32 htc:1;
+	u32 ls:1;
+	u32 fs:1;
+	u32 linip:1;
+	u32 noacm:1;
+	u32 gf:1;
+	u32 own:1;
 
-    /* Offset 4 */
-    u32 macid:6;
-    u32 rsvd0406:2;
-    u32 qsel:5;
-    u32 rd_nav_ext:1;
-    u32 lsig_txop_en:1;
-    u32 pifs:1;
-    u32 rate_id:4;
-    u32 navusehdr:1;
-    u32 en_desc_id:1;
-    u32 sectype:2;
-    u32 rsvd0424:2;
-    u32 pkt_offset:5;	/* unit: 8 bytes */
-    u32 rsvd0431:1;
+	/* Offset 4 */
+	u32 macid:6;
+	u32 rsvd0406:2;
+	u32 qsel:5;
+	u32 rd_nav_ext:1;
+	u32 lsig_txop_en:1;
+	u32 pifs:1;
+	u32 rate_id:4;
+	u32 navusehdr:1;
+	u32 en_desc_id:1;
+	u32 sectype:2;
+	u32 rsvd0424:2;
+	u32 pkt_offset:5;	/* unit: 8 bytes */
+	u32 rsvd0431:1;
 
-    /* Offset 8 */
-    u32 rts_rc:6;
-    u32 data_rc:6;
-    u32 agg_en:1;
-    u32 rd_en:1;
-    u32 bar_rty_th:2;
-    u32 bk:1;
-    u32 morefrag:1;
-    u32 raw:1;
-    u32 ccx:1;
-    u32 ampdu_density:3;
-    u32 bt_null:1;
-    u32 ant_sel_a:1;
-    u32 ant_sel_b:1;
-    u32 tx_ant_cck:2;
-    u32 tx_antl:2;
-    u32 tx_ant_ht:2;
+	/* Offset 8 */
+	u32 rts_rc:6;
+	u32 data_rc:6;
+	u32 agg_en:1;
+	u32 rd_en:1;
+	u32 bar_rty_th:2;
+	u32 bk:1;
+	u32 morefrag:1;
+	u32 raw:1;
+	u32 ccx:1;
+	u32 ampdu_density:3;
+	u32 bt_null:1;
+	u32 ant_sel_a:1;
+	u32 ant_sel_b:1;
+	u32 tx_ant_cck:2;
+	u32 tx_antl:2;
+	u32 tx_ant_ht:2;
 
-    /* Offset 12 */
-    u32 nextheadpage:8;
-    u32 tailpage:8;
-    u32 seq:12;
-    u32 cpu_handle:1;
-    u32 tag1:1;
-    u32 trigger_int:1;
-    u32 hwseq_en:1;
+	/* Offset 12 */
+	u32 nextheadpage:8;
+	u32 tailpage:8;
+	u32 seq:12;
+	u32 cpu_handle:1;
+	u32 tag1:1;
+	u32 trigger_int:1;
+	u32 hwseq_en:1;
 
-    /* Offset 16 */
-    u32 rtsrate:5;
-    u32 ap_dcfe:1;
-    u32 hwseq_sel:2;
-    u32 userate:1;
-    u32 disrtsfb:1;
-    u32 disdatafb:1;
-    u32 cts2self:1;
-    u32 rtsen:1;
-    u32 hw_rts_en:1;
-    u32 port_id:1;
-    u32 pwr_status:3;
-    u32 wait_dcts:1;
-    u32 cts2ap_en:1;
-    u32 data_sc:2;
-    u32 data_stbc:2;
-    u32 data_short:1;
-    u32 data_bw:1;
-    u32 rts_short:1;
-    u32 rts_bw:1;
-    u32 rts_sc:2;
-    u32 vcs_stbc:2;
+	/* Offset 16 */
+	u32 rtsrate:5;
+	u32 ap_dcfe:1;
+	u32 hwseq_sel:2;
+	u32 userate:1;
+	u32 disrtsfb:1;
+	u32 disdatafb:1;
+	u32 cts2self:1;
+	u32 rtsen:1;
+	u32 hw_rts_en:1;
+	u32 port_id:1;
+	u32 pwr_status:3;
+	u32 wait_dcts:1;
+	u32 cts2ap_en:1;
+	u32 data_sc:2;
+	u32 data_stbc:2;
+	u32 data_short:1;
+	u32 data_bw:1;
+	u32 rts_short:1;
+	u32 rts_bw:1;
+	u32 rts_sc:2;
+	u32 vcs_stbc:2;
 
-    /* Offset 20 */
-    u32 datarate:6;
-    u32 sgi:1;
-    u32 try_rate:1;
-    u32 data_ratefb_lmt:5;
-    u32 rts_ratefb_lmt:4;
-    u32 rty_lmt_en:1;
-    u32 data_rt_lmt:6;
-    u32 usb_txagg_num:8;
+	/* Offset 20 */
+	u32 datarate:6;
+	u32 sgi:1;
+	u32 try_rate:1;
+	u32 data_ratefb_lmt:5;
+	u32 rts_ratefb_lmt:4;
+	u32 rty_lmt_en:1;
+	u32 data_rt_lmt:6;
+	u32 usb_txagg_num:8;
 
-    /* Offset 24 */
-    u32 txagg_a:5;
-    u32 txagg_b:5;
-    u32 use_max_len:1;
-    u32 max_agg_num:5;
-    u32 mcsg1_max_len:4;
-    u32 mcsg2_max_len:4;
-    u32 mcsg3_max_len:4;
-    u32 mcs7_sgi_max_len:4;
+	/* Offset 24 */
+	u32 txagg_a:5;
+	u32 txagg_b:5;
+	u32 use_max_len:1;
+	u32 max_agg_num:5;
+	u32 mcsg1_max_len:4;
+	u32 mcsg2_max_len:4;
+	u32 mcsg3_max_len:4;
+	u32 mcs7_sgi_max_len:4;
 
-    /* Offset 28 */
-    u32 checksum:16;	/* TxBuffSize(PCIe)/CheckSum(USB) */
-    u32 mcsg4_max_len:4;
-    u32 mcsg5_max_len:4;
-    u32 mcsg6_max_len:4;
-    u32 mcs15_sgi_max_len:4;
+	/* Offset 28 */
+	u32 checksum:16;	/* TxBuffSize(PCIe)/CheckSum(USB) */
+	u32 mcsg4_max_len:4;
+	u32 mcsg5_max_len:4;
+	u32 mcsg6_max_len:4;
+	u32 mcs15_sgi_max_len:4;
 
-    /* Offset 32 */
-    u32 rsvd32;
+	/* Offset 32 */
+	u32 rsvd32;
 
-    /* Offset 36 */
-    u32 rsvd36;
+	/* Offset 36 */
+	u32 rsvd36;
 } TXDESC_8812, *PTXDESC_8812;
 
 
@@ -306,9 +306,9 @@ typedef struct txdescriptor_8812 {
 #define SET_EARLYMODE_LEN3_8812(__pAddr, __Value)					SET_BITS_TO_LE_4BYTE(__pAddr+4, 17, 15, __Value)
 
 #ifdef CONFIG_TX_EARLY_MODE
-#define USB_DUMMY_OFFSET		2
+	#define USB_DUMMY_OFFSET		2
 #else
-#define USB_DUMMY_OFFSET		1
+	#define USB_DUMMY_OFFSET		1
 #endif
 #define USB_DUMMY_LENGTH		(USB_DUMMY_OFFSET * PACKET_OFFSET_SZ)
 
@@ -318,9 +318,7 @@ void rtl8812a_fill_fake_txdesc(PADAPTER	padapter, u8 *pDesc, u32 BufferLen, u8 I
 void rtl8812a_fill_txdesc_sectype(struct pkt_attrib *pattrib, u8 *ptxdesc);
 void rtl8812a_fill_txdesc_vcs(PADAPTER padapter, struct pkt_attrib *pattrib, u8 *ptxdesc);
 void rtl8812a_fill_txdesc_phy(PADAPTER padapter, struct pkt_attrib *pattrib, u8 *ptxdesc);
-#if defined(CONFIG_CONCURRENT_MODE)
 void fill_txdesc_force_bmc_camid(struct pkt_attrib *pattrib, u8 *ptxdesc);
-#endif
 void fill_txdesc_bmc_tx_rate(struct pkt_attrib *pattrib, u8 *ptxdesc);
 
 #ifdef CONFIG_USB_HCI
@@ -328,6 +326,9 @@ s32 rtl8812au_init_xmit_priv(PADAPTER padapter);
 void rtl8812au_free_xmit_priv(PADAPTER padapter);
 s32 rtl8812au_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
 s32 rtl8812au_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
+#ifdef CONFIG_RTW_MGMT_QUEUE
+s32 rtl8812au_hal_mgmt_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+#endif
 s32	 rtl8812au_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
 s32 rtl8812au_xmit_buf_handler(PADAPTER padapter);
 void rtl8812au_xmit_tasklet(void *priv);
@@ -341,6 +342,9 @@ struct xmit_buf *rtl8812ae_dequeue_xmitbuf(struct rtw_tx_ring *ring);
 void	rtl8812ae_xmitframe_resume(_adapter *padapter);
 s32 rtl8812ae_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
 s32 rtl8812ae_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
+#ifdef CONFIG_RTW_MGMT_QUEUE
+s32 rtl8812ae_hal_mgmt_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+#endif
 s32	rtl8812ae_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
 void rtl8812ae_xmit_tasklet(void *priv);
 

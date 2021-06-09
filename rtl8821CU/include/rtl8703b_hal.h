@@ -28,7 +28,7 @@
 #include "Hal8703BPhyReg.h"
 #include "Hal8703BPhyCfg.h"
 #ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8703b_sreset.h"
+	#include "rtl8703b_sreset.h"
 #endif
 
 #define FW_8703B_SIZE			0x8000
@@ -38,13 +38,13 @@
 #define IS_FW_HEADER_EXIST_8703B(_pFwHdr)	((le16_to_cpu(_pFwHdr->Signature) & 0xFFF0) == 0x03B0)
 
 typedef struct _RT_FIRMWARE {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_8703B_SIZE];
+	u8			szFwBuffer[FW_8703B_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8703B, *PRT_FIRMWARE_8703B;
 
 /*
@@ -52,30 +52,30 @@ typedef struct _RT_FIRMWARE {
  *
  * Added by tynli. 2009.12.04. */
 typedef struct _RT_8703B_FIRMWARE_HDR {
-    /* 8-byte alinment required */
+	/* 8-byte alinment required */
 
-    /* --- LONG WORD 0 ---- */
-    u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
-    u8		Category;	/* AP/NIC and USB/PCI */
-    u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
-    u16		Version;		/* FW Version */
-    u16		Subversion;	/* FW Subversion, default 0x00 */
+	/* --- LONG WORD 0 ---- */
+	u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
+	u8		Category;	/* AP/NIC and USB/PCI */
+	u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
+	u16		Version;		/* FW Version */
+	u16		Subversion;	/* FW Subversion, default 0x00 */
 
-    /* --- LONG WORD 1 ---- */
-    u8		Month;	/* Release time Month field */
-    u8		Date;	/* Release time Date field */
-    u8		Hour;	/* Release time Hour field */
-    u8		Minute;	/* Release time Minute field */
-    u16		RamCodeSize;	/* The size of RAM code */
-    u16		Rsvd2;
+	/* --- LONG WORD 1 ---- */
+	u8		Month;	/* Release time Month field */
+	u8		Date;	/* Release time Date field */
+	u8		Hour;	/* Release time Hour field */
+	u8		Minute;	/* Release time Minute field */
+	u16		RamCodeSize;	/* The size of RAM code */
+	u16		Rsvd2;
 
-    /* --- LONG WORD 2 ---- */
-    u32		SvnIdx;	/* The SVN entry index */
-    u32		Rsvd3;
+	/* --- LONG WORD 2 ---- */
+	u32		SvnIdx;	/* The SVN entry index */
+	u32		Rsvd3;
 
-    /* --- LONG WORD 3 ---- */
-    u32		Rsvd4;
-    u32		Rsvd5;
+	/* --- LONG WORD 3 ---- */
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8703B_FIRMWARE_HDR, *PRT_8703B_FIRMWARE_HDR;
 
 #define DRIVER_EARLY_INT_TIME_8703B		0x05
@@ -90,15 +90,15 @@ typedef struct _RT_8703B_FIRMWARE_HDR {
 #define RX_DMA_SIZE_8703B			0x4000	/* 16K(RX) */
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8703B	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8703B	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8703B	0x80	/* 128B, reserved for tx report */
+	#define RX_DMA_RESERVED_SIZE_8703B	0x80	/* 128B, reserved for tx report */
 #endif
 #define RX_DMA_BOUNDARY_8703B		(RX_DMA_SIZE_8703B - RX_DMA_RESERVED_SIZE_8703B - 1)
 
@@ -116,18 +116,18 @@ typedef struct _RT_8703B_FIRMWARE_HDR {
  * NS offload: 2NDP info: 1
  */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8703B	0x0b
+	#define WOWLAN_PAGE_NUM_8703B	0x0b
 #else
-#define WOWLAN_PAGE_NUM_8703B	0x00
+	#define WOWLAN_PAGE_NUM_8703B	0x00
 #endif
 
 #ifdef CONFIG_PNO_SUPPORT
-#undef WOWLAN_PAGE_NUM_8703B
-#define WOWLAN_PAGE_NUM_8703B	0x15
+	#undef WOWLAN_PAGE_NUM_8703B
+	#define WOWLAN_PAGE_NUM_8703B	0x15
 #endif
 
 #ifdef CONFIG_AP_WOWLAN
-#define AP_WOWLAN_PAGE_NUM_8703B	0x02
+	#define AP_WOWLAN_PAGE_NUM_8703B	0x02
 #endif
 
 #define TX_TOTAL_PAGE_NUMBER_8703B	(0xFF - BCNQ_PAGE_NUM_8703B - WOWLAN_PAGE_NUM_8703B)
@@ -177,11 +177,11 @@ typedef struct _RT_8703B_FIRMWARE_HDR {
 #define EFUSE_PROTECT_BYTES_BANK		16
 
 typedef enum tag_Package_Definition {
-    PACKAGE_DEFAULT,
-    PACKAGE_QFN68,
-    PACKAGE_TFBGA90,
-    PACKAGE_TFBGA80,
-    PACKAGE_TFBGA79
+	PACKAGE_DEFAULT,
+	PACKAGE_QFN68,
+	PACKAGE_TFBGA90,
+	PACKAGE_TFBGA80,
+	PACKAGE_TFBGA79
 } PACKAGE_TYPE_E;
 
 #define INCLUDE_MULTI_FUNC_BT(_Adapter)		(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_BT)
@@ -232,21 +232,21 @@ void _InitLTECoex_8703BS(PADAPTER Adapter);
 void _InitMacAPLLSetting_8703B(PADAPTER Adapter);
 void _8051Reset8703(PADAPTER padapter);
 #ifdef CONFIG_WOWLAN
-void Hal_DetectWoWMode(PADAPTER pAdapter);
+	void Hal_DetectWoWMode(PADAPTER pAdapter);
 #endif /* CONFIG_WOWLAN */
 
 void rtl8703b_start_thread(_adapter *padapter);
 void rtl8703b_stop_thread(_adapter *padapter);
 
 #if defined(CONFIG_CHECK_BT_HANG) && defined(CONFIG_BT_COEXIST)
-void rtl8703bs_init_checkbthang_workqueue(_adapter *adapter);
-void rtl8703bs_free_checkbthang_workqueue(_adapter *adapter);
-void rtl8703bs_cancle_checkbthang_workqueue(_adapter *adapter);
-void rtl8703bs_hal_check_bt_hang(_adapter *adapter);
+	void rtl8703bs_init_checkbthang_workqueue(_adapter *adapter);
+	void rtl8703bs_free_checkbthang_workqueue(_adapter *adapter);
+	void rtl8703bs_cancle_checkbthang_workqueue(_adapter *adapter);
+	void rtl8703bs_hal_check_bt_hang(_adapter *adapter);
 #endif
 
 #ifdef CONFIG_GPIO_WAKEUP
-void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
+	void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
 #endif
 #ifdef CONFIG_MP_INCLUDED
 int FirmwareDownloadBT(PADAPTER Adapter, PRT_MP_FIRMWARE pFirmware);
@@ -259,8 +259,8 @@ u8 HwRateToMRate8703B(u8	 rate);
 void Hal_ReadRFGainOffset(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
 
 #ifdef CONFIG_PCI_HCI
-BOOLEAN	InterruptRecognized8703BE(PADAPTER Adapter);
-void	UpdateInterruptMask8703BE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
+	BOOLEAN	InterruptRecognized8703BE(PADAPTER Adapter);
+	void	UpdateInterruptMask8703BE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
 #endif
 
 #endif

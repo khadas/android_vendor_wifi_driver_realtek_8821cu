@@ -28,7 +28,7 @@ deinit_usb_cfg_88xx(struct halmac_adapter *adapter);
 
 enum halmac_ret_status
 cfg_usb_rx_agg_88xx(struct halmac_adapter *adapter,
-                    struct halmac_rxagg_cfg *cfg);
+		    struct halmac_rxagg_cfg *cfg);
 
 u8
 reg_r8_usb_88xx(struct halmac_adapter *adapter, u32 offset);
@@ -53,11 +53,11 @@ set_usb_bulkout_num_88xx(struct halmac_adapter *adapter, u8 num);
 
 enum halmac_ret_status
 get_usb_bulkout_id_88xx(struct halmac_adapter *adapter, u8 *buf, u32 size,
-                        u8 *id);
+			u8 *id);
 
 enum halmac_ret_status
 cfg_txagg_usb_align_88xx(struct halmac_adapter *adapter, u8 enable,
-                         u16 align_size);
+			 u16 align_size);
 
 enum halmac_ret_status
 tx_allowed_usb_88xx(struct halmac_adapter *adapter, u8 *buf, u32 size);
@@ -67,11 +67,11 @@ usb_indirect_reg_r32_88xx(struct halmac_adapter *adapter, u32 offset);
 
 enum halmac_ret_status
 usb_reg_rn_88xx(struct halmac_adapter *adapter, u32 offset, u32 size,
-                u8 *value);
+		u8 *value);
 
 enum halmac_ret_status
 get_usb_tx_addr_88xx(struct halmac_adapter *adapter, u8 *buf, u32 size,
-                     u32 *cmd53_addr);
+		     u32 *cmd53_addr);
 
 enum halmac_ret_status
 set_usb_mode_88xx(struct halmac_adapter *adapter, enum halmac_usb_mode mode);
@@ -84,6 +84,9 @@ usbphy_read_88xx(struct halmac_adapter *adapter, u8 addr, u8 speed);
 
 enum halmac_ret_status
 en_ref_autok_usb_88xx(struct halmac_adapter *adapter, u8 en);
+
+enum halmac_ret_status
+usb_page_switch_88xx(struct halmac_adapter *adapter, u8 speed, u8 page);
 
 #endif /* HALMAC_88XX_SUPPORT */
 

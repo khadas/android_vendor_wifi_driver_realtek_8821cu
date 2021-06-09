@@ -81,18 +81,18 @@
 #define	HALMAC_PWR_CUT_ALL_MSK			0xFF
 
 enum halmac_pwrseq_cmd_delay_unit {
-    HALMAC_PWR_DELAY_US,
-    HALMAC_PWR_DELAY_MS,
+	HALMAC_PWR_DELAY_US,
+	HALMAC_PWR_DELAY_MS,
 };
 
 struct halmac_wlan_pwr_cfg {
-    u16 offset;
-    u8 cut_msk;
-    u8 interface_msk;
-    u8 base:4;
-    u8 cmd:4;
-    u8 msk;
-    u8 value;
+	u16 offset;
+	u8 cut_msk;
+	u8 interface_msk;
+	u8 base:4;
+	u8 cmd:4;
+	u8 msk;
+	u8 value;
 };
 
 #endif

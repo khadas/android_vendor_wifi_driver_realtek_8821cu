@@ -39,8 +39,8 @@
 #define WPP_SOFTWARE_TRACE 0
 
 typedef enum _BTC_MSG_COMP_TYPE {
-    COMP_COEX		= 0,
-    COMP_MAX
+	COMP_COEX		= 0,
+	COMP_MAX
 } BTC_MSG_COMP_TYPE;
 extern u4Byte GLBtcDbgType[];
 
@@ -124,6 +124,11 @@ struct btc_coexist;
 #include "halbtc8822c.h"
 #endif
 
+#ifdef CONFIG_RTL8723F
+#include "halbtc8723fwifionly.h"
+#include "halbtc8723f.h"
+#endif
+
 #ifdef CONFIG_RTL8192F
 #include "halbtc8192f.h"
 #endif
@@ -148,6 +153,10 @@ struct btc_coexist;
 
 #ifdef CONFIG_RTL8822C
 #include "halbtc8822cwifionly.h"
+#endif
+
+#ifdef CONFIG_RTL8723F
+#include "halbtc8723fwifionly.h"
 #endif
 
 #ifdef CONFIG_RTL8814B

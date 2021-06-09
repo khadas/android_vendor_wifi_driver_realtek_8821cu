@@ -54,7 +54,11 @@
 #define MCC_SINGLE_TX_CRITERIA 5 /* Mbps */
 
 #define MAX_MCC_NUM 2
+#ifdef CONFIG_RTL8822C
+#define DBG_MCC_REG_NUM 3
+#else
 #define DBG_MCC_REG_NUM 4
+#endif
 #define DBG_MCC_RF_REG_NUM 1
 
 #define MCC_STOP(adapter) (adapter->mcc_adapterpriv.mcc_tx_stop)
@@ -80,161 +84,161 @@
 
 #ifdef CONFIG_MCC_PHYDM_OFFLOAD
 enum mcc_cfg_phydm_ops {
-    MCC_CFG_PHYDM_OFFLOAD = 0,
-    MCC_CFG_PHYDM_RF_CH,
-    MCC_CFG_PHYDM_ADD_CLIENT,
-    MCC_CFG_PHYDM_REMOVE_CLIENT,
-    MCC_CFG_PHYDM_START,
-    MCC_CFG_PHYDM_STOP,
-    MCC_CFG_PHYDM_DUMP,
-    MCC_CFG_PHYDM_MAX,
+	MCC_CFG_PHYDM_OFFLOAD = 0,
+	MCC_CFG_PHYDM_RF_CH,
+	MCC_CFG_PHYDM_ADD_CLIENT,
+	MCC_CFG_PHYDM_REMOVE_CLIENT,
+	MCC_CFG_PHYDM_START,
+	MCC_CFG_PHYDM_STOP,
+	MCC_CFG_PHYDM_DUMP,
+	MCC_CFG_PHYDM_MAX,
 };
 #endif
 
 enum rtw_mcc_cmd_id {
-    MCC_CMD_WK_CID = 0,
-    MCC_SET_DURATION_WK_CID,
-    MCC_GET_DBG_REG_WK_CID,
-#ifdef CONFIG_MCC_PHYDM_OFFLOAD
-    MCC_SET_PHYDM_OFFLOAD_WK_CID,
-#endif
+	MCC_CMD_WK_CID = 0,
+	MCC_SET_DURATION_WK_CID,
+	MCC_GET_DBG_REG_WK_CID,
+	#ifdef CONFIG_MCC_PHYDM_OFFLOAD
+	MCC_SET_PHYDM_OFFLOAD_WK_CID,
+	#endif
 };
 
 /* Represent Channel Tx Null setting */
 enum mcc_channel_tx_null {
-    MCC_ENABLE_TX_NULL = 0,
-    MCC_DISABLE_TX_NULL = 1,
+	MCC_ENABLE_TX_NULL = 0,
+	MCC_DISABLE_TX_NULL = 1,
 };
 
 /* Represent C2H Report setting */
 enum mcc_c2h_report {
-    MCC_C2H_REPORT_DISABLE = 0,
-    MCC_C2H_REPORT_FAIL_STATUS = 1,
-    MCC_C2H_REPORT_ALL_STATUS = 2,
+	MCC_C2H_REPORT_DISABLE = 0,
+	MCC_C2H_REPORT_FAIL_STATUS = 1,
+	MCC_C2H_REPORT_ALL_STATUS = 2,
 };
 
 /* Represent Channel Scan */
 enum mcc_channel_scan {
-    MCC_CHIDX = 0,
-    MCC_SCANCH_RSVD_LOC = 1,
+	MCC_CHIDX = 0,
+	MCC_SCANCH_RSVD_LOC = 1,
 };
 
 /* Represent FW status report of channel switch */
 enum mcc_status_rpt {
-    MCC_RPT_SUCCESS = 0,
-    MCC_RPT_TXNULL_FAIL = 1,
-    MCC_RPT_STOPMCC = 2,
-    MCC_RPT_READY = 3,
-    MCC_RPT_SWICH_CHANNEL_NOTIFY = 7,
-    MCC_RPT_UPDATE_NOA_START_TIME = 8,
-    MCC_RPT_TSF = 9,
-    MCC_RPT_MAX,
+	MCC_RPT_SUCCESS = 0,
+	MCC_RPT_TXNULL_FAIL = 1,
+	MCC_RPT_STOPMCC = 2,
+	MCC_RPT_READY = 3,
+	MCC_RPT_SWICH_CHANNEL_NOTIFY = 7,
+	MCC_RPT_UPDATE_NOA_START_TIME = 8,
+	MCC_RPT_TSF = 9,
+	MCC_RPT_MAX,
 };
 
 enum mcc_role {
-    MCC_ROLE_STA = 0,
-    MCC_ROLE_AP = 1,
-    MCC_ROLE_GC = 2,
-    MCC_ROLE_GO = 3,
-    MCC_ROLE_MAX,
+	MCC_ROLE_STA = 0,
+	MCC_ROLE_AP = 1,
+	MCC_ROLE_GC = 2,
+	MCC_ROLE_GO = 3,
+	MCC_ROLE_MAX,
 };
 
 struct mcc_iqk_backup {
-    u16 TX_X;
-    u16 TX_Y;
-    u16 RX_X;
-    u16 RX_Y;
+	u16 TX_X;
+	u16 TX_Y;
+	u16 RX_X;
+	u16 RX_Y;
 };
 
 enum mcc_duration_setting {
-    MCC_DURATION_MAPPING = 0,
-    MCC_DURATION_DIRECET = 1,
+	MCC_DURATION_MAPPING = 0,
+	MCC_DURATION_DIRECET = 1,
 };
 
 enum mcc_sched_mode {
-    MCC_FAIR_SCHEDULE = 0,
-    MCC_FAVOR_STA = 1,
-    MCC_FAVOR_P2P = 2,
+	MCC_FAIR_SCHEDULE = 0,
+	MCC_FAVOR_STA = 1,
+	MCC_FAVOR_P2P = 2,
 };
 
 /*  mcc data for adapter */
 struct mcc_adapter_priv {
-    u8 order;		/* FW document, softap/AP must be 0 */
-    enum mcc_role role;			/* MCC role(AP,STA,GO,GC) */
-    u8 mcc_duration; /* channel stay period, UNIT:1TU */
+	u8 order;		/* FW document, softap/AP must be 0 */
+	enum mcc_role role;			/* MCC role(AP,STA,GO,GC) */
+	u8 mcc_duration; /* channel stay period, UNIT:1TU */
 
-    /* flow control */
-    u8 mcc_tx_stop;				/* check if tp stop or not */
-    u8 mcc_tp_limit;				/* check if tp limit or not */
-    u32 mcc_target_tx_bytes_to_port;		/* customer require  */
-    u32 mcc_tx_bytes_to_port;	/* already tx to tx fifo (write port) */
+	/* flow control */
+	u8 mcc_tx_stop;				/* check if tp stop or not */
+	u8 mcc_tp_limit;				/* check if tp limit or not */
+	u32 mcc_target_tx_bytes_to_port;		/* customer require  */
+	u32 mcc_tx_bytes_to_port;	/* already tx to tx fifo (write port) */
 
-    /* data from kernel to check if enqueue data or netif stop queue */
-    u32 mcc_tp;
-    u64 mcc_tx_bytes_from_kernel;
-    u64 mcc_last_tx_bytes_from_kernel;
+	/* data from kernel to check if enqueue data or netif stop queue */
+	u32 mcc_tp;
+	u64 mcc_tx_bytes_from_kernel;
+	u64 mcc_last_tx_bytes_from_kernel;
 
-    /* Backup IQK value for MCC */
-    struct mcc_iqk_backup mcc_iqk_arr[MAX_RF_PATH];
+	/* Backup IQK value for MCC */
+	struct mcc_iqk_backup mcc_iqk_arr[MAX_RF_PATH];
 
-    /* mgmt queue macid to avoid RA issue */
-    u8 mgmt_queue_macid;
+	/* mgmt queue macid to avoid RA issue */
+	u8 mgmt_queue_macid;
 
-    /* set macid bitmap to let fw know which macid should be tx pause */
-    /* all interface share total 16 macid */
-    u16 mcc_macid_bitmap;
+	/* set macid bitmap to let fw know which macid should be tx pause */
+	/* all interface share total 16 macid */
+	u16 mcc_macid_bitmap;
 
-    /* use for NoA start time (unit: mircoseconds) */
-    u32 noa_start_time;
+	/* use for NoA start time (unit: mircoseconds) */
+	u32 noa_start_time;
 
-    u8 p2p_go_noa_ie[MAX_P2P_IE_LEN];
-    u32 p2p_go_noa_ie_len;
-    u64 tsf;
+	u8 p2p_go_noa_ie[MAX_P2P_IE_LEN];
+	u32 p2p_go_noa_ie_len;
+	u64 tsf;
 #ifdef CONFIG_TDLS
-    u8 backup_tdls_en;
+	u8 backup_tdls_en;
 #endif /* CONFIG_TDLS */
 
-    u8 null_early;
-    u8 null_rty_num;
+	u8 null_early;
+	u8 null_rty_num;
 };
 
 struct mcc_obj_priv {
-    u8 en_mcc; /* enable MCC or not */
-    u8 duration; /* store duration(%) from registry, for primary adapter */
-    u8 interval;
-    u8 start_time;
-    u8 mcc_c2h_status;
-    u8 cur_mcc_success_cnt; /* used for check mcc switch channel success */
-    u8 prev_mcc_success_cnt; /* used for check mcc switch channel success */
-    u8 mcc_tolerance_time; /* used for detect mcc switch channel success */
-    u8 mcc_loc_rsvd_paga[MAX_MCC_NUM];  /* mcc rsvd page */
-    u8 mcc_status; /* mcc status stop or start .... */
-    u8 policy_index;
-    u8 mcc_stop_threshold;
-    u8 current_order;
-    u8 last_tsfdiff;
-    systime mcc_launch_time; /* mcc launch time, used for starting detect mcc switch channel success */
-    _mutex mcc_mutex;
-    _lock mcc_lock;
-    PADAPTER iface[MAX_MCC_NUM]; /* by order, use for mcc parameter cmd */
-    struct submit_ctx mcc_sctx;
-    struct submit_ctx mcc_tsf_req_sctx;
-    _mutex mcc_tsf_req_mutex;
-    u8 mcc_tsf_req_sctx_order; /* record current order for mcc_tsf_req_sctx */
+	u8 en_mcc; /* enable MCC or not */
+	u8 duration; /* store duration(%) from registry, for primary adapter */
+	u8 interval;
+	u8 start_time;
+	u8 mcc_c2h_status;
+	u8 cur_mcc_success_cnt; /* used for check mcc switch channel success */
+	u8 prev_mcc_success_cnt; /* used for check mcc switch channel success */
+	u8 mcc_tolerance_time; /* used for detect mcc switch channel success */
+	u8 mcc_loc_rsvd_paga[MAX_MCC_NUM];  /* mcc rsvd page */
+	u8 mcc_status; /* mcc status stop or start .... */
+	u8 policy_index;
+	u8 mcc_stop_threshold;
+	u8 current_order;
+	u8 last_tsfdiff;
+	systime mcc_launch_time; /* mcc launch time, used for starting detect mcc switch channel success */
+	_mutex mcc_mutex;
+	_lock mcc_lock;
+	PADAPTER iface[MAX_MCC_NUM]; /* by order, use for mcc parameter cmd */
+	struct submit_ctx mcc_sctx;
+	struct submit_ctx mcc_tsf_req_sctx;
+	_mutex mcc_tsf_req_mutex;
+	u8 mcc_tsf_req_sctx_order; /* record current order for mcc_tsf_req_sctx */
 #ifdef CONFIG_MCC_MODE_V2
-    u8 mcc_iqk_value_rsvd_page[3];
+	u8 mcc_iqk_value_rsvd_page[3];
 #endif /* CONFIG_MCC_MODE_V2 */
-    u8 mcc_pwr_idx_rsvd_page[MAX_MCC_NUM];
-    u8 enable_runtime_duration;
-    /* for LG */
-    u8 mchan_sched_mode;
+	u8 mcc_pwr_idx_rsvd_page[MAX_MCC_NUM];
+	u8 enable_runtime_duration;
+	/* for LG */
+	u8 mchan_sched_mode;
 
-    _mutex mcc_dbg_reg_mutex;
-    u32 dbg_reg[DBG_MCC_REG_NUM];
-    u32 dbg_reg_val[DBG_MCC_REG_NUM];
-    u32 dbg_rf_reg[DBG_MCC_RF_REG_NUM];
-    u32 dbg_rf_reg_val[DBG_MCC_RF_REG_NUM][MAX_RF_PATH];
-    u8 mcc_phydm_offload;
+	_mutex mcc_dbg_reg_mutex;
+	u32 dbg_reg[DBG_MCC_REG_NUM];
+	u32 dbg_reg_val[DBG_MCC_REG_NUM];
+	u32 dbg_rf_reg[DBG_MCC_RF_REG_NUM];
+	u32 dbg_rf_reg_val[DBG_MCC_RF_REG_NUM][MAX_RF_PATH];
+	u8 mcc_phydm_offload;
 };
 
 /* backup IQK val */
@@ -251,7 +255,7 @@ void rtw_hal_clear_mcc_status(PADAPTER padapter, u8 mcc_status);
 
 /* dl mcc rsvd page */
 u8 rtw_hal_dl_mcc_fw_rsvd_page(_adapter *adapter, u8 *pframe, u16 *index
-                               , u8 tx_desc, u32 page_size, u8 *total_page_num, RSVDPAGE_LOC *rsvd_page_loc, u8 *page_num);
+	, u8 tx_desc, u32 page_size, u8 *total_page_num, RSVDPAGE_LOC *rsvd_page_loc, u8 *page_num);
 
 /* handle C2H */
 void rtw_hal_mcc_c2h_handler(PADAPTER padapter, u8 buflen, u8 *tmpBuf);

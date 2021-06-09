@@ -30,7 +30,7 @@
 #include "rtl8188e_led.h"
 #include "Hal8188EPwrSeq.h"
 #ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8188e_sreset.h"
+	#include "rtl8188e_sreset.h"
 #endif
 
 /* --------------------------------------------------------------------- */
@@ -60,13 +60,13 @@
 #define IS_FW_HEADER_EXIST_88E(_pFwHdr)	((le16_to_cpu(_pFwHdr->Signature) & 0xFFF0) == 0x88E0)
 
 typedef struct _RT_FIRMWARE_8188E {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[MAX_FW_8188E_SIZE];
+	u8			szFwBuffer[MAX_FW_8188E_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8188E, *PRT_FIRMWARE_8188E;
 
 /*
@@ -74,33 +74,33 @@ typedef struct _RT_FIRMWARE_8188E {
  *   */
 
 typedef struct _RT_8188E_FIRMWARE_HDR {
-    /* 8-byte alinment required */
+	/* 8-byte alinment required */
 
-    /* --- LONG WORD 0 ---- */
-    u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
-    u8		Category;	/* AP/NIC and USB/PCI */
-    u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
-    u16		Version;		/* FW Version */
-    u8		Subversion;	/* FW Subversion, default 0x00 */
-    u16		Rsvd1;
+	/* --- LONG WORD 0 ---- */
+	u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
+	u8		Category;	/* AP/NIC and USB/PCI */
+	u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
+	u16		Version;		/* FW Version */
+	u8		Subversion;	/* FW Subversion, default 0x00 */
+	u16		Rsvd1;
 
 
-    /* --- LONG WORD 1 ---- */
-    u8		Month;	/* Release time Month field */
-    u8		Date;	/* Release time Date field */
-    u8		Hour;	/* Release time Hour field */
-    u8		Minute;	/* Release time Minute field */
-    u16		RamCodeSize;	/* The size of RAM code */
-    u8		Foundry;
-    u8		Rsvd2;
+	/* --- LONG WORD 1 ---- */
+	u8		Month;	/* Release time Month field */
+	u8		Date;	/* Release time Date field */
+	u8		Hour;	/* Release time Hour field */
+	u8		Minute;	/* Release time Minute field */
+	u16		RamCodeSize;	/* The size of RAM code */
+	u8		Foundry;
+	u8		Rsvd2;
 
-    /* --- LONG WORD 2 ---- */
-    u32		SvnIdx;	/* The SVN entry index */
-    u32		Rsvd3;
+	/* --- LONG WORD 2 ---- */
+	u32		SvnIdx;	/* The SVN entry index */
+	u32		Rsvd3;
 
-    /* --- LONG WORD 3 ---- */
-    u32		Rsvd4;
-    u32		Rsvd5;
+	/* --- LONG WORD 3 ---- */
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8188E_FIRMWARE_HDR, *PRT_8188E_FIRMWARE_HDR;
 #endif /* download firmware related data structure */
 
@@ -111,15 +111,15 @@ typedef struct _RT_8188E_FIRMWARE_HDR {
 
 /* #define MAX_RX_DMA_BUFFER_SIZE_88E	      0x2400 */ /* 9k for 88E nornal chip , */ /* MaxRxBuff=10k-max(TxReportSize(64*8), WOLPattern(16*24)) */
 #ifdef CONFIG_USB_HCI
-#define RX_DMA_SIZE_88E(__Adapter) 0x2800
+	#define RX_DMA_SIZE_88E(__Adapter) 0x2800
 #else
-#define RX_DMA_SIZE_88E(__Adapter) ((!IS_VENDOR_8188E_I_CUT_SERIES(__Adapter))?0x2800:0x4000)
+	#define RX_DMA_SIZE_88E(__Adapter) ((!IS_VENDOR_8188E_I_CUT_SERIES(__Adapter))?0x2800:0x4000)
 #endif
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #define RX_DMA_RESERVD_FW_FEATURE	0x200 /* for tx report (64*8) */
@@ -138,10 +138,15 @@ typedef struct _RT_8188E_FIRMWARE_HDR {
 
 /* For WoWLan , more reserved page */
 #ifdef CONFIG_WOWLAN
-/* 1 ArpRsp + 2 NbrAdv + 2 NDPInfo + 1 RCI + 1 AOAC = 7 pages */
-#define WOWLAN_PAGE_NUM_88E	0x07
+	#ifdef CONFIG_WOW_KEEP_ALIVE_PATTERN
+	#define WOWLAN_KEEP_ALIVE_PAGE 0x02 /*for keep alive packet*/
+	#else
+	#define WOWLAN_KEEP_ALIVE_PAGE	0x00
+	#endif /*CONFIG_WOW_KEEP_ALIVE_PATTERN*/
+	/* 1 ArpRsp + 2 NbrAdv + 2 NDPInfo + 1 RCI + 1 AOAC = 7 pages */
+	#define WOWLAN_PAGE_NUM_88E	(0x07+ WOWLAN_KEEP_ALIVE_PAGE)
 #else
-#define WOWLAN_PAGE_NUM_88E	0x00
+	#define WOWLAN_PAGE_NUM_88E	0x00
 #endif
 
 /* Note:
@@ -150,9 +155,9 @@ Tx page Size : 128B
 Total page numbers : 176(0xB0) / 256(0x100)
 */
 #ifdef CONFIG_USB_HCI
-#define TOTAL_PAGE_NUMBER_88E(_Adapter) (0xB0 - 1)
+	#define TOTAL_PAGE_NUMBER_88E(_Adapter) (0xB0 - 1)
 #else
-#define TOTAL_PAGE_NUMBER_88E(_Adapter)	((IS_VENDOR_8188E_I_CUT_SERIES(_Adapter)?0x100:0xB0) - 1)/* must reserved 1 page for dma issue */
+	#define TOTAL_PAGE_NUMBER_88E(_Adapter)	((IS_VENDOR_8188E_I_CUT_SERIES(_Adapter)?0x100:0xB0) - 1)/* must reserved 1 page for dma issue */
 #endif
 #define TX_TOTAL_PAGE_NUMBER_88E(_Adapter)	(TOTAL_PAGE_NUMBER_88E(_Adapter) - BCNQ_PAGE_NUM_88E - WOWLAN_PAGE_NUM_88E)
 #define TX_PAGE_BOUNDARY_88E(_Adapter)		(TX_TOTAL_PAGE_NUMBER_88E(_Adapter) + 1) /* beacon header start address */
@@ -232,19 +237,19 @@ Total page numbers : 176(0xB0) / 256(0x100)
 /* #define RT_IS_FUNC_DISABLED(__pAdapter, __FuncBits) ( (__pAdapter)->DisabledFunctions & (__FuncBits) ) */
 
 #ifdef CONFIG_PCI_HCI
-/* according to the define in the rtw_xmit.h, rtw_recv.h */
-#define TX_DESC_NUM_8188EE  TXDESC_NUM   /* 128 */
-#ifdef CONFIG_CONCURRENT_MODE
-/*#define BE_QUEUE_TX_DESC_NUM_8188EE  (TXDESC_NUM<<1)*/		/* 256 */
-#define BE_QUEUE_TX_DESC_NUM_8188EE  ((TXDESC_NUM<<1)+(TXDESC_NUM>>1))    /* 320 */
-/*#define BE_QUEUE_TX_DESC_NUM_8188EE  ((TXDESC_NUM<<1)+TXDESC_NUM)*/    /* 384 */
-#else
-#define BE_QUEUE_TX_DESC_NUM_8188EE  TXDESC_NUM /* 128 */
-/*#define BE_QUEUE_TX_DESC_NUM_8188EE  (TXDESC_NUM+(TXDESC_NUM>>1)) */ /* 192 */
-#endif
+	/* according to the define in the rtw_xmit.h, rtw_recv.h */
+	#define TX_DESC_NUM_8188EE  TXDESC_NUM   /* 128 */
+	#ifdef CONFIG_CONCURRENT_MODE
+		/*#define BE_QUEUE_TX_DESC_NUM_8188EE  (TXDESC_NUM<<1)*/		/* 256 */
+		#define BE_QUEUE_TX_DESC_NUM_8188EE  ((TXDESC_NUM<<1)+(TXDESC_NUM>>1))    /* 320 */
+		/*#define BE_QUEUE_TX_DESC_NUM_8188EE  ((TXDESC_NUM<<1)+TXDESC_NUM)*/    /* 384 */
+	#else
+		#define BE_QUEUE_TX_DESC_NUM_8188EE  TXDESC_NUM /* 128 */
+		/*#define BE_QUEUE_TX_DESC_NUM_8188EE  (TXDESC_NUM+(TXDESC_NUM>>1)) */ /* 192 */
+	#endif
 
-void InterruptRecognized8188EE(PADAPTER Adapter, PRT_ISR_CONTENT pIsrContent);
-void UpdateInterruptMask8188EE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
+	void InterruptRecognized8188EE(PADAPTER Adapter, PRT_ISR_CONTENT pIsrContent);
+	void UpdateInterruptMask8188EE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
 #endif /* CONFIG_PCI_HCI */
 
 /* rtl8188e_hal_init.c */
@@ -277,12 +282,12 @@ void Hal_ReadRFEType_8188E(PADAPTER Adapter, u8 *PROMContent, BOOLEAN AutoloadFa
 BOOLEAN HalDetectPwrDownMode88E(PADAPTER Adapter);
 
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-void Hal_DetectWoWMode(PADAPTER pAdapter);
+	void Hal_DetectWoWMode(PADAPTER pAdapter);
 #endif /* CONFIG_WOWLAN */
 
 
 #ifdef CONFIG_RF_POWER_TRIM
-void Hal_ReadRFGainOffset(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
+	void Hal_ReadRFGainOffset(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
 #endif /*CONFIG_RF_POWER_TRIM*/
 
 
@@ -297,7 +302,7 @@ void rtl8188e_stop_thread(_adapter *padapter);
 
 void rtw_IOL_cmd_tx_pkt_buf_dump(ADAPTER *Adapter, int data_len);
 #ifdef CONFIG_IOL_EFUSE_PATCH
-s32 rtl8188e_iol_efuse_patch(PADAPTER padapter);
+	s32 rtl8188e_iol_efuse_patch(PADAPTER padapter);
 #endif/* CONFIG_IOL_EFUSE_PATCH */
 void _InitTransferPageSize(PADAPTER padapter);
 
@@ -306,9 +311,9 @@ void GetHwReg8188E(PADAPTER padapter, u8 variable, u8 *val);
 
 u8
 GetHalDefVar8188E(
-    PADAPTER				Adapter,
-    HAL_DEF_VARIABLE		eVariable,
-    void						*pValue
+		PADAPTER				Adapter,
+		HAL_DEF_VARIABLE		eVariable,
+		void						*pValue
 );
 #ifdef CONFIG_GPIO_API
 int rtl8188e_GpioFuncCheck(PADAPTER adapter, u8 gpio_num);

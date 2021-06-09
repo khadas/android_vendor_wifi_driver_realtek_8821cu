@@ -28,10 +28,10 @@
 #include "Hal8710BPhyReg.h"
 #include "Hal8710BPhyCfg.h"
 #ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8710b_sreset.h"
+	#include "rtl8710b_sreset.h"
 #endif
 #ifdef CONFIG_LPS_POFF
-#include "rtl8710b_lps_poff.h"
+	#include "rtl8710b_lps_poff.h"
 #endif
 
 #define FW_8710B_SIZE		0x8000
@@ -39,13 +39,13 @@
 #define FW_8710B_END_ADDRESS	0x1FFF /* 0x5FFF */
 
 typedef struct _RT_FIRMWARE {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_8710B_SIZE];
+	u8			szFwBuffer[FW_8710B_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8710B, *PRT_FIRMWARE_8710B;
 
 /*
@@ -53,30 +53,30 @@ typedef struct _RT_FIRMWARE {
  *
  * Added by tynli. 2009.12.04. */
 typedef struct _RT_8710B_FIRMWARE_HDR {
-    /* 8-byte alinment required */
+	/* 8-byte alinment required */
 
-    /* --- LONG WORD 0 ---- */
-    u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
-    u8		Category;	/* AP/NIC and USB/PCI */
-    u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
-    u16		Version;		/* FW Version */
-    u16		Subversion;	/* FW Subversion, default 0x00 */
+	/* --- LONG WORD 0 ---- */
+	u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
+	u8		Category;	/* AP/NIC and USB/PCI */
+	u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
+	u16		Version;		/* FW Version */
+	u16		Subversion;	/* FW Subversion, default 0x00 */
 
-    /* --- LONG WORD 1 ---- */
-    u8		Month;	/* Release time Month field */
-    u8		Date;	/* Release time Date field */
-    u8		Hour;	/* Release time Hour field */
-    u8		Minute;	/* Release time Minute field */
-    u16		RamCodeSize;	/* The size of RAM code */
-    u16		Rsvd2;
+	/* --- LONG WORD 1 ---- */
+	u8		Month;	/* Release time Month field */
+	u8		Date;	/* Release time Date field */
+	u8		Hour;	/* Release time Hour field */
+	u8		Minute;	/* Release time Minute field */
+	u16		RamCodeSize;	/* The size of RAM code */
+	u16		Rsvd2;
 
-    /* --- LONG WORD 2 ---- */
-    u32		SvnIdx;	/* The SVN entry index */
-    u32		Rsvd3;
+	/* --- LONG WORD 2 ---- */
+	u32		SvnIdx;	/* The SVN entry index */
+	u32		Rsvd3;
 
-    /* --- LONG WORD 3 ---- */
-    u32		Rsvd4;
-    u32		Rsvd5;
+	/* --- LONG WORD 3 ---- */
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8710B_FIRMWARE_HDR, *PRT_8710B_FIRMWARE_HDR;
 
 #define DRIVER_EARLY_INT_TIME_8710B		0x05
@@ -91,15 +91,15 @@ typedef struct _RT_8710B_FIRMWARE_HDR {
 #define RX_DMA_SIZE_8710B			0x4000	/* 16K(RX) */
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8710B	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8710B	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8710B	0x80	/* 128B, reserved for tx report */
+	#define RX_DMA_RESERVED_SIZE_8710B	0x80	/* 128B, reserved for tx report */
 #endif
 #define RX_DMA_BOUNDARY_8710B\
 	(RX_DMA_SIZE_8710B - RX_DMA_RESERVED_SIZE_8710B - 1)
@@ -118,18 +118,18 @@ typedef struct _RT_8710B_FIRMWARE_HDR {
  * NS offload: 2 NDP info: 1
  */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8710B	0x0b
+	#define WOWLAN_PAGE_NUM_8710B	0x0b
 #else
-#define WOWLAN_PAGE_NUM_8710B	0x00
+	#define WOWLAN_PAGE_NUM_8710B	0x00
 #endif
 
 #ifdef CONFIG_PNO_SUPPORT
-#undef WOWLAN_PAGE_NUM_8710B
-#define WOWLAN_PAGE_NUM_8710B	0x15
+	#undef WOWLAN_PAGE_NUM_8710B
+	#define WOWLAN_PAGE_NUM_8710B	0x15
 #endif
 
 #ifdef CONFIG_AP_WOWLAN
-#define AP_WOWLAN_PAGE_NUM_8710B	0x02
+	#define AP_WOWLAN_PAGE_NUM_8710B	0x02
 #endif
 
 #define TX_TOTAL_PAGE_NUMBER_8710B\
@@ -175,10 +175,10 @@ typedef struct _RT_8710B_FIRMWARE_HDR {
 #define   PACKAGE_QFN32_S           0
 #define   PACKAGE_QFN48M_S        1    //definiton 8188GU Dongle Package, Efuse Physical Address 0xF8 = 0xFE
 #define   PACKAGE_QFN48_S  	       2
-#define   PACKAGE_QFN64_S  	       3
-#define   PACKAGE_QFN32_U  		4
+#define   PACKAGE_QFN64_S  	       3     
+#define   PACKAGE_QFN32_U  		4    
 #define   PACKAGE_QFN48M_U  	5   //definiton 8188GU Dongle Package, Efuse Physical Address 0xF8 = 0xEE
-#define   PACKAGE_QFN48_U  		6
+#define   PACKAGE_QFN48_U  		6 
 #define   PACKAGE_QFN68_U  		7
 
 typedef enum _PACKAGE_TYPE_E
@@ -188,17 +188,17 @@ typedef enum _PACKAGE_TYPE_E
     PACKAGE_TFBGA90,
     PACKAGE_TFBGA80,
     PACKAGE_TFBGA79
-} PACKAGE_TYPE_E;
+}PACKAGE_TYPE_E;
 
 #define INCLUDE_MULTI_FUNC_GPS(_Adapter) \
 	(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_GPS)
 
 #ifdef CONFIG_FILE_FWIMG
-extern char *rtw_fw_file_path;
-extern char *rtw_fw_wow_file_path;
-#ifdef CONFIG_MP_INCLUDED
-extern char *rtw_fw_mp_bt_file_path;
-#endif /* CONFIG_MP_INCLUDED */
+	extern char *rtw_fw_file_path;
+	extern char *rtw_fw_wow_file_path;
+	#ifdef CONFIG_MP_INCLUDED
+		extern char *rtw_fw_mp_bt_file_path;
+	#endif /* CONFIG_MP_INCLUDED */
 #endif /* CONFIG_FILE_FWIMG */
 
 /* rtl8710b_hal_init.c */
@@ -226,23 +226,23 @@ u8 GetEEPROMSize8710B(PADAPTER padapter);
 void Hal_InitPGData(PADAPTER padapter, u8 *PROMContent);
 void Hal_EfuseParseIDCode(PADAPTER padapter, u8 *hwinfo);
 void Hal_EfuseParseTxPowerInfo_8710B(PADAPTER padapter,
-                                     u8 *PROMContent, BOOLEAN AutoLoadFail);
+				     u8 *PROMContent, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseEEPROMVer_8710B(PADAPTER padapter,
-                                   u8 *hwinfo, BOOLEAN AutoLoadFail);
+				   u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParsePackageType_8710B(PADAPTER pAdapter,
-                                     u8 *hwinfo, BOOLEAN AutoLoadFail);
+				     u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseChnlPlan_8710B(PADAPTER padapter,
-                                  u8 *hwinfo, BOOLEAN AutoLoadFail);
+				  u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseCustomerID_8710B(PADAPTER padapter,
-                                    u8 *hwinfo, BOOLEAN AutoLoadFail);
+				    u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseAntennaDiversity_8710B(PADAPTER padapter,
-        u8 *hwinfo, BOOLEAN AutoLoadFail);
+		u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseXtal_8710B(PADAPTER pAdapter,
-                              u8 *hwinfo, u8 AutoLoadFail);
+			      u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseThermalMeter_8710B(PADAPTER padapter,
-                                      u8 *hwinfo, u8 AutoLoadFail);
+				      u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseBoardType_8710B(PADAPTER Adapter,
-                                   u8	*PROMContent, BOOLEAN AutoloadFail);
+				   u8	*PROMContent, BOOLEAN AutoloadFail);
 #endif
 
 void rtl8710b_set_hal_ops(struct hal_ops *pHalFunc);
@@ -261,7 +261,7 @@ void rtl8710b_start_thread(_adapter *padapter);
 void rtl8710b_stop_thread(_adapter *padapter);
 
 #ifdef CONFIG_GPIO_WAKEUP
-void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
+	void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
 #endif
 
 void CCX_FwC2HTxRpt_8710b(PADAPTER padapter, u8 *pdata, u8 len);
@@ -270,7 +270,7 @@ u8 MRateToHwRate8710B(u8 rate);
 u8 HwRateToMRate8710B(u8 rate);
 
 #ifdef CONFIG_USB_HCI
-void rtl8710b_cal_txdesc_chksum(struct tx_desc *ptxdesc);
+	void rtl8710b_cal_txdesc_chksum(struct tx_desc *ptxdesc);
 #endif
 
 

@@ -35,7 +35,7 @@ void halrf_update_pwr_track(void *dm_void, u8 rate);
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 void halrf_update_init_rate_work_item_callback(
-    void *context);
+	void *context);
 #endif
 
 void halrf_set_pwr_track(void *dm_void, u8 enable);

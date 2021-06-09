@@ -23,7 +23,7 @@
 
 enum halmac_ret_status
 pinmux_wl_led_mode_88xx(struct halmac_adapter *adapter,
-                        enum halmac_wlled_mode mode);
+			enum halmac_wlled_mode mode);
 
 void
 pinmux_wl_led_sw_ctrl_88xx(struct halmac_adapter *adapter, u8 on);
@@ -42,8 +42,8 @@ pinmux_pin_status_88xx(struct halmac_adapter *adapter, u8 pin_id, u8 *high);
 
 enum halmac_ret_status
 pinmux_parser_88xx(struct halmac_adapter *adapter,
-                   const struct halmac_gpio_pimux_list *list, u32 size,
-                   u32 gpio_id, u32 *cur_func);
+		   const struct halmac_gpio_pimux_list *list, u32 size,
+		   u32 gpio_id, u32 *cur_func);
 
 #endif /* HALMAC_88XX_SUPPORT */
 

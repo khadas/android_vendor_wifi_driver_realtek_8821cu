@@ -339,15 +339,15 @@
 /*	RTL8723D TX BUFFER DESC                                      */
 /*-----------------------------------------------------------------*/
 #ifdef CONFIG_64BIT_DMA
-#define SET_TXBUFFER_DESC_LEN_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16), 0, 16, __Valeu)
-#define SET_TXBUFFER_DESC_AMSDU_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16), 31, 1, __Valeu)
-#define SET_TXBUFFER_DESC_ADD_LOW_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16)+4, 0, 32, __Valeu)
-#define SET_TXBUFFER_DESC_ADD_HIGT_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16)+8, 0, 32, __Valeu)
+	#define SET_TXBUFFER_DESC_LEN_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16), 0, 16, __Valeu)
+	#define SET_TXBUFFER_DESC_AMSDU_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16), 31, 1, __Valeu)
+	#define SET_TXBUFFER_DESC_ADD_LOW_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16)+4, 0, 32, __Valeu)
+	#define SET_TXBUFFER_DESC_ADD_HIGT_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+((__Offset)*16)+8, 0, 32, __Valeu)
 #else
-#define SET_TXBUFFER_DESC_LEN_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+(__Offset*8), 0, 16, __Valeu)
-#define SET_TXBUFFER_DESC_AMSDU_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+(__Offset*8), 31, 1, __Valeu)
-#define SET_TXBUFFER_DESC_ADD_LOW_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+(__Offset*8)+4, 0, 32, __Valeu)
-#define SET_TXBUFFER_DESC_ADD_HIGT_WITH_OFFSET(__pTxDesc, __Offset, __Valeu)	/* 64 BIT mode only */
+	#define SET_TXBUFFER_DESC_LEN_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+(__Offset*8), 0, 16, __Valeu)
+	#define SET_TXBUFFER_DESC_AMSDU_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+(__Offset*8), 31, 1, __Valeu)
+	#define SET_TXBUFFER_DESC_ADD_LOW_WITH_OFFSET(__pTxDesc, __Offset, __Valeu) SET_BITS_TO_LE_4BYTE(__pTxDesc+(__Offset*8)+4, 0, 32, __Valeu)
+	#define SET_TXBUFFER_DESC_ADD_HIGT_WITH_OFFSET(__pTxDesc, __Offset, __Valeu)	/* 64 BIT mode only */
 #endif
 /* ********************************************************* */
 
@@ -364,9 +364,9 @@
 /* Dword 2     NA */
 #define SET_TX_BUFF_DESC_ADDR_HIGH_0_8723D(__pTxDesc, __Value) SET_TXBUFFER_DESC_ADD_HIGT_WITH_OFFSET(__pTxDesc, 0, __Value)
 #ifdef CONFIG_64BIT_DMA
-#define GET_TX_BUFF_DESC_ADDR_HIGH_0_8723D(__pTxDesc) LE_BITS_TO_4BYTE(__pTxDesc+8, 0, 32)
+	#define GET_TX_BUFF_DESC_ADDR_HIGH_0_8723D(__pTxDesc) LE_BITS_TO_4BYTE(__pTxDesc+8, 0, 32)
 #else
-#define GET_TX_BUFF_DESC_ADDR_HIGH_0_8723D(__pTxDesc) 0
+	#define GET_TX_BUFF_DESC_ADDR_HIGH_0_8723D(__pTxDesc) 0
 #endif
 /* Dword 3     NA */
 /* RESERVED 0 */
@@ -467,7 +467,7 @@
 	 GET_RX_STATUS_DESC_RX_RATE_8723D(pDesc) == DESC8723D_RATE11M)
 
 #ifdef CONFIG_TRX_BD_ARCH
-struct tx_desc;
+	struct tx_desc;
 #endif
 
 void rtl8723d_cal_txdesc_chksum(struct tx_desc *ptxdesc);
@@ -477,44 +477,51 @@ void rtl8723d_fill_txdesc_vcs(PADAPTER padapter, struct pkt_attrib *pattrib, str
 void rtl8723d_fill_txdesc_phy(PADAPTER padapter, struct pkt_attrib *pattrib, struct tx_desc *ptxdesc);
 void rtl8723d_fill_fake_txdesc(PADAPTER padapter, u8 *pDesc, u32 BufferLen, u8 IsPsPoll, u8 IsBTQosNull, u8 bDataFrame);
 
-#if defined(CONFIG_CONCURRENT_MODE)
 void fill_txdesc_force_bmc_camid(struct pkt_attrib *pattrib, u8 *ptxdesc);
-#endif
 void fill_txdesc_bmc_tx_rate(struct pkt_attrib *pattrib, u8 *ptxdesc);
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-s32 rtl8723ds_init_xmit_priv(PADAPTER padapter);
-void rtl8723ds_free_xmit_priv(PADAPTER padapter);
-s32 rtl8723ds_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
-s32 rtl8723ds_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
-s32	rtl8723ds_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
-s32 rtl8723ds_xmit_buf_handler(PADAPTER padapter);
-thread_return rtl8723ds_xmit_thread(thread_context context);
-#define hal_xmit_handler rtl8723ds_xmit_buf_handler
+	s32 rtl8723ds_init_xmit_priv(PADAPTER padapter);
+	void rtl8723ds_free_xmit_priv(PADAPTER padapter);
+	s32 rtl8723ds_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
+	s32 rtl8723ds_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
+#ifdef CONFIG_RTW_MGMT_QUEUE
+	s32 rtl8723ds_hal_mgmt_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+#endif
+	s32	rtl8723ds_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+	s32 rtl8723ds_xmit_buf_handler(PADAPTER padapter);
+	thread_return rtl8723ds_xmit_thread(thread_context context);
+	#define hal_xmit_handler rtl8723ds_xmit_buf_handler
 #endif
 
 #ifdef CONFIG_USB_HCI
-s32 rtl8723du_xmit_buf_handler(PADAPTER padapter);
-#define hal_xmit_handler rtl8723du_xmit_buf_handler
-s32 rtl8723du_init_xmit_priv(PADAPTER padapter);
-void rtl8723du_free_xmit_priv(PADAPTER padapter);
-s32 rtl8723du_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
-s32 rtl8723du_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
-s32	 rtl8723du_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
-void rtl8723du_xmit_tasklet(void *priv);
-s32 rtl8723du_xmitframe_complete(_adapter *padapter, struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf);
-void _dbg_dump_tx_info(_adapter	*padapter, int frame_tag, struct tx_desc *ptxdesc);
+	s32 rtl8723du_xmit_buf_handler(PADAPTER padapter);
+	#define hal_xmit_handler rtl8723du_xmit_buf_handler
+	s32 rtl8723du_init_xmit_priv(PADAPTER padapter);
+	void rtl8723du_free_xmit_priv(PADAPTER padapter);
+	s32 rtl8723du_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
+	s32 rtl8723du_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
+#ifdef CONFIG_RTW_MGMT_QUEUE
+	s32 rtl8723du_hal_mgmt_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+#endif
+	s32	 rtl8723du_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+	void rtl8723du_xmit_tasklet(void *priv);
+	s32 rtl8723du_xmitframe_complete(_adapter *padapter, struct xmit_priv *pxmitpriv, struct xmit_buf *pxmitbuf);
+	void _dbg_dump_tx_info(_adapter	*padapter, int frame_tag, struct tx_desc *ptxdesc);
 #endif
 
 #ifdef CONFIG_PCI_HCI
-s32 rtl8723de_init_xmit_priv(PADAPTER padapter);
-void rtl8723de_free_xmit_priv(PADAPTER padapter);
-struct xmit_buf *rtl8723de_dequeue_xmitbuf(struct rtw_tx_ring *ring);
-void	rtl8723de_xmitframe_resume(_adapter *padapter);
-s32 rtl8723de_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
-s32 rtl8723de_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
-s32	rtl8723de_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
-void rtl8723de_xmit_tasklet(void *priv);
+	s32 rtl8723de_init_xmit_priv(PADAPTER padapter);
+	void rtl8723de_free_xmit_priv(PADAPTER padapter);
+	struct xmit_buf *rtl8723de_dequeue_xmitbuf(struct rtw_tx_ring *ring);
+	void	rtl8723de_xmitframe_resume(_adapter *padapter);
+	s32 rtl8723de_hal_xmit(PADAPTER padapter, struct xmit_frame *pxmitframe);
+	s32 rtl8723de_mgnt_xmit(PADAPTER padapter, struct xmit_frame *pmgntframe);
+#ifdef CONFIG_RTW_MGMT_QUEUE
+	s32 rtl8723de_hal_mgmt_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+#endif
+	s32	rtl8723de_hal_xmitframe_enqueue(_adapter *padapter, struct xmit_frame *pxmitframe);
+	void rtl8723de_xmit_tasklet(void *priv);
 #endif
 
 u8	BWMapping_8723D(PADAPTER Adapter, struct pkt_attrib *pattrib);

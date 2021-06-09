@@ -42,8 +42,8 @@
  ***************************************************************/
 
 struct phydm_pow_train_stuc {
-    u8 pt_state;
-    u32 pow_train_score;
+	u8 pt_state;
+	u32 pow_train_score;
 };
 
 /****************************************************************
@@ -53,15 +53,15 @@ struct phydm_pow_train_stuc {
  ***************************************************************/
 
 enum pow_train_state {
-    DYNAMIC_POW_TRAIN = 0,
-    ENABLE_POW_TRAIN = 1,
-    DISABLE_POW_TRAIN = 2
+	DYNAMIC_POW_TRAIN = 0,
+	ENABLE_POW_TRAIN = 1,
+	DISABLE_POW_TRAIN = 2
 };
 
 enum power_training_score {
-    DISABLE_PT_SCORE = 0,
-    KEEP_PRE_PT_SCORE = 1,
-    ENABLE_PT_SCORE = 2
+	DISABLE_PT_SCORE = 0,
+	KEEP_PRE_PT_SCORE = 1,
+	ENABLE_PT_SCORE = 2
 };
 
 /****************************************************************
@@ -71,14 +71,14 @@ enum power_training_score {
  ***************************************************************/
 
 void phydm_update_power_training_state(
-    void *dm_void);
+	void *dm_void);
 
 void phydm_pow_train_debug(
-    void *dm_void,
-    char input[][16],
-    u32 *_used,
-    char *output,
-    u32 *_out_len);
+	void *dm_void,
+	char input[][16],
+	u32 *_used,
+	char *output,
+	u32 *_out_len);
 
 #endif
 #endif

@@ -17,12 +17,12 @@
 
 
 struct pkt_file {
-    _pkt *pkt;
-    SIZE_T pkt_len;	 /* the remainder length of the open_file */
-    _buffer *cur_buffer;
-    u8 *buf_start;
-    u8 *cur_addr;
-    SIZE_T buf_len;
+	_pkt *pkt;
+	SIZE_T pkt_len;	 /* the remainder length of the open_file */
+	_buffer *cur_buffer;
+	u8 *buf_start;
+	u8 *cur_addr;
+	SIZE_T buf_len;
 };
 
 #ifdef PLATFORM_WINDOWS
@@ -36,17 +36,17 @@ struct pkt_file {
 #endif
 
 #ifdef CONFIG_GSPI_HCI
-#define NR_XMITFRAME     64
+	#define NR_XMITFRAME     64
 #else
-#define NR_XMITFRAME     128
+	#define NR_XMITFRAME     128
 #endif
 
 #define ETH_ALEN	6
 
 extern NDIS_STATUS rtw_xmit_entry(
-    _nic_hdl		cnxt,
-    NDIS_PACKET		*pkt,
-    u32				flags
+	_nic_hdl		cnxt,
+	NDIS_PACKET		*pkt,
+	u32				flags
 );
 
 #endif /* PLATFORM_WINDOWS */
@@ -87,6 +87,8 @@ extern sint rtw_endofpktfile(struct pkt_file *pfile);
 extern void rtw_os_pkt_complete(_adapter *padapter, _pkt *pkt);
 extern void rtw_os_xmit_complete(_adapter *padapter, struct xmit_frame *pxframe);
 
+void rtw_os_check_wakup_queue(_adapter *adapter, u16 os_qid);
+bool rtw_os_check_stop_queue(_adapter *adapter, u16 os_qid);
 void rtw_os_wake_queue_at_free_stainfo(_adapter *padapter, int *qcnt_freed);
 
 void dump_os_queue(void *sel, _adapter *padapter);

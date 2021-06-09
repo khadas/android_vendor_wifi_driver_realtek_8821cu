@@ -24,9 +24,9 @@
 #define Reset_Cnt_Limit			3
 
 #ifdef CONFIG_PCI_HCI
-#define MAX_AGGR_NUM	0x0B
+	#define MAX_AGGR_NUM	0x0B
 #else
-#define MAX_AGGR_NUM	0x07
+	#define MAX_AGGR_NUM	0x07
 #endif /* CONFIG_PCI_HCI */
 
 
@@ -52,21 +52,21 @@
  * BB and RF register read/write
  *   */
 u32	PHY_QueryBBReg8192E(PADAPTER	Adapter,
-                        u32			RegAddr,
-                        u32			BitMask);
+				u32			RegAddr,
+				u32			BitMask);
 void	PHY_SetBBReg8192E(PADAPTER		Adapter,
-                          u32			RegAddr,
-                          u32			BitMask,
-                          u32			Data);
+				u32			RegAddr,
+				u32			BitMask,
+				u32			Data);
 u32	PHY_QueryRFReg8192E(PADAPTER	Adapter,
-                        enum rf_path	eRFPath,
-                        u32			RegAddr,
-                        u32			BitMask);
+				enum rf_path	eRFPath,
+				u32			RegAddr,
+				u32			BitMask);
 void	PHY_SetRFReg8192E(PADAPTER		Adapter,
-                          enum rf_path	eRFPath,
-                          u32			RegAddr,
-                          u32			BitMask,
-                          u32			Data);
+				enum rf_path	eRFPath,
+				u32			RegAddr,
+				u32			BitMask,
+				u32			Data);
 
 /*
  * Initialization related function
@@ -86,10 +86,10 @@ void	PHY_SetTxPowerLevel8192E(PADAPTER	Adapter, u8	channel);
 
 void
 PHY_SetTxPowerIndex_8192E(
-    PADAPTER			Adapter,
-    u32					PowerIndex,
-    enum rf_path			RFPath,
-    u8					Rate
+		PADAPTER			Adapter,
+		u32					PowerIndex,
+		enum rf_path			RFPath,
+		u8					Rate
 );
 
 /*
@@ -97,29 +97,29 @@ PHY_SetTxPowerIndex_8192E(
  *   */
 void
 PHY_SetSwChnlBWMode8192E(
-    PADAPTER			Adapter,
-    u8					channel,
-    enum channel_width	Bandwidth,
-    u8					Offset40,
-    u8					Offset80
+		PADAPTER			Adapter,
+		u8					channel,
+		enum channel_width	Bandwidth,
+		u8					Offset40,
+		u8					Offset80
 );
 
 void
 PHY_SetRFEReg_8192E(
-    PADAPTER		Adapter
+		PADAPTER		Adapter
 );
 
 void
 phy_SpurCalibration_8192E(
-    PADAPTER			Adapter,
-    enum spur_cal_method	method
+		PADAPTER			Adapter,
+		enum spur_cal_method	method
 );
 void PHY_SpurCalibration_8192E( PADAPTER Adapter);
 
 #ifdef CONFIG_SPUR_CAL_NBI
 void
 phy_SpurCalibration_8192E_NBI(
-    PADAPTER			Adapter
+		PADAPTER			Adapter
 );
 #endif
 /*
@@ -128,8 +128,8 @@ phy_SpurCalibration_8192E_NBI(
 
 void
 phy_set_rf_path_switch_8192e(
-    struct dm_struct		*phydm,
-    bool		bMain
+		struct dm_struct		*phydm,
+		bool		bMain
 );
 
 /*--------------------------Exported Function prototype---------------------*/

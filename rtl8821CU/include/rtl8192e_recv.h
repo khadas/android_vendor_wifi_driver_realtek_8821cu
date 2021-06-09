@@ -17,39 +17,39 @@
 
 #if defined(CONFIG_USB_HCI)
 
-#ifndef MAX_RECVBUF_SZ
-#ifdef CONFIG_MINIMAL_MEMORY_USAGE
-#define MAX_RECVBUF_SZ (4000) /* about 4K */
-#else
-#ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
-#define MAX_RECVBUF_SZ (rtw_rtkm_get_buff_size()) /*depend rtkm*/
-#elif defined(CONFIG_PLATFORM_HISILICON)
-#define MAX_RECVBUF_SZ (16384) /* 16k */
-#else
-#define MAX_RECVBUF_SZ (32768) /* 32k */
-#endif
-/* #define MAX_RECVBUF_SZ (20480) */ /* 20K */
-/* #define MAX_RECVBUF_SZ (10240)  */ /* 10K */
-/* #define MAX_RECVBUF_SZ (16384) */ /* 16k - 92E RX BUF :16K */
-/* #define MAX_RECVBUF_SZ (8192+1024) */ /* 8K+1k		 */
-#ifdef CONFIG_PLATFORM_NOVATEK_NT72668
-#undef MAX_RECVBUF_SZ
-#define MAX_RECVBUF_SZ (15360) /* 15k < 16k */
-#endif /* CONFIG_PLATFORM_NOVATEK_NT72668 */
-#endif
-#endif /* !MAX_RECVBUF_SZ */
+	#ifndef MAX_RECVBUF_SZ
+		#ifdef CONFIG_MINIMAL_MEMORY_USAGE
+			#define MAX_RECVBUF_SZ (4000) /* about 4K */
+		#else
+			#ifdef CONFIG_PREALLOC_RX_SKB_BUFFER
+				#define MAX_RECVBUF_SZ (rtw_rtkm_get_buff_size()) /*depend rtkm*/
+			#elif defined(CONFIG_PLATFORM_HISILICON)
+				#define MAX_RECVBUF_SZ (16384) /* 16k */
+			#else
+				#define MAX_RECVBUF_SZ (32768) /* 32k */
+			#endif
+			/* #define MAX_RECVBUF_SZ (20480) */ /* 20K */
+			/* #define MAX_RECVBUF_SZ (10240)  */ /* 10K */
+			/* #define MAX_RECVBUF_SZ (16384) */ /* 16k - 92E RX BUF :16K */
+			/* #define MAX_RECVBUF_SZ (8192+1024) */ /* 8K+1k		 */
+			#ifdef CONFIG_PLATFORM_NOVATEK_NT72668
+				#undef MAX_RECVBUF_SZ
+				#define MAX_RECVBUF_SZ (15360) /* 15k < 16k */
+			#endif /* CONFIG_PLATFORM_NOVATEK_NT72668 */
+		#endif
+	#endif /* !MAX_RECVBUF_SZ */
 
 #elif defined(CONFIG_PCI_HCI)
-/* #ifndef CONFIG_MINIMAL_MEMORY_USAGE */
-/*	#define MAX_RECVBUF_SZ (9100) */
-/* #else */
-#define MAX_RECVBUF_SZ (4000) /* about 4K
+	/* #ifndef CONFIG_MINIMAL_MEMORY_USAGE */
+	/*	#define MAX_RECVBUF_SZ (9100) */
+	/* #else */
+	#define MAX_RECVBUF_SZ (4000) /* about 4K
 	* #endif */
 
 
 #elif defined(CONFIG_SDIO_HCI)
 
-#define MAX_RECVBUF_SZ (16384)
+	#define MAX_RECVBUF_SZ (16384)
 
 #endif
 
@@ -154,20 +154,20 @@
 
 
 #ifdef CONFIG_SDIO_HCI
-s32 rtl8192es_init_recv_priv(PADAPTER padapter);
-void rtl8192es_free_recv_priv(PADAPTER padapter);
-s32 rtl8192es_recv_hdl(_adapter *padapter);
+	s32 rtl8192es_init_recv_priv(PADAPTER padapter);
+	void rtl8192es_free_recv_priv(PADAPTER padapter);
+	s32 rtl8192es_recv_hdl(_adapter *padapter);
 #endif
 
 #ifdef CONFIG_USB_HCI
-void rtl8192eu_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);
-s32 rtl8192eu_init_recv_priv(PADAPTER padapter);
-void rtl8192eu_free_recv_priv(PADAPTER padapter);
+	void rtl8192eu_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);
+	s32 rtl8192eu_init_recv_priv(PADAPTER padapter);
+	void rtl8192eu_free_recv_priv(PADAPTER padapter);
 #endif
 
 #ifdef CONFIG_PCI_HCI
-s32 rtl8192ee_init_recv_priv(PADAPTER padapter);
-void rtl8192ee_free_recv_priv(PADAPTER padapter);
+	s32 rtl8192ee_init_recv_priv(PADAPTER padapter);
+	void rtl8192ee_free_recv_priv(PADAPTER padapter);
 #endif
 
 void rtl8192e_query_rx_desc_status(union recv_frame *precvframe, u8 *pdesc);

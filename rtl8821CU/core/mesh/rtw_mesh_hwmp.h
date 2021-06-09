@@ -38,11 +38,11 @@ void rtw_ewma_err_rate_init(struct rtw_ewma_err_rate *e);
 unsigned long rtw_ewma_err_rate_read(struct rtw_ewma_err_rate *e);
 void rtw_ewma_err_rate_add(struct rtw_ewma_err_rate *e, unsigned long val);
 int rtw_mesh_path_error_tx(_adapter *adapter,
-                           u8 ttl, const u8 *target, u32 target_sn,
-                           u16 target_rcode, const u8 *ra);
+			   u8 ttl, const u8 *target, u32 target_sn,
+			   u16 target_rcode, const u8 *ra);
 void rtw_ieee80211s_update_metric(_adapter *adapter, u8 mac_id,
-                                  u8 per, u8 rate,
-                                  u8 bw, u8 total_pkt);
+				  u8 per, u8 rate,
+				  u8 bw, u8 total_pkt);
 void rtw_mesh_rx_path_sel_frame(_adapter *adapter, union recv_frame *rframe);
 void rtw_mesh_queue_preq(struct rtw_mesh_path *mpath, u8 flags);
 void rtw_mesh_path_start_discovery(_adapter *adapter);

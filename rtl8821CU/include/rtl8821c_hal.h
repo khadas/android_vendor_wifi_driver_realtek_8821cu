@@ -41,32 +41,32 @@
 
 #if defined(CONFIG_USB_HCI)
 
-#ifndef MAX_RECVBUF_SZ
-#ifndef CONFIG_MINIMAL_MEMORY_USAGE
-/* 8821C - RX FIFO :16K ,for RX agg DMA mode = 16K, Rx agg USB mode could large than 16k*/
-/* #define MAX_RECVBUF_SZ		(16384 + RX_FIFO_EXPANDING)*/
-/* For Max throughput issue , need to use USB AGG mode to replace DMA AGG mode*/
-#define MAX_RECVBUF_SZ (32768)
+	#ifndef MAX_RECVBUF_SZ
+		#ifndef CONFIG_MINIMAL_MEMORY_USAGE
+			/* 8821C - RX FIFO :16K ,for RX agg DMA mode = 16K, Rx agg USB mode could large than 16k*/
+			/* #define MAX_RECVBUF_SZ		(16384 + RX_FIFO_EXPANDING)*/
+			/* For Max throughput issue , need to use USB AGG mode to replace DMA AGG mode*/
+			#define MAX_RECVBUF_SZ (32768)
 
-/*#define MAX_RECVBUF_SZ_8821C (24576)*/ /* 24k*/
-/*#define MAX_RECVBUF_SZ_8821C (20480)*/ /*20K*/
-/*#define MAX_RECVBUF_SZ_8821C (10240) */ /*10K*/
-/*#define MAX_RECVBUF_SZ_8821C (15360)*/ /*15k < 16k*/
-/*#define MAX_RECVBUF_SZ_8821C (8192+1024)*/ /* 8K+1k*/
-#else
-#define MAX_RECVBUF_SZ (4096 + RX_FIFO_EXPANDING) /* about 4K */
-#endif
-#endif/* !MAX_RECVBUF_SZ*/
+			/*#define MAX_RECVBUF_SZ_8821C (24576)*/ /* 24k*/
+			/*#define MAX_RECVBUF_SZ_8821C (20480)*/ /*20K*/
+			/*#define MAX_RECVBUF_SZ_8821C (10240) */ /*10K*/
+			/*#define MAX_RECVBUF_SZ_8821C (15360)*/ /*15k < 16k*/
+			/*#define MAX_RECVBUF_SZ_8821C (8192+1024)*/ /* 8K+1k*/
+		#else
+			#define MAX_RECVBUF_SZ (4096 + RX_FIFO_EXPANDING) /* about 4K */
+		#endif
+	#endif/* !MAX_RECVBUF_SZ*/
 
 #elif defined(CONFIG_PCI_HCI)
-/*#ifndef CONFIG_MINIMAL_MEMORY_USAGE
-#define MAX_RECVBUF_SZ (9100)
-#else*/
-#define MAX_RECVBUF_SZ (4096 + RX_FIFO_EXPANDING) /* about 4K */
-/*#endif*/
+	/*#ifndef CONFIG_MINIMAL_MEMORY_USAGE
+	#define MAX_RECVBUF_SZ (9100)
+	#else*/
+	#define MAX_RECVBUF_SZ (4096 + RX_FIFO_EXPANDING) /* about 4K */
+	/*#endif*/
 
 #elif defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-#define MAX_RECVBUF_SZ	(16384 + RX_FIFO_EXPANDING)
+	#define MAX_RECVBUF_SZ	(16384 + RX_FIFO_EXPANDING)
 #endif
 
 void init_hal_spec_rtl8821c(PADAPTER);

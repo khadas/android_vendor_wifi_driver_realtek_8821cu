@@ -20,53 +20,53 @@
  * --------------------------------------------------------------------------------------------------------- */
 
 enum h2c_cmd_8710B {
-    /* Common Class: 000 */
-    H2C_8710B_RSVD_PAGE = 0x00,
-    H2C_8710B_MEDIA_STATUS_RPT = 0x01,
-    H2C_8710B_SCAN_ENABLE = 0x02,
-    H2C_8710B_KEEP_ALIVE = 0x03,
-    H2C_8710B_DISCON_DECISION = 0x04,
-    H2C_8710B_PSD_OFFLOAD = 0x05,
-    H2C_8710B_AP_OFFLOAD = 0x08,
-    H2C_8710B_BCN_RSVDPAGE = 0x09,
-    H2C_8710B_PROBERSP_RSVDPAGE = 0x0A,
-    H2C_8710B_FCS_RSVDPAGE = 0x10,
-    H2C_8710B_FCS_INFO = 0x11,
-    H2C_8710B_AP_WOW_GPIO_CTRL = 0x13,
+	/* Common Class: 000 */
+	H2C_8710B_RSVD_PAGE = 0x00,
+	H2C_8710B_MEDIA_STATUS_RPT = 0x01,
+	H2C_8710B_SCAN_ENABLE = 0x02,
+	H2C_8710B_KEEP_ALIVE = 0x03,
+	H2C_8710B_DISCON_DECISION = 0x04,
+	H2C_8710B_PSD_OFFLOAD = 0x05,
+	H2C_8710B_AP_OFFLOAD = 0x08,
+	H2C_8710B_BCN_RSVDPAGE = 0x09,
+	H2C_8710B_PROBERSP_RSVDPAGE = 0x0A,
+	H2C_8710B_FCS_RSVDPAGE = 0x10,
+	H2C_8710B_FCS_INFO = 0x11,
+	H2C_8710B_AP_WOW_GPIO_CTRL = 0x13,
 
-    /* PoweSave Class: 001 */
-    H2C_8710B_SET_PWR_MODE = 0x20,
-    H2C_8710B_PS_TUNING_PARA = 0x21,
-    H2C_8710B_PS_TUNING_PARA2 = 0x22,
-    H2C_8710B_P2P_LPS_PARAM = 0x23,
-    H2C_8710B_P2P_PS_OFFLOAD = 0x24,
-    H2C_8710B_PS_SCAN_ENABLE = 0x25,
-    H2C_8710B_SAP_PS_ = 0x26,
-    H2C_8710B_INACTIVE_PS_ = 0x27, /* Inactive_PS */
-    H2C_8710B_FWLPS_IN_IPS_ = 0x28,
+	/* PoweSave Class: 001 */
+	H2C_8710B_SET_PWR_MODE = 0x20,
+	H2C_8710B_PS_TUNING_PARA = 0x21,
+	H2C_8710B_PS_TUNING_PARA2 = 0x22,
+	H2C_8710B_P2P_LPS_PARAM = 0x23,
+	H2C_8710B_P2P_PS_OFFLOAD = 0x24,
+	H2C_8710B_PS_SCAN_ENABLE = 0x25,
+	H2C_8710B_SAP_PS_ = 0x26,
+	H2C_8710B_INACTIVE_PS_ = 0x27, /* Inactive_PS */
+	H2C_8710B_FWLPS_IN_IPS_ = 0x28,
 
-    /* Dynamic Mechanism Class: 010 */
-    H2C_8710B_MACID_CFG = 0x40,
-    H2C_8710B_TXBF = 0x41,
-    H2C_8710B_RSSI_SETTING = 0x42,
-    H2C_8710B_AP_REQ_TXRPT = 0x43,
-    H2C_8710B_INIT_RATE_COLLECT = 0x44,
-    H2C_8710B_RA_PARA_ADJUST = 0x46,
+	/* Dynamic Mechanism Class: 010 */
+	H2C_8710B_MACID_CFG = 0x40,
+	H2C_8710B_TXBF = 0x41,
+	H2C_8710B_RSSI_SETTING = 0x42,
+	H2C_8710B_AP_REQ_TXRPT = 0x43,
+	H2C_8710B_INIT_RATE_COLLECT = 0x44,
+	H2C_8710B_RA_PARA_ADJUST = 0x46,
 
-    /* WOWLAN Class: 100 */
-    H2C_8710B_WOWLAN = 0x80,
-    H2C_8710B_REMOTE_WAKE_CTRL = 0x81,
-    H2C_8710B_AOAC_GLOBAL_INFO = 0x82,
-    H2C_8710B_AOAC_RSVD_PAGE = 0x83,
-    H2C_8710B_AOAC_RSVD_PAGE2 = 0x84,
-    H2C_8710B_D0_SCAN_OFFLOAD_CTRL = 0x85,
-    H2C_8710B_D0_SCAN_OFFLOAD_INFO = 0x86,
-    H2C_8710B_CHNL_SWITCH_OFFLOAD = 0x87,
-    H2C_8710B_P2P_OFFLOAD_RSVD_PAGE = 0x8A,
-    H2C_8710B_P2P_OFFLOAD = 0x8B,
+	/* WOWLAN Class: 100 */
+	H2C_8710B_WOWLAN = 0x80,
+	H2C_8710B_REMOTE_WAKE_CTRL = 0x81,
+	H2C_8710B_AOAC_GLOBAL_INFO = 0x82,
+	H2C_8710B_AOAC_RSVD_PAGE = 0x83,
+	H2C_8710B_AOAC_RSVD_PAGE2 = 0x84,
+	H2C_8710B_D0_SCAN_OFFLOAD_CTRL = 0x85,
+	H2C_8710B_D0_SCAN_OFFLOAD_INFO = 0x86,
+	H2C_8710B_CHNL_SWITCH_OFFLOAD = 0x87,
+	H2C_8710B_P2P_OFFLOAD_RSVD_PAGE = 0x8A,
+	H2C_8710B_P2P_OFFLOAD = 0x8B,
 
-    H2C_8710B_RESET_TSF = 0xC0,
-    H2C_8710B_MAXID,
+	H2C_8710B_RESET_TSF = 0xC0,
+	H2C_8710B_MAXID,
 };
 
 /* ---------------------------------------------------------------------------------------------------------
@@ -154,20 +154,14 @@ void rtl8710b_set_FwJoinBssRpt_cmd(PADAPTER padapter, u8 mstatus);
 void rtl8710b_set_FwPsTuneParam_cmd(PADAPTER padapter);
 void rtl8710b_download_rsvd_page(PADAPTER padapter, u8 mstatus);
 #ifdef CONFIG_BT_COEXIST
-void rtl8710b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter);
+	void rtl8710b_download_BTCoex_AP_mode_rsvd_page(PADAPTER padapter);
 #endif /* CONFIG_BT_COEXIST */
 #ifdef CONFIG_P2P
-void rtl8710b_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
+	void rtl8710b_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
 #endif /* CONFIG_P2P */
 
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-void rtl8710b_set_BcnEarly_C2H_Rpt_cmd(PADAPTER padapter, u8 enable);
-#endif
-#endif
-
 #ifdef CONFIG_P2P_WOWLAN
-void rtl8710b_set_p2p_wowlan_offload_cmd(PADAPTER padapter);
+	void rtl8710b_set_p2p_wowlan_offload_cmd(PADAPTER padapter);
 #endif
 
 s32 FillH2CCmd8710B(PADAPTER padapter, u8 ElementID, u32 CmdLen, u8 *pCmdBuffer);

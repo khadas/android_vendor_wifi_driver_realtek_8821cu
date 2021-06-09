@@ -47,25 +47,26 @@
 #endif
 
 #if (RTL8814B_SUPPORT == 1)
-#include "halrf/rtl8814b/halrf_iqk_8814b.h"
-#include "halrf/rtl8814b/halrf_dpk_8814b.h"
+	#include "halrf/rtl8814b/halrf_iqk_8814b.h"	
+	#include "halrf/rtl8814b/halrf_dpk_8814b.h"
+	#include "halrf/rtl8814b/halrf_txgapk_8814b.h"
 #endif
 
 #include "halrf/halrf_powertracking_ce.h"
 
 enum spur_cal_method {
-    PLL_RESET,
-    AFE_PHASE_SEL
+	PLL_RESET,
+	AFE_PHASE_SEL
 };
 
 enum pwrtrack_method {
-    BBSWING,
-    TXAGC,
-    MIX_MODE,
-    TSSI_MODE,
-    MIX_2G_TSSI_5G_MODE,
-    MIX_5G_TSSI_2G_MODE,
-    CLEAN_MODE
+	BBSWING,
+	TXAGC,
+	MIX_MODE,
+	TSSI_MODE,
+	MIX_2G_TSSI_5G_MODE,
+	MIX_5G_TSSI_2G_MODE,
+	CLEAN_MODE
 };
 
 typedef void (*func_set_pwr)(void *, enum pwrtrack_method, u8, u8);
@@ -78,21 +79,21 @@ typedef void (*func_swing_xtal)(void *, s8 **, s8 **);
 typedef void (*func_set_xtal)(void *);
 
 struct txpwrtrack_cfg {
-    u8 swing_table_size_cck;
-    u8 swing_table_size_ofdm;
-    u8 threshold_iqk;
-    u8 threshold_dpk;
-    u8 average_thermal_num;
-    u8 rf_path_count;
-    u32 thermal_reg_addr;
-    func_set_pwr odm_tx_pwr_track_set_pwr;
-    func_iqk do_iqk;
-    func_lck phy_lc_calibrate;
-    func_tssi_dck do_tssi_dck;
-    func_swing get_delta_swing_table;
-    func_swing8814only get_delta_swing_table8814only;
-    func_swing_xtal get_delta_swing_xtal_table;
-    func_set_xtal odm_txxtaltrack_set_xtal;
+	u8 swing_table_size_cck;
+	u8 swing_table_size_ofdm;
+	u8 threshold_iqk;
+	u8 threshold_dpk;
+	u8 average_thermal_num;
+	u8 rf_path_count;
+	u32 thermal_reg_addr;
+	func_set_pwr odm_tx_pwr_track_set_pwr;
+	func_iqk do_iqk;
+	func_lck phy_lc_calibrate;
+	func_tssi_dck do_tssi_dck;
+	func_swing get_delta_swing_table;
+	func_swing8814only get_delta_swing_table8814only;
+	func_swing_xtal get_delta_swing_xtal_table;
+	func_set_xtal odm_txxtaltrack_set_xtal;
 };
 
 void configure_txpower_track(void *dm_void, struct txpwrtrack_cfg *config);

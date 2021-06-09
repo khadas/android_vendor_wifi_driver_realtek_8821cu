@@ -32,8 +32,10 @@
  * ============================================================
  */
 
-/* 2019.2.12, refine code structure and set macid 127 only for 22C*/
-#define DYNAMIC_TXPWR_VERSION "1.8"
+/* 2020.6.23, Let gain_idx be initialized to 0 for linux compile warning*/
+#define DYNAMIC_TXPWR_VERSION "2.1"
+
+#define DTP_POWER_LEVEL_SIZE 3
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_AP)
 #define TX_POWER_NEAR_FIELD_THRESH_LVL2 74
@@ -48,9 +50,9 @@
 #endif
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_AP)
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL3 255
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL2 74
-#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL1 60
+#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL3 80
+#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL2 63
+#define TX_PWR_NEAR_FIELD_TH_JGR3_LVL1 55
 #elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 #define TX_PWR_NEAR_FIELD_TH_JGR3_LVL3 90
 #define TX_PWR_NEAR_FIELD_TH_JGR3_LVL2 85
@@ -66,40 +68,41 @@
 #define tx_high_pwr_level_level2 2
 #define tx_high_pwr_level_level3 3
 #define tx_high_pwr_level_unchange 4
+#define DTP_FLOOR_UP_GAP 3
 
 /* @============================================================
  * enumrate
  * ============================================================
  */
 enum phydm_dtp_power_offset {
-    PHYDM_OFFSET_ZERO = 0,
-    PHYDM_OFFSET_MINUS_3DB = 1,
-    PHYDM_OFFSET_MINUS_7DB = 2,
-    PHYDM_OFFSET_MINUS_11DB = 3,
-    PHYDM_OFFSET_ADD_3DB = 4,
-    PHYDM_OFFSET_ADD_6DB = 5
+	PHYDM_OFFSET_ZERO = 0,
+	PHYDM_OFFSET_MINUS_3DB = 1,
+	PHYDM_OFFSET_MINUS_7DB = 2,
+	PHYDM_OFFSET_MINUS_11DB = 3,
+	PHYDM_OFFSET_ADD_3DB = 4,
+	PHYDM_OFFSET_ADD_6DB = 5
 };
 
 enum phydm_dtp_power_offset_2nd {
-    PHYDM_2ND_OFFSET_ZERO = 0,
-    PHYDM_2ND_OFFSET_MINUS_3DB = 1,
-    PHYDM_2ND_OFFSET_MINUS_7DB = 2,
-    PHYDM_2ND_OFFSET_MINUS_11DB = 3
+	PHYDM_2ND_OFFSET_ZERO = 0,
+	PHYDM_2ND_OFFSET_MINUS_3DB = 1,
+	PHYDM_2ND_OFFSET_MINUS_7DB = 2,
+	PHYDM_2ND_OFFSET_MINUS_11DB = 3
 };
 
 enum phydm_dtp_power_offset_bbram {
-    /*@ HW min use 1dB*/
-    PHYDM_BBRAM_OFFSET_ZERO = 0,
-    PHYDM_BBRAM_OFFSET_MINUS_3DB = -3,
-    PHYDM_BBRAM_OFFSET_MINUS_7DB = -7,
-    PHYDM_BBRAM_OFFSET_MINUS_11DB = -11
+	/*@ HW min use 1dB*/
+	PHYDM_BBRAM_OFFSET_ZERO = 0,
+	PHYDM_BBRAM_OFFSET_MINUS_3DB = -3,
+	PHYDM_BBRAM_OFFSET_MINUS_7DB = -7,
+	PHYDM_BBRAM_OFFSET_MINUS_11DB = -11
 };
 
 enum phydm_dtp_power_pkt_type {
-    RAM_PWR_OFST0		= 0,
-    RAM_PWR_OFST1		= 1,
-    REG_PWR_OFST0		= 2,
-    REG_PWR_OFST1		= 3
+	RAM_PWR_OFST0		= 0,
+	RAM_PWR_OFST1		= 1,
+	REG_PWR_OFST0		= 2,
+	REG_PWR_OFST1		= 3
 };
 
 /* @============================================================
@@ -120,7 +123,16 @@ void phydm_dynamic_tx_power(void *dm_void);
 void phydm_dynamic_tx_power_init(void *dm_void);
 
 void phydm_dtp_debug(void *dm_void, char input[][16], u32 *_used, char *output,
-                     u32 *_out_len);
+			     u32 *_out_len);
+
+void phydm_rd_reg_pwr(void *dm_void, u32 *_used, char *output, u32 *_out_len);
+
+void phydm_wt_reg_pwr(void *dm_void, boolean is_ofst1, boolean pwr_ofst_en,
+            		     s8 pwr_ofst);
+
+void phydm_wt_ram_pwr(void *dm_void, u8 macid, boolean is_ofst1, 
+		             boolean pwr_ofst_en, s8 pwr_ofst);
+
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 void odm_dynamic_tx_power_win(void *dm_void);

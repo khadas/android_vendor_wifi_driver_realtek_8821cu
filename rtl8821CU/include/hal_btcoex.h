@@ -20,11 +20,11 @@
 /* Some variables can't get from outsrc BT-Coex,
  * so we need to save here */
 typedef struct _BT_COEXIST {
-    u8 bBtExist;
-    u8 btTotalAntNum;
-    u8 btChipType;
-    u8 bInitlized;
-    u8 btAntisolation;
+	u8 bBtExist;
+	u8 btTotalAntNum;
+	u8 btChipType;
+	u8 bInitlized;
+	u8 btAntisolation;
 } BT_COEXIST, *PBT_COEXIST;
 
 void DBG_BT_INFO(u8 *dbgmsg);
@@ -49,6 +49,7 @@ void hal_btcoex_ConnectNotify(PADAPTER padapter, u8 action);
 void hal_btcoex_MediaStatusNotify(PADAPTER padapter, u8 mediaStatus);
 void hal_btcoex_SpecialPacketNotify(PADAPTER padapter, u8 pktType);
 void hal_btcoex_IQKNotify(PADAPTER padapter, u8 state);
+void hal_btcoex_WLRFKNotify(PADAPTER padapter, u8 path, u8 type, u8 state);
 void hal_btcoex_BtInfoNotify(PADAPTER padapter, u8 length, u8 *tmpBuf);
 void hal_btcoex_BtMpRptNotify(PADAPTER padapter, u8 length, u8 *tmpBuf);
 void hal_btcoex_SuspendNotify(PADAPTER padapter, u8 state);
@@ -61,6 +62,7 @@ s32 hal_btcoex_IsBTCoexRejectAMPDU(PADAPTER padapter);
 s32 hal_btcoex_IsBTCoexCtrlAMPDUSize(PADAPTER padapter);
 u32 hal_btcoex_GetAMPDUSize(PADAPTER padapter);
 void hal_btcoex_SetManualControl(PADAPTER padapter, u8 bmanual);
+void hal_btcoex_set_policy_control(PADAPTER padapter, u8 btc_policy);
 u8 hal_btcoex_1Ant(PADAPTER padapter);
 u8 hal_btcoex_IsBtControlLps(PADAPTER);
 u8 hal_btcoex_IsLpsOn(PADAPTER);
@@ -83,8 +85,8 @@ void hal_btcoex_StackUpdateProfileInfo(void);
 void hal_btcoex_pta_off_on_notify(PADAPTER padapter, u8 bBTON);
 void hal_btcoex_SetAntIsolationType(PADAPTER padapter, u8 anttype);
 #ifdef CONFIG_LOAD_PHY_PARA_FROM_FILE
-int hal_btcoex_AntIsolationConfig_ParaFile(PADAPTER	Adapter, char *pFileName);
-int hal_btcoex_ParseAntIsolationConfigFile(PADAPTER Adapter, char	*buffer);
+	int hal_btcoex_AntIsolationConfig_ParaFile(PADAPTER	Adapter, char *pFileName);
+	int hal_btcoex_ParseAntIsolationConfigFile(PADAPTER Adapter, char	*buffer);
 #endif /* CONFIG_LOAD_PHY_PARA_FROM_FILE */
 u16 hal_btcoex_btreg_read(PADAPTER padapter, u8 type, u16 addr, u32 *data);
 u16 hal_btcoex_btreg_write(PADAPTER padapter, u8 type, u16 addr, u16 val);

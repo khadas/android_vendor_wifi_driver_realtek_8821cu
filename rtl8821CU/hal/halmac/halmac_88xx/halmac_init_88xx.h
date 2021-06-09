@@ -22,7 +22,7 @@
 
 enum halmac_ret_status
 register_api_88xx(struct halmac_adapter *adapter,
-                  struct halmac_api_registry *registry);
+		  struct halmac_api_registry *registry);
 
 void
 init_adapter_param_88xx(struct halmac_adapter *adapter);
@@ -38,7 +38,7 @@ init_mac_cfg_88xx(struct halmac_adapter *adapter, enum halmac_trx_mode mode);
 
 enum halmac_ret_status
 reset_ofld_feature_88xx(struct halmac_adapter *adapter,
-                        enum halmac_feature_id feature_id);
+			enum halmac_feature_id feature_id);
 
 enum halmac_ret_status
 verify_platform_api_88xx(struct halmac_adapter *adapter);
@@ -48,11 +48,11 @@ tx_desc_chksum_88xx(struct halmac_adapter *adapter, u8 enable);
 
 enum halmac_ret_status
 pg_num_parser_88xx(struct halmac_adapter *adapter, enum halmac_trx_mode mode,
-                   struct halmac_pg_num *tbl);
+		   struct halmac_pg_num *tbl);
 
 enum halmac_ret_status
 rqpn_parser_88xx(struct halmac_adapter *adapter, enum halmac_trx_mode mode,
-                 struct halmac_rqpn *tbl);
+		 struct halmac_rqpn *tbl);
 
 void
 init_ofld_feature_state_machine_88xx(struct halmac_adapter *adapter);

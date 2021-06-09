@@ -33,17 +33,6 @@
 /*@Definition */
 /*@============================================================*/
 
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE)
-#define	SECOND_CH_AT_LSB	2	/*@primary CH @ MSB,  SD4: HAL_PRIME_CHNL_OFFSET_UPPER*/
-#define	SECOND_CH_AT_USB	1	/*@primary CH @ LSB,   SD4: HAL_PRIME_CHNL_OFFSET_LOWER*/
-#elif (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#define	SECOND_CH_AT_LSB	2	/*@primary CH @ MSB,  SD7: HAL_PRIME_CHNL_OFFSET_UPPER*/
-#define	SECOND_CH_AT_USB	1	/*@primary CH @ LSB,   SD7: HAL_PRIME_CHNL_OFFSET_LOWER*/
-#else /*if (DM_ODM_SUPPORT_TYPE == ODM_AP)*/
-#define	SECOND_CH_AT_LSB	1	/*@primary CH @ MSB,  SD8: HT_2NDCH_OFFSET_BELOW*/
-#define	SECOND_CH_AT_USB	2	/*@primary CH @ LSB,   SD8: HT_2NDCH_OFFSET_ABOVE*/
-#endif
-
 #define	OFDMCCA_TH		500
 #define	bw_ind_bias		500
 #define	PRI_CCA_MONITOR_TIME	30
@@ -52,24 +41,24 @@
 /*structure and define*/
 /*@============================================================*/
 enum primary_cca_ch_position { /*N-series REG0xc6c[8:7]*/
-    MF_USC_LSC	= 0,
-    MF_LSC		= 1,
-    MF_USC		= 2
+	MF_USC_LSC	= 0,
+	MF_LSC		= 1,
+	MF_USC		= 2
 };
 
 struct phydm_pricca_struct {
-#if (RTL8188E_SUPPORT == 1) || (RTL8192E_SUPPORT == 1)
-    u8	pri_cca_flag;
-    u8	intf_flag;
-    u8	intf_type;
-    u8	monitor_flag;
-    u8	ch_offset;
-#endif
-    u8	dup_rts_flag;
-    u8	cca_th_40m_bkp; /*@c84[31:28]*/
-    enum channel_width	pre_bw;
-    u8	pri_cca_is_become_linked;
-    u8	mf_state;
+	#if (RTL8188E_SUPPORT == 1) || (RTL8192E_SUPPORT == 1)
+	u8	pri_cca_flag;
+	u8	intf_flag;
+	u8	intf_type;
+	u8	monitor_flag;
+	u8	ch_offset;
+	#endif
+	u8	dup_rts_flag;
+	u8	cca_th_40m_bkp; /*@c84[31:28]*/
+	enum channel_width	pre_bw;
+	u8	pri_cca_is_become_linked;
+	u8	mf_state;
 };
 
 /*@============================================================*/

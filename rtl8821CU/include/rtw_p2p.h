@@ -70,8 +70,6 @@ u8	p2p_ps_wk_cmd(_adapter *padapter, u8 p2p_ps_state, u8 enqueue);
 #endif /* CONFIG_P2P_PS */
 
 #ifdef CONFIG_IOCTL_CFG80211
-u8 roch_stay_in_cur_chan(_adapter *padapter);
-void rtw_init_cfg80211_wifidirect_info(_adapter	*padapter);
 int rtw_p2p_check_frames(_adapter *padapter, const u8 *buf, u32 len, u8 tx);
 #endif /* CONFIG_IOCTL_CFG80211 */
 
@@ -83,46 +81,46 @@ int rtw_p2p_enable(_adapter *padapter, enum P2P_ROLE role);
 
 static inline void _rtw_p2p_set_state(struct wifidirect_info *wdinfo, enum P2P_STATE state)
 {
-    if (wdinfo->p2p_state != state) {
-        /* wdinfo->pre_p2p_state = wdinfo->p2p_state; */
-        wdinfo->p2p_state = state;
-    }
+	if (wdinfo->p2p_state != state) {
+		/* wdinfo->pre_p2p_state = wdinfo->p2p_state; */
+		wdinfo->p2p_state = state;
+	}
 }
 static inline void _rtw_p2p_set_pre_state(struct wifidirect_info *wdinfo, enum P2P_STATE state)
 {
-    if (wdinfo->pre_p2p_state != state)
-        wdinfo->pre_p2p_state = state;
+	if (wdinfo->pre_p2p_state != state)
+		wdinfo->pre_p2p_state = state;
 }
 #if 0
 static inline void _rtw_p2p_restore_state(struct wifidirect_info *wdinfo)
 {
-    if (wdinfo->pre_p2p_state != -1) {
-        wdinfo->p2p_state = wdinfo->pre_p2p_state;
-        wdinfo->pre_p2p_state = -1;
-    }
+	if (wdinfo->pre_p2p_state != -1) {
+		wdinfo->p2p_state = wdinfo->pre_p2p_state;
+		wdinfo->pre_p2p_state = -1;
+	}
 }
 #endif
 void _rtw_p2p_set_role(struct wifidirect_info *wdinfo, enum P2P_ROLE role);
 
 static inline int _rtw_p2p_state(struct wifidirect_info *wdinfo)
 {
-    return wdinfo->p2p_state;
+	return wdinfo->p2p_state;
 }
 static inline int _rtw_p2p_pre_state(struct wifidirect_info *wdinfo)
 {
-    return wdinfo->pre_p2p_state;
+	return wdinfo->pre_p2p_state;
 }
 static inline int _rtw_p2p_role(struct wifidirect_info *wdinfo)
 {
-    return wdinfo->role;
+	return wdinfo->role;
 }
 static inline bool _rtw_p2p_chk_state(struct wifidirect_info *wdinfo, enum P2P_STATE state)
 {
-    return wdinfo->p2p_state == state;
+	return wdinfo->p2p_state == state;
 }
 static inline bool _rtw_p2p_chk_role(struct wifidirect_info *wdinfo, enum P2P_ROLE role)
 {
-    return wdinfo->role == role;
+	return wdinfo->role == role;
 }
 
 #ifdef CONFIG_DBG_P2P

@@ -22,15 +22,15 @@
 
 enum halmac_ret_status
 pinmux_get_func_8821c(struct halmac_adapter *adapter,
-                      enum halmac_gpio_func gpio_func, u8 *enable);
+		      enum halmac_gpio_func gpio_func, u8 *enable);
 
 enum halmac_ret_status
 pinmux_set_func_8821c(struct halmac_adapter *adapter,
-                      enum halmac_gpio_func gpio_func);
+		      enum halmac_gpio_func gpio_func);
 
 enum halmac_ret_status
 pinmux_free_func_8821c(struct halmac_adapter *adapter,
-                       enum halmac_gpio_func gpio_func);
+		       enum halmac_gpio_func gpio_func);
 
 #endif /* HALMAC_8821C_SUPPORT */
 
