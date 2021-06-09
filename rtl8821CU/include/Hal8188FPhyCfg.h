@@ -23,9 +23,9 @@
 #define Reset_Cnt_Limit			3
 
 #ifdef CONFIG_PCI_HCI
-#define MAX_AGGR_NUM	0x0B
+	#define MAX_AGGR_NUM	0x0B
 #else
-#define MAX_AGGR_NUM	0x07
+	#define MAX_AGGR_NUM	0x07
 #endif /* CONFIG_PCI_HCI */
 
 
@@ -39,34 +39,34 @@
 /*--------------------------Exported Function prototype---------------------*/
 u32
 PHY_QueryBBReg_8188F(
-    PADAPTER	Adapter,
-    u32		RegAddr,
-    u32		BitMask
+		PADAPTER	Adapter,
+		u32		RegAddr,
+		u32		BitMask
 );
 
 void
 PHY_SetBBReg_8188F(
-    PADAPTER	Adapter,
-    u32		RegAddr,
-    u32		BitMask,
-    u32		Data
+		PADAPTER	Adapter,
+		u32		RegAddr,
+		u32		BitMask,
+		u32		Data
 );
 
 u32
 PHY_QueryRFReg_8188F(
-    PADAPTER			Adapter,
-    enum rf_path			eRFPath,
-    u32				RegAddr,
-    u32				BitMask
+		PADAPTER			Adapter,
+		enum rf_path			eRFPath,
+		u32				RegAddr,
+		u32				BitMask
 );
 
 void
 PHY_SetRFReg_8188F(
-    PADAPTER			Adapter,
-    enum rf_path			eRFPath,
-    u32				RegAddr,
-    u32				BitMask,
-    u32				Data
+		PADAPTER			Adapter,
+		enum rf_path			eRFPath,
+		u32				RegAddr,
+		u32				BitMask,
+		u32				Data
 );
 
 /* MAC/BB/RF HAL config */
@@ -78,37 +78,39 @@ s32 PHY_MACConfig8188F(PADAPTER padapter);
 
 int
 PHY_ConfigRFWithParaFile_8188F(
-    PADAPTER			Adapter,
-    u8					*pFileName,
-    enum rf_path				eRFPath
+		PADAPTER			Adapter,
+		u8					*pFileName,
+	enum rf_path				eRFPath
 );
 
 void
 PHY_SetTxPowerIndex_8188F(
-    PADAPTER			Adapter,
-    u32					PowerIndex,
-    enum rf_path			RFPath,
-    u8					Rate
+		PADAPTER			Adapter,
+		u32					PowerIndex,
+		enum rf_path			RFPath,
+		u8					Rate
 );
 
 void
 PHY_SetTxPowerLevel8188F(
-    PADAPTER		Adapter,
-    u8			channel
+		PADAPTER		Adapter,
+		u8			channel
 );
+
+void rtl8188f_set_txpwr_done(_adapter *adapter);
 
 void
 PHY_SetSwChnlBWMode8188F(
-    PADAPTER			Adapter,
-    u8					channel,
-    enum channel_width	Bandwidth,
-    u8					Offset40,
-    u8					Offset80
+		PADAPTER			Adapter,
+		u8					channel,
+		enum channel_width	Bandwidth,
+		u8					Offset40,
+		u8					Offset80
 );
 
 void phy_set_rf_path_switch_8188f(
-    struct		dm_struct *phydm,
-    bool		bMain
+		struct		dm_struct *phydm,
+		bool		bMain
 );
 
 void BBTurnOnBlock_8188F(_adapter *adapter);

@@ -22,22 +22,22 @@
 void configure_txpower_track_8821c(struct txpwrtrack_cfg *config);
 
 void odm_tx_pwr_track_set_pwr8821c(void *dm_void, enum pwrtrack_method method,
-                                   u8 rf_path, u8 channel_mapped_index);
+				   u8 rf_path, u8 channel_mapped_index);
 
 void get_delta_swing_table_8821c(void *dm_void,
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
-                                 u8 **temperature_up_a, u8 **temperature_down_a,
-                                 u8 **temperature_up_b, u8 **temperature_down_b,
-                                 u8 **temperature_up_cck_a,
-                                 u8 **temperature_down_cck_a,
-                                 u8 **temperature_up_cck_b,
-                                 u8 **temperature_down_cck_b
+				 u8 **temperature_up_a, u8 **temperature_down_a,
+				 u8 **temperature_up_b, u8 **temperature_down_b,
+				 u8 **temperature_up_cck_a,
+				 u8 **temperature_down_cck_a,
+				 u8 **temperature_up_cck_b,
+				 u8 **temperature_down_cck_b
 #else
-                                 u8 **temperature_up_a, u8 **temperature_down_a,
-                                 u8 **temperature_up_b,
-                                 u8 **temperature_down_b
+				 u8 **temperature_up_a, u8 **temperature_down_a,
+				 u8 **temperature_up_b,
+				 u8 **temperature_down_b
 #endif
-                                );
+				 );
 
 void phy_lc_calibrate_8821c(void *dm_void);
 
@@ -48,13 +48,13 @@ void phy_set_rf_path_switch_8821c(struct dm_struct *dm,
 #else
 void phy_set_rf_path_switch_8821c(void *adapter,
 #endif
-                                  boolean is_main);
+				  boolean is_main);
 
 #if (DM_ODM_SUPPORT_TYPE & ODM_AP)
 boolean phy_query_rf_path_switch_8821c(struct dm_struct *dm
 #else
 boolean phy_query_rf_path_switch_8821c(void *adapter
 #endif
-                                      );
+				       );
 
 #endif /*#ifndef __HALRF_8821C_H__*/

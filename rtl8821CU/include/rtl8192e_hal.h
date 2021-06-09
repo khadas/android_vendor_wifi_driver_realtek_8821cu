@@ -33,7 +33,7 @@
 
 
 #ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8192e_sreset.h"
+	#include "rtl8192e_sreset.h"
 #endif
 
 /* ---------------------------------------------------------------------
@@ -61,13 +61,13 @@
 
 
 typedef struct _RT_FIRMWARE_8192E {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_SIZE_8192E];
+	u8			szFwBuffer[FW_SIZE_8192E];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8192E, *PRT_FIRMWARE_8192E;
 
 /*
@@ -109,15 +109,15 @@ typedef struct _RT_FIRMWARE_8192E {
 #define RX_DMA_SIZE_8192E					0x4000	/* 16K*/
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8192E	0x100	/* 256B, reserved for c2h debug message*/
+	#define RX_DMA_RESERVED_SIZE_8192E	0x100	/* 256B, reserved for c2h debug message*/
 #else
-#define RX_DMA_RESERVED_SIZE_8192E	0x40	/* 64B, reserved for c2h event(16bytes) or ccx(8 Bytes)*/
+	#define RX_DMA_RESERVED_SIZE_8192E	0x40	/* 64B, reserved for c2h event(16bytes) or ccx(8 Bytes)*/
 #endif
 #define MAX_RX_DMA_BUFFER_SIZE_8192E		(RX_DMA_SIZE_8192E-RX_DMA_RESERVED_SIZE_8192E)	/*RX 16K*/
 
@@ -135,14 +135,14 @@ typedef struct _RT_FIRMWARE_8192E {
  * NS offload: 2 NDP info: 1
  */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8192E	0x0b
+	#define WOWLAN_PAGE_NUM_8192E	0x0b
 #else
-#define WOWLAN_PAGE_NUM_8192E	0x00
+	#define WOWLAN_PAGE_NUM_8192E	0x00
 #endif
 
 #ifdef CONFIG_PNO_SUPPORT
-#undef WOWLAN_PAGE_NUM_8192E
-#define WOWLAN_PAGE_NUM_8192E	0x0d
+	#undef WOWLAN_PAGE_NUM_8192E
+	#define WOWLAN_PAGE_NUM_8192E	0x0d
 #endif
 
 /* Note:
@@ -261,7 +261,7 @@ u8 Hal_CrystalAFEAdjust(_adapter *Adapter);
 BOOLEAN HalDetectPwrDownMode8192E(PADAPTER Adapter);
 
 #if defined(CONFIG_WOWLAN) || defined(CONFIG_AP_WOWLAN)
-void Hal_DetectWoWMode(PADAPTER pAdapter);
+	void Hal_DetectWoWMode(PADAPTER pAdapter);
 #endif /* CONFIG_WOWLAN */
 
 /***********************************************************/
@@ -282,8 +282,8 @@ void _InitRetryFunction_8192E(PADAPTER Adapter);
 void _BBTurnOnBlock_8192E(PADAPTER Adapter);
 void _InitBeaconParameters_8192E(PADAPTER Adapter);
 void _InitBeaconMaxError_8192E(
-    PADAPTER	Adapter,
-    BOOLEAN		InfraMode
+		PADAPTER	Adapter,
+		BOOLEAN		InfraMode
 );
 void SetBeaconRelatedRegisters8192E(PADAPTER padapter);
 void hal_ReadRFType_8192E(PADAPTER	Adapter);
@@ -294,15 +294,15 @@ u8 SetHwReg8192E(PADAPTER Adapter, u8 variable, u8 *val);
 void GetHwReg8192E(PADAPTER Adapter, u8 variable, u8 *val);
 u8
 SetHalDefVar8192E(
-    PADAPTER				Adapter,
-    HAL_DEF_VARIABLE		eVariable,
-    void						*pValue
+		PADAPTER				Adapter,
+		HAL_DEF_VARIABLE		eVariable,
+		void						*pValue
 );
 u8
 GetHalDefVar8192E(
-    PADAPTER				Adapter,
-    HAL_DEF_VARIABLE		eVariable,
-    void						*pValue
+		PADAPTER				Adapter,
+		HAL_DEF_VARIABLE		eVariable,
+		void						*pValue
 );
 
 void rtl8192e_set_hal_ops(struct hal_ops *pHalFunc);
@@ -313,18 +313,18 @@ void rtl8192e_start_thread(_adapter *padapter);
 void rtl8192e_stop_thread(_adapter *padapter);
 
 #ifdef CONFIG_PCI_HCI
-BOOLEAN	InterruptRecognized8192EE(PADAPTER Adapter);
-u16	get_txbd_rw_reg(u16 ff_hwaddr);
+	BOOLEAN	InterruptRecognized8192EE(PADAPTER Adapter);
+	u16	get_txbd_rw_reg(u16 ff_hwaddr);
 #endif
 
 #ifdef CONFIG_SDIO_HCI
-#ifdef CONFIG_SDIO_TX_ENABLE_AVAL_INT
-void _init_available_page_threshold(PADAPTER padapter, u8 numHQ, u8 numNQ, u8 numLQ, u8 numPubQ);
-#endif
+	#ifdef CONFIG_SDIO_TX_ENABLE_AVAL_INT
+		void _init_available_page_threshold(PADAPTER padapter, u8 numHQ, u8 numNQ, u8 numLQ, u8 numPubQ);
+	#endif
 #endif
 
 #ifdef CONFIG_BT_COEXIST
-void rtl8192e_combo_card_WifiOnlyHwInit(PADAPTER Adapter);
+	void rtl8192e_combo_card_WifiOnlyHwInit(PADAPTER Adapter);
 #endif
 
 #endif /* __RTL8192E_HAL_H__ */

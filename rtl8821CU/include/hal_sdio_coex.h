@@ -25,9 +25,9 @@
 #ifdef CONFIG_SDIO_MULTI_FUNCTION_COEX
 
 enum { /* for sdio multi-func. coex */
-    SDIO_MULTI_WIFI = 0,
-    SDIO_MULTI_BT,
-    SDIO_MULTI_NUM
+	SDIO_MULTI_WIFI = 0,
+	SDIO_MULTI_BT,
+	SDIO_MULTI_NUM
 };
 
 bool ex_hal_sdio_multi_if_bus_available(PADAPTER adapter);

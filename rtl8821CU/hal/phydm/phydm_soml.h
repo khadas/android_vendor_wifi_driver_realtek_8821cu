@@ -67,76 +67,76 @@
 #ifdef CONFIG_ADAPTIVE_SOML
 
 struct adaptive_soml {
-    u32			rvrt_val; /*all rvrt_val for pause API must set to u32*/
-    boolean			is_soml_method_enable;
-    boolean			get_stats;
-    u8			soml_on_off;
-    u8			soml_state_cnt;
-    u8			soml_delay_time;
-    u8			soml_intvl;
-    u8			soml_train_num;
-    u8			soml_counter;
-    u8			soml_period;
-    u8			soml_select;
-    u8			soml_last_state;
-    u8			cfo_qpsk_th;
-    u8			cfo_qam16_th;
-    u8			cfo_qam64_th;
-    u8			cfo_qam256_th;
-    u8			bpsk_qpsk_dist_th;
-    u8			qam16_dist_th;
-    u8			qam64_dist_th;
-    u8			qam256_dist_th;
-    u8			cfo_cnt;
-    s32			cfo_diff_a;
-    s32			cfo_diff_b;
-    s32			cfo_diff_sum_a;
-    s32			cfo_diff_sum_b;
-    s32			cfo_diff_avg_a;
-    s32			cfo_diff_avg_b;
-    u16			ht_cnt[HT_RATE_IDX];
-    u16			pre_ht_cnt[HT_RATE_IDX];
-    u16			ht_cnt_on[HT_RATE_IDX];
-    u16			ht_cnt_off[HT_RATE_IDX];
-    u16			ht_crc_ok_cnt_on[HT_RATE_IDX];
-    u16			ht_crc_fail_cnt_on[HT_RATE_IDX];
-    u16			ht_crc_ok_cnt_off[HT_RATE_IDX];
-    u16			ht_crc_fail_cnt_off[HT_RATE_IDX];
-    u16			vht_crc_ok_cnt_on[VHT_RATE_IDX];
-    u16			vht_crc_fail_cnt_on[VHT_RATE_IDX];
-    u16			vht_crc_ok_cnt_off[VHT_RATE_IDX];
-    u16			vht_crc_fail_cnt_off[VHT_RATE_IDX];
+	u32			rvrt_val; /*all rvrt_val for pause API must set to u32*/
+	boolean			is_soml_method_enable;
+	boolean			get_stats;
+	u8			soml_on_off;
+	u8			soml_state_cnt;
+	u8			soml_delay_time;
+	u8			soml_intvl;
+	u8			soml_train_num;
+	u8			soml_counter;
+	u8			soml_period;
+	u8			soml_select;
+	u8			soml_last_state;
+	u8			cfo_qpsk_th;
+	u8			cfo_qam16_th;
+	u8			cfo_qam64_th;
+	u8			cfo_qam256_th;
+	u8			bpsk_qpsk_dist_th;
+	u8			qam16_dist_th;
+	u8			qam64_dist_th;
+	u8			qam256_dist_th;
+	u8			cfo_cnt;
+	s32			cfo_diff_a;
+	s32			cfo_diff_b;
+	s32			cfo_diff_sum_a;
+	s32			cfo_diff_sum_b;
+	s32			cfo_diff_avg_a;
+	s32			cfo_diff_avg_b;
+	u16			ht_cnt[HT_RATE_IDX];
+	u16			pre_ht_cnt[HT_RATE_IDX];
+	u16			ht_cnt_on[HT_RATE_IDX];
+	u16			ht_cnt_off[HT_RATE_IDX];
+	u16			ht_crc_ok_cnt_on[HT_RATE_IDX];
+	u16			ht_crc_fail_cnt_on[HT_RATE_IDX];
+	u16			ht_crc_ok_cnt_off[HT_RATE_IDX];
+	u16			ht_crc_fail_cnt_off[HT_RATE_IDX];
+	u16			vht_crc_ok_cnt_on[VHT_RATE_IDX];
+	u16			vht_crc_fail_cnt_on[VHT_RATE_IDX];
+	u16			vht_crc_ok_cnt_off[VHT_RATE_IDX];
+	u16			vht_crc_fail_cnt_off[VHT_RATE_IDX];
 
-    u16			vht_cnt[VHT_RATE_IDX];
-    u16			pre_vht_cnt[VHT_RATE_IDX];
-    u16			vht_cnt_on[VHT_RATE_IDX];
-    u16			vht_cnt_off[VHT_RATE_IDX];
+	u16			vht_cnt[VHT_RATE_IDX];
+	u16			pre_vht_cnt[VHT_RATE_IDX];
+	u16			vht_cnt_on[VHT_RATE_IDX];
+	u16			vht_cnt_off[VHT_RATE_IDX];
 
-    u16			num_ht_qam[HT_ORDER_TYPE];
-    u16			ht_byte[HT_RATE_IDX];
-    u16			pre_ht_byte[HT_RATE_IDX];
-    u16			ht_byte_on[HT_RATE_IDX];
-    u16			ht_byte_off[HT_RATE_IDX];
-    u16			num_vht_qam[VHT_ORDER_TYPE];
-    u16			vht_byte[VHT_RATE_IDX];
-    u16			pre_vht_byte[VHT_RATE_IDX];
-    u16			vht_byte_on[VHT_RATE_IDX];
-    u16			vht_byte_off[VHT_RATE_IDX];
+	u16			num_ht_qam[HT_ORDER_TYPE];
+	u16			ht_byte[HT_RATE_IDX];
+	u16			pre_ht_byte[HT_RATE_IDX];
+	u16			ht_byte_on[HT_RATE_IDX];
+	u16			ht_byte_off[HT_RATE_IDX];
+	u16			num_vht_qam[VHT_ORDER_TYPE];
+	u16			vht_byte[VHT_RATE_IDX];
+	u16			pre_vht_byte[VHT_RATE_IDX];
+	u16			vht_byte_on[VHT_RATE_IDX];
+	u16			vht_byte_off[VHT_RATE_IDX];
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 #if USE_WORKITEM
-    RT_WORK_ITEM	phydm_adaptive_soml_workitem;
+	RT_WORK_ITEM	phydm_adaptive_soml_workitem;
 #endif
 #endif
-    struct phydm_timer_list		phydm_adaptive_soml_timer;
+	struct phydm_timer_list		phydm_adaptive_soml_timer;
 
 };
 
 enum qam_order {
-    BPSK_QPSK	= 0,
-    QAM16		= 1,
-    QAM64		= 2,
-    QAM256		= 3
+	BPSK_QPSK	= 0,
+	QAM16		= 1,
+	QAM64		= 2,
+	QAM256		= 3
 };
 
 void phydm_dynamicsoftmletting(void *dm_void);
@@ -168,7 +168,7 @@ void phydm_soml_reset_qam(void *dm_void);
 void phydm_soml_cfo_process(void *dm_void, s32 *diff_a, s32 *diff_b);
 
 void phydm_soml_debug(void *dm_void, char input[][16], u32 *_used,
-                      char *output, u32 *_out_len);
+		      char *output, u32 *_out_len);
 
 void phydm_soml_statistics(void *dm_void, u8 on_off_state);
 
@@ -193,7 +193,7 @@ void phydm_enable_adaptive_soml(void *dm_void);
 void phydm_stop_adaptive_soml(void *dm_void);
 
 void phydm_adaptive_soml_para_set(void *dm_void, u8 train_num, u8 intvl,
-                                  u8 period, u8 delay_time);
+				  u8 period, u8 delay_time);
 #endif
 void phydm_init_soft_ml_setting(void *dm_void);
 #endif /*@#ifndef	__PHYDMSOML_H__*/

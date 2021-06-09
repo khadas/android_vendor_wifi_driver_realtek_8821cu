@@ -21,33 +21,33 @@
 
 #if defined(CONFIG_USB_HCI)
 
-#ifndef MAX_RECVBUF_SZ
-#ifndef CONFIG_MINIMAL_MEMORY_USAGE
-/* #define MAX_RECVBUF_SZ (32768) */ /* 32k */
-/* #define MAX_RECVBUF_SZ (16384) */ /* 16K */
-/* #define MAX_RECVBUF_SZ (10240) */ /* 10K */
-#ifdef CONFIG_PLATFORM_MSTAR
-#define MAX_RECVBUF_SZ (8192) /* 8K */
-#else
-#define MAX_RECVBUF_SZ (15360) /* 15k < 16k */
-#endif
-/* #define MAX_RECVBUF_SZ (8192+1024) */ /* 8K+1k */
-#else
-#define MAX_RECVBUF_SZ (4000) /* about 4K */
-#endif
-#endif /* !MAX_RECVBUF_SZ */
+	#ifndef MAX_RECVBUF_SZ
+		#ifndef CONFIG_MINIMAL_MEMORY_USAGE
+			/* #define MAX_RECVBUF_SZ (32768) */ /* 32k */
+			/* #define MAX_RECVBUF_SZ (16384) */ /* 16K */
+			/* #define MAX_RECVBUF_SZ (10240) */ /* 10K */
+			#ifdef CONFIG_PLATFORM_MSTAR
+				#define MAX_RECVBUF_SZ (8192) /* 8K */
+			#else
+				#define MAX_RECVBUF_SZ (15360) /* 15k < 16k */
+			#endif
+			/* #define MAX_RECVBUF_SZ (8192+1024) */ /* 8K+1k */
+		#else
+			#define MAX_RECVBUF_SZ (4000) /* about 4K */
+		#endif
+	#endif /* !MAX_RECVBUF_SZ */
 
 #elif defined(CONFIG_PCI_HCI)
-/* #ifndef CONFIG_MINIMAL_MEMORY_USAGE */
-/*	#define MAX_RECVBUF_SZ (9100) */
-/* #else */
-#define MAX_RECVBUF_SZ (4000) /* about 4K
+	/* #ifndef CONFIG_MINIMAL_MEMORY_USAGE */
+	/*	#define MAX_RECVBUF_SZ (9100) */
+	/* #else */
+	#define MAX_RECVBUF_SZ (4000) /* about 4K
 	* #endif */
 
 
 #elif defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
 
-#define MAX_RECVBUF_SZ (RX_DMA_BOUNDARY_8723D + 1)
+	#define MAX_RECVBUF_SZ (RX_DMA_BOUNDARY_8723D + 1)
 
 #endif
 
@@ -55,10 +55,10 @@
 #define	Rx_Smooth_Factor (20)
 
 #ifdef CONFIG_SDIO_HCI
-#ifndef CONFIG_SDIO_RX_COPY
-#undef MAX_RECVBUF_SZ
-#define MAX_RECVBUF_SZ	(RX_DMA_SIZE_8723D - RX_DMA_RESERVED_SIZE_8723D)
-#endif /* !CONFIG_SDIO_RX_COPY */
+	#ifndef CONFIG_SDIO_RX_COPY
+		#undef MAX_RECVBUF_SZ
+		#define MAX_RECVBUF_SZ	(RX_DMA_SIZE_8723D - RX_DMA_RESERVED_SIZE_8723D)
+	#endif /* !CONFIG_SDIO_RX_COPY */
 #endif /* CONFIG_SDIO_HCI */
 
 /*-----------------------------------------------------------------*/
@@ -74,9 +74,9 @@
 #define GET_RX_BUFFER_DESC_LS_8723D(__pRxStatusDesc)		LE_BITS_TO_4BYTE(__pRxStatusDesc, 15, 1)
 #define GET_RX_BUFFER_DESC_FS_8723D(__pRxStatusDesc)		LE_BITS_TO_4BYTE(__pRxStatusDesc, 16, 1)
 #ifdef USING_RX_TAG
-#define GET_RX_BUFFER_DESC_RX_TAG_8723D(__pRxStatusDesc)		LE_BITS_TO_4BYTE(__pRxStatusDesc, 16, 13)
+	#define GET_RX_BUFFER_DESC_RX_TAG_8723D(__pRxStatusDesc)		LE_BITS_TO_4BYTE(__pRxStatusDesc, 16, 13)
 #else
-#define GET_RX_BUFFER_DESC_TOTAL_LENGTH_8723D(__pRxStatusDesc)		LE_BITS_TO_4BYTE(__pRxStatusDesc, 16, 15)
+	#define GET_RX_BUFFER_DESC_TOTAL_LENGTH_8723D(__pRxStatusDesc)		LE_BITS_TO_4BYTE(__pRxStatusDesc, 16, 15)
 #endif
 
 /*DWORD 1*/
@@ -84,27 +84,27 @@
 
 /*DWORD 2*/
 #ifdef CONFIG_64BIT_DMA
-#define SET_RX_BUFFER_PHYSICAL_HIGH_8723D(__pRxStatusDesc, __Value)		SET_BITS_TO_LE_4BYTE(__pRxStatusDesc+8, 0, 32, __Value)
+	#define SET_RX_BUFFER_PHYSICAL_HIGH_8723D(__pRxStatusDesc, __Value)		SET_BITS_TO_LE_4BYTE(__pRxStatusDesc+8, 0, 32, __Value)
 #else
-#define SET_RX_BUFFER_PHYSICAL_HIGH_8723D(__pRxStatusDesc, __Value)
+	#define SET_RX_BUFFER_PHYSICAL_HIGH_8723D(__pRxStatusDesc, __Value)
 #endif
 
 
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_GSPI_HCI)
-s32 rtl8723ds_init_recv_priv(PADAPTER padapter);
-void rtl8723ds_free_recv_priv(PADAPTER padapter);
-s32 rtl8723ds_recv_hdl(_adapter *padapter);
+	s32 rtl8723ds_init_recv_priv(PADAPTER padapter);
+	void rtl8723ds_free_recv_priv(PADAPTER padapter);
+	s32 rtl8723ds_recv_hdl(_adapter *padapter);
 #endif
 
 #ifdef CONFIG_USB_HCI
-int rtl8723du_init_recv_priv(_adapter *padapter);
-void rtl8723du_free_recv_priv(_adapter *padapter);
-void rtl8723du_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);
+	int rtl8723du_init_recv_priv(_adapter *padapter);
+	void rtl8723du_free_recv_priv(_adapter *padapter);
+	void rtl8723du_init_recvbuf(_adapter *padapter, struct recv_buf *precvbuf);
 #endif
 
 #ifdef CONFIG_PCI_HCI
-s32 rtl8723de_init_recv_priv(PADAPTER padapter);
-void rtl8723de_free_recv_priv(PADAPTER padapter);
+	s32 rtl8723de_init_recv_priv(PADAPTER padapter);
+	void rtl8723de_free_recv_priv(PADAPTER padapter);
 #endif
 
 void rtl8723d_query_rx_desc_status(union recv_frame *precvframe, u8 *pdesc);

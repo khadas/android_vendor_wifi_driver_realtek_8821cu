@@ -31,8 +31,8 @@
 /*#define DEBUG_VERSION	"1.3"*/ /*2016.04.28 YuChen*/
 /*#define DEBUG_VERSION	"1.4"*/ /*2017.03.13 Dino*/
 /*#define DEBUG_VERSION "2.0"*/ /*2018.01.10 Dino*/
-/* 2019.03.25 fix nhm_r[11] debug msg error*/
-#define DEBUG_VERSION "2.6"
+/*2020.07.03 fix cck report bug due to 8723F coding error*/
+#define DEBUG_VERSION "4.6"
 
 /*@
  * ============================================================
@@ -67,48 +67,48 @@
 #define config_phydm_read_txagc_check(data) (data != INVALID_TXAGC_DATA)
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
-#if (DBG_CMD_SUPPORT == 1)
-extern	VOID DCMD_Printf(const char *pMsg);
-#else
-#define DCMD_Printf(_pMsg)
-#endif
+	#if (DBG_CMD_SUPPORT == 1)
+		extern	VOID DCMD_Printf(const char *pMsg);
+	#else
+		#define DCMD_Printf(_pMsg)
+	#endif
 
-#if OS_WIN_FROM_WIN10(OS_VERSION)
-#define	pr_debug(fmt, ...) DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, fmt, ##__VA_ARGS__)
-#else
-#define	pr_debug		DbgPrint
-#endif
+	#if OS_WIN_FROM_WIN10(OS_VERSION)
+	#define	pr_debug(fmt, ...) DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, fmt, ##__VA_ARGS__)
+	#else
+	#define	pr_debug		DbgPrint
+	#endif
 
-#define	dcmd_printf		DCMD_Printf
-#define	dcmd_scanf		DCMD_Scanf
-#define	RT_PRINTK		pr_debug
-#define	PRINT_MAX_SIZE		512
-#define PHYDM_SNPRINTF		RT_SPRINTF
-#define	PHYDM_TRACE(_MSG_) 	EXhalPHYDMoutsrc_Print(_MSG_)
+	#define	dcmd_printf		DCMD_Printf
+	#define	dcmd_scanf		DCMD_Scanf
+	#define	RT_PRINTK		pr_debug
+	#define	PRINT_MAX_SIZE		512
+	#define PHYDM_SNPRINTF		RT_SPRINTF
+	#define	PHYDM_TRACE(_MSG_) 	EXhalPHYDMoutsrc_Print(_MSG_)
 #elif (DM_ODM_SUPPORT_TYPE == ODM_CE) && defined(DM_ODM_CE_MAC80211)
-#define PHYDM_SNPRINTF		snprintf
+	#define PHYDM_SNPRINTF		snprintf
 #elif (DM_ODM_SUPPORT_TYPE == ODM_CE)
-#undef	pr_debug
-#define pr_debug		printk
-#define RT_PRINTK(fmt, args...)	pr_debug(fmt, ## args)
-#define	RT_DISP(dbgtype, dbgflag, printstr)
-#define RT_TRACE(adapter, comp, drv_level, fmt, args...)	\
+	#undef	pr_debug
+	#define pr_debug		printk
+	#define RT_PRINTK(fmt, args...)	pr_debug(fmt, ## args)
+	#define	RT_DISP(dbgtype, dbgflag, printstr)
+	#define RT_TRACE(adapter, comp, drv_level, fmt, args...)	\
 		RTW_INFO(fmt, ## args)
-#define PHYDM_SNPRINTF		snprintf
+	#define PHYDM_SNPRINTF		snprintf
 #elif (DM_ODM_SUPPORT_TYPE == ODM_IOT)
-#define pr_debug(fmt, args...)		RTW_PRINT_MSG(fmt, ## args)
-#define RT_DEBUG(comp, drv_level, fmt, args...)	\
+	#define pr_debug(fmt, args...)		RTW_PRINT_MSG(fmt, ## args)
+	#define RT_DEBUG(comp, drv_level, fmt, args...)	\
 		RTW_PRINT_MSG(fmt, ## args)
-#define PHYDM_SNPRINTF		snprintf
+	#define PHYDM_SNPRINTF		snprintf
 #else
-#define pr_debug	panic_printk
-/*@#define RT_PRINTK(fmt, args...)	pr_debug("%s(): " fmt, __FUNCTION__, ## args);*/
-#define RT_PRINTK(fmt, args...)	pr_debug(fmt, ## args)
-#define PHYDM_SNPRINTF		snprintf
+	#define pr_debug	panic_printk
+	/*@#define RT_PRINTK(fmt, args...)	pr_debug("%s(): " fmt, __FUNCTION__, ## args);*/
+	#define RT_PRINTK(fmt, args...)	pr_debug(fmt, ## args)
+	#define PHYDM_SNPRINTF		snprintf
 #endif
 
 #ifndef ASSERT
-#define ASSERT(expr)
+	#define ASSERT(expr)
 #endif
 
 #if DBG
@@ -145,58 +145,58 @@ extern	VOID DCMD_Printf(const char *pMsg);
 
 static __inline void PHYDM_DBG(PDM_ODM_T dm, int comp, char *fmt, ...)
 {
-    RT_STATUS rt_status;
-    va_list args;
-    char buf[PRINT_MAX_SIZE] = {0};
+	RT_STATUS rt_status;
+	va_list args;
+	char buf[PRINT_MAX_SIZE] = {0};
 
-    if ((comp & dm->debug_components) == 0)
-        return;
+	if ((comp & dm->debug_components) == 0)
+		return;
 
-    if (fmt == NULL)
-        return;
+	if (fmt == NULL)
+		return;
 
-    va_start(args, fmt);
-    rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
-    va_end(args);
+	va_start(args, fmt);
+	rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
+	va_end(args);
 
-    if (rt_status != RT_STATUS_SUCCESS) {
-        DbgPrint("Failed (%d) to print message to buffer\n", rt_status);
-        return;
-    }
+	if (rt_status != RT_STATUS_SUCCESS) {
+		DbgPrint("Failed (%d) to print message to buffer\n", rt_status);
+		return;
+	}
 
-#if OS_WIN_FROM_WIN10(OS_VERSION)
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "%s", buf);
-#else
-    DbgPrint("%s", buf);
-#endif
+	#if OS_WIN_FROM_WIN10(OS_VERSION)
+	DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "%s", buf);
+	#else
+	DbgPrint("%s", buf);
+	#endif
 }
 
 static __inline void PHYDM_DBG_F(PDM_ODM_T dm, int comp, char *fmt, ...)
 {
-    RT_STATUS rt_status;
-    va_list args;
-    char buf[PRINT_MAX_SIZE] = {0};
+	RT_STATUS rt_status;
+	va_list args;
+	char buf[PRINT_MAX_SIZE] = {0};
 
-    if ((comp & dm->debug_components) == 0)
-        return;
+	if ((comp & dm->debug_components) == 0)
+		return;
 
-    if (fmt == NULL)
-        return;
+	if (fmt == NULL)
+		return;
 
-    va_start(args, fmt);
-    rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
-    va_end(args);
+	va_start(args, fmt);
+	rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
+	va_end(args);
 
-    if (rt_status != RT_STATUS_SUCCESS) {
-        /*@DbgPrint("DM Print Fail\n");*/
-        return;
-    }
+	if (rt_status != RT_STATUS_SUCCESS) {
+		/*@DbgPrint("DM Print Fail\n");*/
+		return;
+	}
 
-#if OS_WIN_FROM_WIN10(OS_VERSION)
-    DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "%s", buf);
-#else
-    DbgPrint("%s", buf);
-#endif
+	#if OS_WIN_FROM_WIN10(OS_VERSION)
+	DbgPrintEx(DPFLTR_IHVNETWORK_ID, DPFLTR_ERROR_LEVEL, "%s", buf);
+	#else
+	DbgPrint("%s", buf);
+	#endif
 }
 
 #define PHYDM_PRINT_ADDR(p_dm, comp, title_str, ptr)		\
@@ -282,26 +282,26 @@ static __inline void PHYDM_DBG_F(PDM_ODM_T dm, int comp, char *fmt, ...)
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 static __inline void PHYDM_DBG(struct dm_struct *dm, int comp, char *fmt, ...)
 {
-    RT_STATUS rt_status;
-    va_list args;
-    char buf[PRINT_MAX_SIZE] = {0};
+	RT_STATUS rt_status;
+	va_list args;
+	char buf[PRINT_MAX_SIZE] = {0};
 
-    if ((comp & dm->debug_components) == 0)
-        return;
+	if ((comp & dm->debug_components) == 0)
+		return;
 
-    if (fmt == NULL)
-        return;
+	if (fmt == NULL)
+		return;
 
-    va_start(args, fmt);
-    rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
-    va_end(args);
+	va_start(args, fmt);
+	rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
+	va_end(args);
 
-    if (rt_status != RT_STATUS_SUCCESS) {
-        DbgPrint("Failed (%d) to print message to buffer\n", rt_status);
-        return;
-    }
+	if (rt_status != RT_STATUS_SUCCESS) {
+		DbgPrint("Failed (%d) to print message to buffer\n", rt_status);
+		return;
+	}
 
-    PHYDM_TRACE(buf);
+	PHYDM_TRACE(buf);
 }
 static __inline void PHYDM_DBG_F(struct dm_struct *dm, int comp, char *fmt, ...)
 {
@@ -332,36 +332,36 @@ static __inline void PHYDM_DBG_F(struct dm_struct *dm, int comp, char *fmt, ...)
 #else
 
 static __inline void PDM_SNPF(u32 out_len, u32 used, char *buff, int len,
-                              char *fmt, ...)
+			      char *fmt, ...)
 {
-    RT_STATUS rt_status;
-    va_list args;
-    char buf[PRINT_MAX_SIZE] = {0};
+	RT_STATUS rt_status;
+	va_list args;
+	char buf[PRINT_MAX_SIZE] = {0};
 
-    if (fmt == NULL)
-        return;
+	if (fmt == NULL)
+		return;
 
-    va_start(args, fmt);
-    rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
-    va_end(args);
+	va_start(args, fmt);
+	rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
+	va_end(args);
 
-    if (rt_status != RT_STATUS_SUCCESS) {
-        /*@DbgPrint("DM Print Fail\n");*/
-        return;
-    }
+	if (rt_status != RT_STATUS_SUCCESS) {
+		/*@DbgPrint("DM Print Fail\n");*/
+		return;
+	}
 
-    DCMD_Printf(buf);
+	DCMD_Printf(buf);
 }
 
 
 
 #endif	/*@#if (PHYDM_DBGPRINT == 1)*/
 #else	/*@(DM_ODM_SUPPORT_TYPE & (ODM_CE | ODM_AP))*/
-#if (DM_ODM_SUPPORT_TYPE == ODM_CE) || defined(__OSK__)
-#define	PHYDM_DBGPRINT	0
-#else
-#define	PHYDM_DBGPRINT	1
-#endif
+	#if (DM_ODM_SUPPORT_TYPE == ODM_CE) || defined(__OSK__)
+	#define	PHYDM_DBGPRINT	0
+	#else
+	#define	PHYDM_DBGPRINT	1
+	#endif
 #define	MAX_ARGC		20
 #define	MAX_ARGV		16
 #define	DCMD_DECIMAL		"%d"
@@ -407,9 +407,9 @@ static __inline void PDM_SNPF(u32 out_len, u32 used, char *buff, int len,
  */
 
 enum auto_detection_state { /*@Fast antenna training*/
-    AD_LEGACY_MODE	= 0,
-    AD_HT_MODE	= 1,
-    AD_VHT_MODE	= 2
+	AD_LEGACY_MODE	= 0,
+	AD_HT_MODE	= 1,
+	AD_VHT_MODE	= 2
 };
 
 /*@
@@ -451,29 +451,29 @@ void phydm_dm_summary(void *dm_void, u8 macid);
 void phydm_basic_dbg_message(void *dm_void);
 
 void phydm_basic_profile(void *dm_void, u32 *_used, char *output,
-                         u32 *_out_len);
+			 u32 *_out_len);
 #if (DM_ODM_SUPPORT_TYPE & (ODM_CE | ODM_AP))
 s32 phydm_cmd(struct dm_struct *dm, char *input, u32 in_len, u8 flag,
-              char *output, u32 out_len);
+	      char *output, u32 out_len);
 #endif
 void phydm_cmd_parser(struct dm_struct *dm, char input[][16], u32 input_num,
-                      u8 flag, char *output, u32 out_len);
+		      u8 flag, char *output, u32 out_len);
 
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 void phydm_basic_dbg_msg_cli_win(void *dm_void, char *buf);
 
 void phydm_sbd_check(
-    struct dm_struct *dm);
+	struct dm_struct *dm);
 
 void phydm_sbd_callback(
-    struct phydm_timer_list *timer);
+	struct phydm_timer_list *timer);
 
 void phydm_sbd_workitem_callback(
-    void *context);
+	void *context);
 #endif
 
 void phydm_fw_trace_en_h2c(void *dm_void, boolean enable,
-                           u32 fw_debug_component, u32 monitor_mode, u32 macid);
+			   u32 fw_debug_component, u32 monitor_mode, u32 macid);
 
 void phydm_fw_trace_handler(void *dm_void, u8 *cmd_buf, u8 cmd_len);
 

@@ -23,7 +23,7 @@
  *
  *****************************************************************************/
 
-/*Image2HeaderVersion: R3 1.5.8*/
+/*Image2HeaderVersion: R3 1.5.10.1*/
 #if (RTL8821C_SUPPORT == 1)
 #ifndef __INC_MP_RF_HW_IMG_8821C_H
 #define __INC_MP_RF_HW_IMG_8821C_H
@@ -35,32 +35,48 @@
  * #define CONFIG_8821C_TYPE0X28_DRV_DIS
  * #define CONFIG_8821C_FCCSAR_DRV_DIS
  * #define CONFIG_8821C_ICSAR_DRV_DIS
+ * #define CONFIG_8821C_LOWPOWER_DRV_DIS
  */
 
 #define CONFIG_8821C
 #ifdef CONFIG_8821C_DRV_DIS
-#undef CONFIG_8821C
+    #undef CONFIG_8821C
 #endif
 
 #define CONFIG_8821C_TYPE0X20
 #ifdef CONFIG_8821C_TYPE0X20_DRV_DIS
-#undef CONFIG_8821C_TYPE0X20
+    #undef CONFIG_8821C_TYPE0X20
 #endif
 
 #define CONFIG_8821C_TYPE0X28
 #ifdef CONFIG_8821C_TYPE0X28_DRV_DIS
-#undef CONFIG_8821C_TYPE0X28
+    #undef CONFIG_8821C_TYPE0X28
 #endif
 
 #define CONFIG_8821C_FCCSAR
 #ifdef CONFIG_8821C_FCCSAR_DRV_DIS
-#undef CONFIG_8821C_FCCSAR
+    #undef CONFIG_8821C_FCCSAR
 #endif
 
 #define CONFIG_8821C_ICSAR
 #ifdef CONFIG_8821C_ICSAR_DRV_DIS
-#undef CONFIG_8821C_ICSAR
+    #undef CONFIG_8821C_ICSAR
 #endif
+
+#define CONFIG_8821C_LOWPOWER
+#ifdef CONFIG_8821C_LOWPOWER_DRV_DIS
+    #undef CONFIG_8821C_LOWPOWER
+#endif
+
+struct txpwr_lmt_t_8821c {
+	u8			reg;
+	u8			band:1;
+	u8			bw:3;
+	u8			rs:2;
+	u8			ntx:2;
+	u8			ch;
+	s8			val;
+};
 
 /******************************************************************************
  *                           radioa.TXT
@@ -124,6 +140,15 @@ u32 odm_get_version_mp_8821c_txpwr_lmt_fccsar(void);
 void
 odm_read_and_config_mp_8821c_txpwr_lmt_icsar(struct dm_struct *dm);
 u32 odm_get_version_mp_8821c_txpwr_lmt_icsar(void);
+
+/******************************************************************************
+ *                           txpwr_lmt_lowpower.TXT
+ ******************************************************************************/
+
+/* tc: Test Chip, mp: mp Chip*/
+void
+odm_read_and_config_mp_8821c_txpwr_lmt_lowpower(struct dm_struct *dm);
+u32 odm_get_version_mp_8821c_txpwr_lmt_lowpower(void);
 
 #endif
 #endif /* end of HWIMG_SUPPORT*/

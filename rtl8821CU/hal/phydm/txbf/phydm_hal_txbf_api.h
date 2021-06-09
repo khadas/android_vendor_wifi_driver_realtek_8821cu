@@ -44,10 +44,9 @@ u8 beamforming_get_vht_ndp_tx_rate(void *dm_void, u8 bfer_str_num);
 #endif
 
 #if (RTL8822B_SUPPORT == 1 || RTL8822C_SUPPORT == 1 || RTL8192F_SUPPORT == 1 ||\
-	RTL8814B_SUPPORT == 1 || RTL8198F_SUPPORT == 1)
-
+	RTL8814B_SUPPORT == 1 || RTL8198F_SUPPORT == 1 || RTL8812F_SUPPORT == 1)
 u8 phydm_get_beamforming_sounding_info(void *dm_void, u16 *throughput,
-                                       u8 total_bfee_num, u8 *tx_rate);
+				       u8 total_bfee_num, u8 *tx_rate);
 u8 phydm_get_ndpa_rate(void *dm_void);
 
 u8 phydm_get_mu_bfee_snding_decision(void *dm_void, u16 throughput);
@@ -61,11 +60,16 @@ u8 phydm_get_mu_bfee_snding_decision(void *dm_void, u16 throughput);
 
 #ifdef PHYDM_IC_JGR3_SERIES_SUPPORT
 struct phydm_bf_rate_info_jgr3 {
-    u8			enable;
-    u8			mu_ratio_th;
-    u32			pre_mu_ratio;
-    u16			num_mu_vht_pkt[VHT_RATE_NUM];
-    u16			num_qry_vht_pkt[VHT_RATE_NUM];
+	u8			enable;
+	u8			mu_ratio_th;
+	u32			pre_mu_ratio;
+	u16			num_mu_vht_pkt[VHT_RATE_NUM];
+	u16			num_qry_vht_pkt[VHT_RATE_NUM];
+	boolean			mu_set_trxpath;
+	u8			tx_path_en_ofdm_1sts;
+	u8			tx_path_en_ofdm_2sts;
+	u8			rx_path_en_ofdm;
+	boolean			mu_been_iot;
 };
 
 /*this function is only used for BFer*/
@@ -80,6 +84,6 @@ void phydm_txbf_80p80_rfmode(void *dm_void, u8 su_bfee_cnt, u8 mu_bfee_cnt);
 
 #endif /*#PHYDM_IC_JGR3_SERIES_SUPPORT*/
 void phydm_bf_debug(void *dm_void, char input[][16], u32 *_used, char *output,
-                    u32 *_out_len);
+		    u32 *_out_len);
 #endif
 #endif

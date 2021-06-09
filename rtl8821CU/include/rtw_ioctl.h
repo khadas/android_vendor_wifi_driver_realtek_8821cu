@@ -16,19 +16,19 @@
 #define _RTW_IOCTL_H_
 
 enum oid_type {
-    QUERY_OID,
-    SET_OID
+	QUERY_OID,
+	SET_OID
 };
 
 struct oid_par_priv {
-    void		*adapter_context;
-    NDIS_OID	oid;
-    void		*information_buf;
-    u32		information_buf_len;
-    u32		*bytes_rw;
-    u32		*bytes_needed;
-    enum oid_type	type_of_oid;
-    u32		dbg;
+	void		*adapter_context;
+	NDIS_OID	oid;
+	void		*information_buf;
+	u32		information_buf_len;
+	u32		*bytes_rw;
+	u32		*bytes_needed;
+	enum oid_type	type_of_oid;
+	u32		dbg;
 };
 
 #if defined(PLATFORM_LINUX) && defined(CONFIG_WIRELESS_EXT)

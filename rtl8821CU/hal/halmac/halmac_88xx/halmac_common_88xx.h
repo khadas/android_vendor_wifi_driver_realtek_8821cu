@@ -24,31 +24,31 @@
 
 enum halmac_ret_status
 ofld_func_cfg_88xx(struct halmac_adapter *adapter,
-                   struct halmac_ofld_func_info *info);
+		   struct halmac_ofld_func_info *info);
 
 enum halmac_ret_status
 dl_drv_rsvd_page_88xx(struct halmac_adapter *adapter, u8 pg_offset, u8 *buf,
-                      u32 size);
+		      u32 size);
 
 enum halmac_ret_status
 dl_rsvd_page_88xx(struct halmac_adapter *adapter, u16 pg_addr, u8 *buf,
-                  u32 size);
+		  u32 size);
 
 enum halmac_ret_status
 get_hw_value_88xx(struct halmac_adapter *adapter, enum halmac_hw_id hw_id,
-                  void *value);
+		  void *value);
 
 enum halmac_ret_status
 set_hw_value_88xx(struct halmac_adapter *adapter, enum halmac_hw_id hw_id,
-                  void *value);
+		  void *value);
 
 enum halmac_ret_status
 get_watcher_88xx(struct halmac_adapter *adapter, enum halmac_watcher_sel sel,
-                 void *value);
+		 void *value);
 
 enum halmac_ret_status
 set_h2c_pkt_hdr_88xx(struct halmac_adapter *adapter, u8 *hdr,
-                     struct halmac_h2c_header_info *info, u16 *seq_num);
+		     struct halmac_h2c_header_info *info, u16 *seq_num);
 
 enum halmac_ret_status
 send_h2c_pkt_88xx(struct halmac_adapter *adapter, u8 *pkt);
@@ -64,39 +64,39 @@ mac_debug_88xx(struct halmac_adapter *adapter);
 
 enum halmac_ret_status
 cfg_parameter_88xx(struct halmac_adapter *adapter,
-                   struct halmac_phy_parameter_info *info, u8 full_fifo);
+		   struct halmac_phy_parameter_info *info, u8 full_fifo);
 
 enum halmac_ret_status
 update_packet_88xx(struct halmac_adapter *adapter, enum halmac_packet_id pkt_id,
-                   u8 *pkt, u32 size);
+		   u8 *pkt, u32 size);
 
 enum halmac_ret_status
 send_scan_packet_88xx(struct halmac_adapter *adapter, u8 index,
-                      u8 *pkt, u32 size);
+		      u8 *pkt, u32 size);
 
 enum halmac_ret_status
 drop_scan_packet_88xx(struct halmac_adapter *adapter,
-                      struct halmac_drop_pkt_option *option);
+		      struct halmac_drop_pkt_option *option);
 
 enum halmac_ret_status
 bcn_ie_filter_88xx(struct halmac_adapter *adapter,
-                   struct halmac_bcn_ie_info *info);
+		   struct halmac_bcn_ie_info *info);
 
 enum halmac_ret_status
 update_datapack_88xx(struct halmac_adapter *adapter,
-                     enum halmac_data_type data_type,
-                     struct halmac_phy_parameter_info *info);
+		     enum halmac_data_type data_type,
+		     struct halmac_phy_parameter_info *info);
 
 enum halmac_ret_status
 run_datapack_88xx(struct halmac_adapter *adapter,
-                  enum halmac_data_type data_type);
+		  enum halmac_data_type data_type);
 
 enum halmac_ret_status
 send_bt_coex_88xx(struct halmac_adapter *adapter, u8 *buf, u32 size, u8 ack);
 
 enum halmac_ret_status
 dump_fifo_88xx(struct halmac_adapter *adapter, enum hal_fifo_sel sel,
-               u32 start_addr, u32 size, u8 *data);
+	       u32 start_addr, u32 size, u8 *data);
 
 u32
 get_fifo_size_88xx(struct halmac_adapter *adapter, enum hal_fifo_sel sel);
@@ -109,11 +109,11 @@ add_ch_info_88xx(struct halmac_adapter *adapter, struct halmac_ch_info *info);
 
 enum halmac_ret_status
 add_extra_ch_info_88xx(struct halmac_adapter *adapter,
-                       struct halmac_ch_extra_info *info);
+		       struct halmac_ch_extra_info *info);
 
 enum halmac_ret_status
 ctrl_ch_switch_88xx(struct halmac_adapter *adapter,
-                    struct halmac_ch_switch_option *opt);
+		    struct halmac_ch_switch_option *opt);
 
 enum halmac_ret_status
 clear_ch_info_88xx(struct halmac_adapter *adapter);
@@ -129,26 +129,26 @@ p2pps_88xx(struct halmac_adapter *adapter, struct halmac_p2pps *info);
 
 enum halmac_ret_status
 query_status_88xx(struct halmac_adapter *adapter,
-                  enum halmac_feature_id feature_id,
-                  enum halmac_cmd_process_status *proc_status, u8 *data,
-                  u32 *size);
+		  enum halmac_feature_id feature_id,
+		  enum halmac_cmd_process_status *proc_status, u8 *data,
+		  u32 *size);
 
 enum halmac_ret_status
 cfg_drv_rsvd_pg_num_88xx(struct halmac_adapter *adapter,
-                         enum halmac_drv_rsvd_pg_num pg_num);
+			 enum halmac_drv_rsvd_pg_num pg_num);
 
 enum halmac_ret_status
 h2c_lb_88xx(struct halmac_adapter *adapter);
 
 enum halmac_ret_status
 pwr_seq_parser_88xx(struct halmac_adapter *adapter,
-                    struct halmac_wlan_pwr_cfg **cmd_seq);
+		    struct halmac_wlan_pwr_cfg **cmd_seq);
 
 enum halmac_ret_status
 parse_intf_phy_88xx(struct halmac_adapter *adapter,
-                    struct halmac_intf_phy_para *param,
-                    enum halmac_intf_phy_platform pltfm,
-                    enum hal_intf_phy intf_phy);
+		    struct halmac_intf_phy_para *param,
+		    enum halmac_intf_phy_platform pltfm,
+		    enum hal_intf_phy intf_phy);
 
 enum halmac_ret_status
 txfifo_is_empty_88xx(struct halmac_adapter *adapter, u32 chk_num);

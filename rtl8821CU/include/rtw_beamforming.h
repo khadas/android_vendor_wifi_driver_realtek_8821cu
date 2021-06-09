@@ -34,205 +34,205 @@
 #define GetInitSoundCnt(_SoundPeriod, _MinSoundPeriod)	((_SoundPeriod)/(_MinSoundPeriod))
 
 enum BEAMFORMING_CTRL_TYPE {
-    BEAMFORMING_CTRL_ENTER = 0,
-    BEAMFORMING_CTRL_LEAVE = 1,
-    BEAMFORMING_CTRL_START_PERIOD = 2,
-    BEAMFORMING_CTRL_END_PERIOD = 3,
-    BEAMFORMING_CTRL_SOUNDING_FAIL = 4,
-    BEAMFORMING_CTRL_SOUNDING_CLK = 5,
-    BEAMFORMING_CTRL_SET_GID_TABLE = 6,
-    BEAMFORMING_CTRL_SET_CSI_REPORT = 7,
+	BEAMFORMING_CTRL_ENTER = 0,
+	BEAMFORMING_CTRL_LEAVE = 1,
+	BEAMFORMING_CTRL_START_PERIOD = 2,
+	BEAMFORMING_CTRL_END_PERIOD = 3,
+	BEAMFORMING_CTRL_SOUNDING_FAIL = 4,
+	BEAMFORMING_CTRL_SOUNDING_CLK = 5,
+	BEAMFORMING_CTRL_SET_GID_TABLE = 6,
+	BEAMFORMING_CTRL_SET_CSI_REPORT = 7,
 };
 
 enum _BEAMFORMING_STATE {
-    BEAMFORMING_STATE_IDLE,
-    BEAMFORMING_STATE_START,
-    BEAMFORMING_STATE_END,
+	BEAMFORMING_STATE_IDLE,
+	BEAMFORMING_STATE_START,
+	BEAMFORMING_STATE_END,
 };
 
 /*
  * typedef BEAMFORMING_CAP for phydm
  */
 typedef enum beamforming_cap {
-    BEAMFORMING_CAP_NONE = 0x0,
-    BEAMFORMER_CAP_HT_EXPLICIT = 0x1,
-    BEAMFORMEE_CAP_HT_EXPLICIT = 0x2,
-    BEAMFORMER_CAP_VHT_SU = 0x4,			/* Self has er Cap, because Reg er  & peer ee */
-    BEAMFORMEE_CAP_VHT_SU = 0x8, 			/* Self has ee Cap, because Reg ee & peer er */
-    BEAMFORMER_CAP_VHT_MU = 0x10,			/* Self has er Cap, because Reg er & peer ee */
-    BEAMFORMEE_CAP_VHT_MU = 0x20,			/* Self has ee Cap, because Reg ee & peer er */
-    BEAMFORMER_CAP = 0x40,
-    BEAMFORMEE_CAP = 0x80,
+	BEAMFORMING_CAP_NONE = 0x0,
+	BEAMFORMER_CAP_HT_EXPLICIT = 0x1,
+	BEAMFORMEE_CAP_HT_EXPLICIT = 0x2,
+	BEAMFORMER_CAP_VHT_SU = 0x4,			/* Self has er Cap, because Reg er  & peer ee */
+	BEAMFORMEE_CAP_VHT_SU = 0x8, 			/* Self has ee Cap, because Reg ee & peer er */
+	BEAMFORMER_CAP_VHT_MU = 0x10,			/* Self has er Cap, because Reg er & peer ee */
+	BEAMFORMEE_CAP_VHT_MU = 0x20,			/* Self has ee Cap, because Reg ee & peer er */
+	BEAMFORMER_CAP = 0x40,
+	BEAMFORMEE_CAP = 0x80,
 } BEAMFORMING_CAP;
 
 enum _BEAMFORM_ENTRY_HW_STATE {
-    BEAMFORM_ENTRY_HW_STATE_NONE,
-    BEAMFORM_ENTRY_HW_STATE_ADD_INIT,
-    BEAMFORM_ENTRY_HW_STATE_ADDING,
-    BEAMFORM_ENTRY_HW_STATE_ADDED,
-    BEAMFORM_ENTRY_HW_STATE_DELETE_INIT,
-    BEAMFORM_ENTRY_HW_STATE_DELETING,
-    BEAMFORM_ENTRY_HW_STATE_MAX
+	BEAMFORM_ENTRY_HW_STATE_NONE,
+	BEAMFORM_ENTRY_HW_STATE_ADD_INIT,
+	BEAMFORM_ENTRY_HW_STATE_ADDING,
+	BEAMFORM_ENTRY_HW_STATE_ADDED,
+	BEAMFORM_ENTRY_HW_STATE_DELETE_INIT,
+	BEAMFORM_ENTRY_HW_STATE_DELETING,
+	BEAMFORM_ENTRY_HW_STATE_MAX
 };
 
 /* The sounding state is recorded by BFer. */
 enum _SOUNDING_STATE {
-    SOUNDING_STATE_NONE		= 0,
-    SOUNDING_STATE_INIT		= 1,
-    SOUNDING_STATE_SU_START		= 2,
-    SOUNDING_STATE_SU_SOUNDDOWN	= 3,
-    SOUNDING_STATE_MU_START		= 4,
-    SOUNDING_STATE_MU_SOUNDDOWN	= 5,
-    SOUNDING_STATE_SOUNDING_TIMEOUT	= 6,
-    SOUNDING_STATE_MAX
+	SOUNDING_STATE_NONE		= 0,
+	SOUNDING_STATE_INIT		= 1,
+	SOUNDING_STATE_SU_START		= 2,
+	SOUNDING_STATE_SU_SOUNDDOWN	= 3,
+	SOUNDING_STATE_MU_START		= 4,
+	SOUNDING_STATE_MU_SOUNDDOWN	= 5,
+	SOUNDING_STATE_SOUNDING_TIMEOUT	= 6,
+	SOUNDING_STATE_MAX
 };
 
 struct beamformee_entry {
-    u8 used;	/* _TRUE/_FALSE */
-    u8 txbf;
-    u8 sounding;
-    /* Used to construct AID field of NDPA packet */
-    u16 aid;
-    /* Used to Set Reg42C in IBSS mode */
-    u16 mac_id;
-    /* Used to fill Reg42C & Reg714 to compare with P_AID of Tx DESC */
-    u16 p_aid;
-    u8 g_id;
-    /* Used to fill Reg6E4 to fill Mac address of CSI report frame */
-    u8 mac_addr[ETH_ALEN];
-    /* Sounding BandWidth */
-    enum channel_width sound_bw;
-    u16 sound_period;
+	u8 used;	/* _TRUE/_FALSE */
+	u8 txbf;
+	u8 sounding;
+	/* Used to construct AID field of NDPA packet */
+	u16 aid;
+	/* Used to Set Reg42C in IBSS mode */
+	u16 mac_id;
+	/* Used to fill Reg42C & Reg714 to compare with P_AID of Tx DESC */
+	u16 p_aid;
+	u8 g_id;
+	/* Used to fill Reg6E4 to fill Mac address of CSI report frame */
+	u8 mac_addr[ETH_ALEN];
+	/* Sounding BandWidth */
+	enum channel_width sound_bw;
+	u16 sound_period;
 
-    enum beamforming_cap cap;
-    enum _BEAMFORM_ENTRY_HW_STATE state;
+	enum beamforming_cap cap;
+	enum _BEAMFORM_ENTRY_HW_STATE state;
 
-    /* The BFee need to be sounded when count to zero */
-    u8 SoundCnt;
-    u8 bCandidateSoundingPeer;
-    u8 bSoundingTimeout;
-    u8 bDeleteSounding;
-    /* Get the result through throughput and Tx rate from BB API */
-    u8 bApplySounding;
+	/* The BFee need to be sounded when count to zero */
+	u8 SoundCnt;
+	u8 bCandidateSoundingPeer;
+	u8 bSoundingTimeout;
+	u8 bDeleteSounding;
+	/* Get the result through throughput and Tx rate from BB API */
+	u8 bApplySounding;
 
-    /* information for sounding judgement */
-    systime tx_timestamp;
-    u64 tx_bytes;
+	/* information for sounding judgement */
+	systime tx_timestamp;
+	u64 tx_bytes;
 
-    u16 LogStatusFailCnt:5;	/* 0~21 */
-    u16 DefaultCSICnt:5; /* 0~21 */
-    u8 CSIMatrix[327];
-    u16 CSIMatrixLen;
+	u16 LogStatusFailCnt:5;	/* 0~21 */
+	u16 DefaultCSICnt:5; /* 0~21 */
+	u8 CSIMatrix[327];
+	u16 CSIMatrixLen;
 
-    u8 NumofSoundingDim;
+	u8 NumofSoundingDim;
 
-    u8 comp_steering_num_of_bfer;
+	u8 comp_steering_num_of_bfer;
 
 
-    /* SU-MIMO */
-    u8 su_reg_index;
+	/* SU-MIMO */
+	u8 su_reg_index;
 
-    /* MU-MIMO */
-    u8 mu_reg_index;
-    u8 gid_valid[8];
-    u8 user_position[16];
+	/* MU-MIMO */
+	u8 mu_reg_index;
+	u8 gid_valid[8];
+	u8 user_position[16];
 
-    /* For 8822B C-cut workaround */
-    /* If the flag set to _TRUE, do not sound this STA */
-    u8 bSuspendSUCap;
+	/* For 8822B C-cut workaround */
+	/* If the flag set to _TRUE, do not sound this STA */
+	u8 bSuspendSUCap;
 };
 
 struct beamformer_entry {
-    u8 used;
-    /* p_aid of BFer entry is probably not used */
-    /* Used to fill Reg42C & Reg714 to compare with p_aid of Tx DESC */
-    u16 p_aid;
-    u8 g_id;
-    u8 mac_addr[ETH_ALEN];
+	u8 used;
+	/* p_aid of BFer entry is probably not used */
+	/* Used to fill Reg42C & Reg714 to compare with p_aid of Tx DESC */
+	u16 p_aid;
+	u8 g_id;
+	u8 mac_addr[ETH_ALEN];
 
-    enum beamforming_cap cap;
-    enum _BEAMFORM_ENTRY_HW_STATE state;
+	enum beamforming_cap cap;
+	enum _BEAMFORM_ENTRY_HW_STATE state;
 
-    u8 NumofSoundingDim;
+	u8 NumofSoundingDim;
 
-    /* SU-MIMO */
-    u8 su_reg_index;
+	/* SU-MIMO */
+	u8 su_reg_index;
 
-    /* MU-MIMO */
-    u8 gid_valid[8];
-    u8 user_position[16];
-    u16 aid;
+	/* MU-MIMO */
+	u8 gid_valid[8];
+	u8 user_position[16];
+	u16 aid;
 };
 
 struct sounding_info {
-    u8 su_sounding_list[MAX_NUM_BEAMFORMEE_SU];
-    u8 mu_sounding_list[MAX_NUM_BEAMFORMEE_MU];
+	u8 su_sounding_list[MAX_NUM_BEAMFORMEE_SU];
+	u8 mu_sounding_list[MAX_NUM_BEAMFORMEE_MU];
 
-    enum _SOUNDING_STATE state;
-    /*
-     * su_bfee_curidx is index for beamforming_info.bfee_entry[]
-     * range: 0~MAX_BEAMFORMEE_ENTRY_NUM
-     */
-    u8 su_bfee_curidx;
-    u8 candidate_mu_bfee_cnt;
+	enum _SOUNDING_STATE state;
+	/*
+	 * su_bfee_curidx is index for beamforming_info.bfee_entry[]
+	 * range: 0~MAX_BEAMFORMEE_ENTRY_NUM
+	 */
+	u8 su_bfee_curidx;
+	u8 candidate_mu_bfee_cnt;
 
-    /* For sounding schedule maintenance */
-    u16 min_sounding_period;
-    /* Get from sounding list */
-    /* Ex: SU STA1, SU STA2, MU STA(1~n) => the value will be 2+1=3 */
-    u8 sound_remain_cnt_per_period;
+	/* For sounding schedule maintenance */
+	u16 min_sounding_period;
+	/* Get from sounding list */
+	/* Ex: SU STA1, SU STA2, MU STA(1~n) => the value will be 2+1=3 */
+	u8 sound_remain_cnt_per_period;
 };
 
-struct _RT_CSI_INFO {
-    u8 Nc;
-    u8 Nr;
-    u8 Ng;
-    u8 CodeBook;
-    u8 ChnlWidth;
-    u8 bVHT;
+struct _RT_CSI_INFO{
+	u8 Nc;
+	u8 Nr;
+	u8 Ng;
+	u8 CodeBook;
+	u8 ChnlWidth;
+	u8 bVHT;
 };
 
 struct beamforming_info {
-    enum beamforming_cap beamforming_cap;
-    enum _BEAMFORMING_STATE beamforming_state;
-    struct beamformee_entry bfee_entry[MAX_BEAMFORMEE_ENTRY_NUM];
-    struct beamformer_entry bfer_entry[MAX_BEAMFORMER_ENTRY_NUM];
-    u8 sounding_sequence;
-    u8 beamformee_su_cnt;
-    u8 beamformer_su_cnt;
-    u32 beamformee_su_reg_maping;
-    u32 beamformer_su_reg_maping;
-    /* For MU-MINO */
-    u8 beamformee_mu_cnt;
-    u8 beamformer_mu_cnt;
-    u32 beamformee_mu_reg_maping;
-    u8 first_mu_bfee_index;
-    u8 mu_bfer_curidx;
-    u8 cur_csi_rpt_rate;
+	enum beamforming_cap beamforming_cap;
+	enum _BEAMFORMING_STATE beamforming_state;
+	struct beamformee_entry bfee_entry[MAX_BEAMFORMEE_ENTRY_NUM];
+	struct beamformer_entry bfer_entry[MAX_BEAMFORMER_ENTRY_NUM];
+	u8 sounding_sequence;
+	u8 beamformee_su_cnt;
+	u8 beamformer_su_cnt;
+	u32 beamformee_su_reg_maping;
+	u32 beamformer_su_reg_maping;
+	/* For MU-MINO */
+	u8 beamformee_mu_cnt;
+	u8 beamformer_mu_cnt;
+	u32 beamformee_mu_reg_maping;
+	u8 first_mu_bfee_index;
+	u8 mu_bfer_curidx;
+	u8 cur_csi_rpt_rate;
 
-    struct sounding_info sounding_info;
-    /* schedule regular timer for sounding */
-    _timer sounding_timer;
-    /* moniter if soudning too long */
-    _timer sounding_timeout_timer;
+	struct sounding_info sounding_info;
+	/* schedule regular timer for sounding */
+	_timer sounding_timer;
+	/* moniter if soudning too long */
+	_timer sounding_timeout_timer;
 
-    /* For HW configuration */
-    u8 SetHalBFEnterOnDemandCnt;
-    u8 SetHalBFLeaveOnDemandCnt;
-    u8 SetHalSoundownOnDemandCnt;
-    u8 bSetBFHwConfigInProgess;
+	/* For HW configuration */
+	u8 SetHalBFEnterOnDemandCnt;
+	u8 SetHalBFLeaveOnDemandCnt;
+	u8 SetHalSoundownOnDemandCnt;
+	u8 bSetBFHwConfigInProgess;
 
-    /*
-     * Target CSI report info.
-     * Keep the first SU CSI report info for 8822B HW bug workaround.
-     */
-    u8 bEnableSUTxBFWorkAround;
-    struct _RT_CSI_INFO TargetCSIInfo;
-    /* Only peform sounding to the first SU BFee */
-    struct beamformee_entry *TargetSUBFee;
+	/*
+	 * Target CSI report info.
+	 * Keep the first SU CSI report info for 8822B HW bug workaround.
+	 */
+	u8 bEnableSUTxBFWorkAround;
+	struct _RT_CSI_INFO TargetCSIInfo;
+	/* Only peform sounding to the first SU BFee */
+	struct beamformee_entry *TargetSUBFee;
 
-    /* For debug */
-    s8 sounding_running;
+	/* For debug */
+	s8 sounding_running;
 };
 
 enum beamforming_cap rtw_bf_bfee_get_entry_cap_by_macid(void *mlmepriv, u8 mac_id);
@@ -276,12 +276,12 @@ void rtw_bf_update_traffic(PADAPTER);
 #else /* !RTW_BEAMFORMING_VERSION_2 */
 /*PHYDM_BF - (BEAMFORMING_SUPPORT == 1)*/
 enum BEAMFORMING_CTRL_TYPE {
-    BEAMFORMING_CTRL_ENTER = 0,
-    BEAMFORMING_CTRL_LEAVE = 1,
-    BEAMFORMING_CTRL_START_PERIOD = 2,
-    BEAMFORMING_CTRL_END_PERIOD = 3,
-    BEAMFORMING_CTRL_SOUNDING_FAIL = 4,
-    BEAMFORMING_CTRL_SOUNDING_CLK = 5,
+	BEAMFORMING_CTRL_ENTER = 0,
+	BEAMFORMING_CTRL_LEAVE = 1,
+	BEAMFORMING_CTRL_START_PERIOD = 2,
+	BEAMFORMING_CTRL_END_PERIOD = 3,
+	BEAMFORMING_CTRL_SOUNDING_FAIL = 4,
+	BEAMFORMING_CTRL_SOUNDING_CLK = 5,
 };
 u32	rtw_beamforming_get_report_frame(PADAPTER	 Adapter, union recv_frame *precv_frame);
 void	rtw_beamforming_get_ndpa_frame(PADAPTER	 Adapter, union recv_frame *precv_frame);

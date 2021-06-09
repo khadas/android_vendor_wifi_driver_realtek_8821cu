@@ -37,48 +37,48 @@
 #undef ON_VISTA
 /* added by Jackson */
 #ifndef ON_VISTA
-/*
-* Bus driver versions
-*   */
+	/*
+	* Bus driver versions
+	*   */
 
-#define SDBUS_DRIVER_VERSION_1          0x100
-#define SDBUS_DRIVER_VERSION_2          0x200
+	#define SDBUS_DRIVER_VERSION_1          0x100
+	#define SDBUS_DRIVER_VERSION_2          0x200
 
-#define    SDP_FUNCTION_TYPE	4
-#define    SDP_BUS_DRIVER_VERSION 5
-#define    SDP_BUS_WIDTH 6
-#define    SDP_BUS_CLOCK 7
-#define    SDP_BUS_INTERFACE_CONTROL 8
-#define    SDP_HOST_BLOCK_LENGTH 9
-#define    SDP_FUNCTION_BLOCK_LENGTH 10
-#define    SDP_FN0_BLOCK_LENGTH 11
-#define    SDP_FUNCTION_INT_ENABLE 12
+	#define    SDP_FUNCTION_TYPE	4
+	#define    SDP_BUS_DRIVER_VERSION 5
+	#define    SDP_BUS_WIDTH 6
+	#define    SDP_BUS_CLOCK 7
+	#define    SDP_BUS_INTERFACE_CONTROL 8
+	#define    SDP_HOST_BLOCK_LENGTH 9
+	#define    SDP_FUNCTION_BLOCK_LENGTH 10
+	#define    SDP_FN0_BLOCK_LENGTH 11
+	#define    SDP_FUNCTION_INT_ENABLE 12
 #endif
 
 
 typedef struct _MP_REG_ENTRY {
 
-    NDIS_STRING		RegName;	/* variable name text */
-    BOOLEAN			bRequired;	/* 1->required, 0->optional */
+	NDIS_STRING		RegName;	/* variable name text */
+	BOOLEAN			bRequired;	/* 1->required, 0->optional */
 
-    u8			Type;		/* NdisParameterInteger/NdisParameterHexInteger/NdisParameterStringle/NdisParameterMultiString */
-    uint			FieldOffset;	/* offset to MP_ADAPTER field */
-    uint			FieldSize;	/* size (in bytes) of the field */
+	u8			Type;		/* NdisParameterInteger/NdisParameterHexInteger/NdisParameterStringle/NdisParameterMultiString */
+	uint			FieldOffset;	/* offset to MP_ADAPTER field */
+	uint			FieldSize;	/* size (in bytes) of the field */
 
 #ifdef UNDER_AMD64
-    u64			Default;
+	u64			Default;
 #else
-    u32			Default;		/* default value to use */
+	u32			Default;		/* default value to use */
 #endif
 
-    u32			Min;			/* minimum value allowed */
-    u32			Max;		/* maximum value allowed */
+	u32			Min;			/* minimum value allowed */
+	u32			Max;		/* maximum value allowed */
 } MP_REG_ENTRY, *PMP_REG_ENTRY;
 
 
 typedef struct _OCTET_STRING {
-    u8      *Octet;
-    u16      Length;
+	u8      *Octet;
+	u16      Length;
 } OCTET_STRING, *POCTET_STRING;
 
 

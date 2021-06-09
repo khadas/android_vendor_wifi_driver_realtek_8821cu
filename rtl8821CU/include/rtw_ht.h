@@ -19,62 +19,62 @@
 #define HT_OP_IE_LEN 22
 
 struct ht_priv {
-    u8	ht_option;
-    u8	ampdu_enable;/* for enable Tx A-MPDU */
-    u8	tx_amsdu_enable;/* for enable Tx A-MSDU */
-    u8	bss_coexist;/* for 20/40 Bss coexist */
+	u8	ht_option;
+	u8	ampdu_enable;/* for enable Tx A-MPDU */
+	u8	tx_amsdu_enable;/* for enable Tx A-MSDU */
+	u8	bss_coexist;/* for 20/40 Bss coexist */
 
-    /* u8	baddbareq_issued[16]; */
-    u32	tx_amsdu_maxlen; /* 1: 8k, 0:4k ; default:8k, for tx */
-    u32	rx_ampdu_maxlen; /* for rx reordering ctrl win_sz, updated when join_callback. */
+	/* u8	baddbareq_issued[16]; */
+	u32	tx_amsdu_maxlen; /* 1: 8k, 0:4k ; default:8k, for tx */
+	u32	rx_ampdu_maxlen; /* for rx reordering ctrl win_sz, updated when join_callback. */
 
-    u8	rx_ampdu_min_spacing;
+	u8	rx_ampdu_min_spacing;
 
-    u8	ch_offset;/* PRIME_CHNL_OFFSET */
-    u8	sgi_20m;
-    u8	sgi_40m;
+	u8	ch_offset;/* PRIME_CHNL_OFFSET */
+	u8	sgi_20m;
+	u8	sgi_40m;
 
-    /* for processing Tx A-MPDU */
-    u8	agg_enable_bitmap;
-    /* u8	ADDBA_retry_count; */
-    u8	candidate_tid_bitmap;
+	/* for processing Tx A-MPDU */
+	u8	agg_enable_bitmap;
+	/* u8	ADDBA_retry_count; */
+	u8	candidate_tid_bitmap;
 
-    u8	ldpc_cap;
-    u8	stbc_cap;
-    u8	beamform_cap;
-    u8	smps_cap; /*spatial multiplexing power save mode. 0:static SMPS, 1:dynamic SMPS, 3:SMPS disabled, 2:reserved*/
+	u8	ldpc_cap;
+	u8	stbc_cap;
+	u8	beamform_cap;
+	u8	smps_cap; /*spatial multiplexing power save mode. 0:static SMPS, 1:dynamic SMPS, 3:SMPS disabled, 2:reserved*/
 
-    u8 op_present:1; /* ht_op is present */
+	u8 op_present:1; /* ht_op is present */
 
-    struct rtw_ieee80211_ht_cap ht_cap;
-    u8 ht_op[HT_OP_IE_LEN];
+	struct rtw_ieee80211_ht_cap ht_cap;
+	u8 ht_op[HT_OP_IE_LEN];
 
 };
 
 #ifdef ROKU_PRIVATE
 struct ht_priv_infra_ap {
 
-    /*Infra mode, only store AP's info , not intersection of STA and AP*/
-    u8	channel_width_infra_ap;
-    u8	sgi_20m_infra_ap;
-    u8	sgi_40m_infra_ap;
-    u8	ldpc_cap_infra_ap;
-    u8	stbc_cap_infra_ap;
-    u8	MCS_set_infra_ap[16];
-    u8	Rx_ss_infra_ap;
-    u16	rx_highest_data_rate_infra_ap;
+	/*Infra mode, only store AP's info , not intersection of STA and AP*/
+	u8	channel_width_infra_ap;
+	u8	sgi_20m_infra_ap;
+	u8	sgi_40m_infra_ap;
+	u8	ldpc_cap_infra_ap;
+	u8	stbc_cap_infra_ap;
+	u8	MCS_set_infra_ap[16];
+	u8	Rx_ss_infra_ap;
+	u16	rx_highest_data_rate_infra_ap;
 };
 #endif /* ROKU_PRIVATE */
 
 typedef enum AGGRE_SIZE {
-    HT_AGG_SIZE_8K = 0,
-    HT_AGG_SIZE_16K = 1,
-    HT_AGG_SIZE_32K = 2,
-    HT_AGG_SIZE_64K = 3,
-    VHT_AGG_SIZE_128K = 4,
-    VHT_AGG_SIZE_256K = 5,
-    VHT_AGG_SIZE_512K = 6,
-    VHT_AGG_SIZE_1024K = 7,
+	HT_AGG_SIZE_8K = 0,
+	HT_AGG_SIZE_16K = 1,
+	HT_AGG_SIZE_32K = 2,
+	HT_AGG_SIZE_64K = 3,
+	VHT_AGG_SIZE_128K = 4,
+	VHT_AGG_SIZE_256K = 5,
+	VHT_AGG_SIZE_512K = 6,
+	VHT_AGG_SIZE_1024K = 7,
 } AGGRE_SIZE_E, *PAGGRE_SIZE_E;
 
 #define	LDPC_HT_ENABLE_RX			BIT0

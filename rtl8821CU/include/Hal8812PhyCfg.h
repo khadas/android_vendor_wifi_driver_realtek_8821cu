@@ -25,9 +25,9 @@
 
 
 #ifdef CONFIG_PCI_HCI
-#define MAX_AGGR_NUM	0x0B
+	#define MAX_AGGR_NUM	0x0B
 #else
-#define MAX_AGGR_NUM	0x07
+	#define MAX_AGGR_NUM	0x07
 #endif /* CONFIG_PCI_HCI */
 
 
@@ -54,21 +54,21 @@
  * BB and RF register read/write
  *   */
 u32	PHY_QueryBBReg8812(PADAPTER	Adapter,
-                       u32			RegAddr,
-                       u32			BitMask);
+				u32			RegAddr,
+				u32			BitMask);
 void	PHY_SetBBReg8812(PADAPTER		Adapter,
-                         u32			RegAddr,
-                         u32			BitMask,
-                         u32			Data);
+				u32			RegAddr,
+				u32			BitMask,
+				u32			Data);
 u32	PHY_QueryRFReg8812(PADAPTER	Adapter,
-                       enum rf_path	eRFPath,
-                       u32			RegAddr,
-                       u32			BitMask);
+				enum rf_path	eRFPath,
+				u32			RegAddr,
+				u32			BitMask);
 void	PHY_SetRFReg8812(PADAPTER		Adapter,
-                         enum rf_path	eRFPath,
-                         u32			RegAddr,
-                         u32			BitMask,
-                         u32			Data);
+				enum rf_path	eRFPath,
+				u32			RegAddr,
+				u32			BitMask,
+				u32			Data);
 
 /*
  * Initialization related function
@@ -83,8 +83,8 @@ int	PHY_RFConfig8812(PADAPTER	Adapter);
 
 s32
 PHY_SwitchWirelessBand8812(
-    PADAPTER		Adapter,
-    u8			Band
+		PADAPTER		Adapter,
+		u8			Band
 );
 
 /*
@@ -95,17 +95,17 @@ void	PHY_SetTxPowerLevel8812(PADAPTER	Adapter, u8	Channel);
 bool phy_get_txpwr_target_skip_by_rate_8812a(_adapter *adapter, enum MGN_RATE rate);
 
 u32 phy_get_tx_bb_swing_8812a(
-    PADAPTER	Adapter,
-    BAND_TYPE	Band,
-    enum rf_path	RFPath
+		PADAPTER	Adapter,
+		BAND_TYPE	Band,
+		enum rf_path	RFPath
 );
 
 void
 PHY_SetTxPowerIndex_8812A(
-    PADAPTER		Adapter,
-    u32				PowerIndex,
-    enum rf_path		RFPath,
-    u8				Rate
+		PADAPTER		Adapter,
+		u32				PowerIndex,
+		enum rf_path		RFPath,
+		u8				Rate
 );
 
 /*
@@ -113,11 +113,11 @@ PHY_SetTxPowerIndex_8812A(
  *   */
 void
 PHY_SetSwChnlBWMode8812(
-    PADAPTER			Adapter,
-    u8					channel,
-    enum channel_width	Bandwidth,
-    u8					Offset40,
-    u8					Offset80
+		PADAPTER			Adapter,
+		u8					channel,
+		enum channel_width	Bandwidth,
+		u8					Offset40,
+		u8					Offset80
 );
 
 /*
@@ -126,8 +126,8 @@ PHY_SetSwChnlBWMode8812(
 
 void
 phy_set_rf_path_switch_8812a(
-    struct dm_struct		*phydm,
-    bool		bMain
+		struct dm_struct		*phydm,
+		bool		bMain
 );
 
 /*--------------------------Exported Function prototype---------------------*/

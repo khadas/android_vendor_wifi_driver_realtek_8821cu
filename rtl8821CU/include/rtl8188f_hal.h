@@ -38,13 +38,13 @@
 #define IS_FW_HEADER_EXIST_8188F(_pFwHdr)	((le16_to_cpu(_pFwHdr->Signature) & 0xFFF0) == 0x88F0)
 
 typedef struct _RT_FIRMWARE {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_8188F_SIZE];
+	u8			szFwBuffer[FW_8188F_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8188F, *PRT_FIRMWARE_8188F;
 
 /*
@@ -52,30 +52,30 @@ typedef struct _RT_FIRMWARE {
  *
  * Added by tynli. 2009.12.04. */
 typedef struct _RT_8188F_FIRMWARE_HDR {
-    /* 8-byte alinment required */
+	/* 8-byte alinment required */
 
-    /* --- LONG WORD 0 ---- */
-    u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
-    u8		Category;	/* AP/NIC and USB/PCI */
-    u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
-    u16		Version;		/* FW Version */
-    u16		Subversion;	/* FW Subversion, default 0x00 */
+	/* --- LONG WORD 0 ---- */
+	u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
+	u8		Category;	/* AP/NIC and USB/PCI */
+	u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
+	u16		Version;		/* FW Version */
+	u16		Subversion;	/* FW Subversion, default 0x00 */
 
-    /* --- LONG WORD 1 ---- */
-    u8		Month;	/* Release time Month field */
-    u8		Date;	/* Release time Date field */
-    u8		Hour;	/* Release time Hour field */
-    u8		Minute;	/* Release time Minute field */
-    u16		RamCodeSize;	/* The size of RAM code */
-    u16		Rsvd2;
+	/* --- LONG WORD 1 ---- */
+	u8		Month;	/* Release time Month field */
+	u8		Date;	/* Release time Date field */
+	u8		Hour;	/* Release time Hour field */
+	u8		Minute;	/* Release time Minute field */
+	u16		RamCodeSize;	/* The size of RAM code */
+	u16		Rsvd2;
 
-    /* --- LONG WORD 2 ---- */
-    u32		SvnIdx;	/* The SVN entry index */
-    u32		Rsvd3;
+	/* --- LONG WORD 2 ---- */
+	u32		SvnIdx;	/* The SVN entry index */
+	u32		Rsvd3;
 
-    /* --- LONG WORD 3 ---- */
-    u32		Rsvd4;
-    u32		Rsvd5;
+	/* --- LONG WORD 3 ---- */
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8188F_FIRMWARE_HDR, *PRT_8188F_FIRMWARE_HDR;
 
 #define DRIVER_EARLY_INT_TIME_8188F		0x05
@@ -88,15 +88,15 @@ typedef struct _RT_8188F_FIRMWARE_HDR {
 
 #define RX_DMA_SIZE_8188F			0x4000	/* 16K */
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8188F	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8188F	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8188F	0x80	/* 128B, reserved for tx report */
+	#define RX_DMA_RESERVED_SIZE_8188F	0x80	/* 128B, reserved for tx report */
 #endif
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #define RX_DMA_BOUNDARY_8188F		(RX_DMA_SIZE_8188F - RX_DMA_RESERVED_SIZE_8188F - 1)
@@ -114,9 +114,9 @@ typedef struct _RT_8188F_FIRMWARE_HDR {
  * NS offload:2 NDP info: 1
  */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8188F	0x0b
+	#define WOWLAN_PAGE_NUM_8188F	0x0b
 #else
-#define WOWLAN_PAGE_NUM_8188F	0x00
+	#define WOWLAN_PAGE_NUM_8188F	0x00
 #endif
 
 #ifdef CONFIG_PNO_SUPPORT
@@ -233,10 +233,10 @@ void rtl8188f_start_thread(_adapter *padapter);
 void rtl8188f_stop_thread(_adapter *padapter);
 
 #if defined(CONFIG_CHECK_BT_HANG) && defined(CONFIG_BT_COEXIST)
-void rtl8188fs_init_checkbthang_workqueue(_adapter *adapter);
-void rtl8188fs_free_checkbthang_workqueue(_adapter *adapter);
-void rtl8188fs_cancle_checkbthang_workqueue(_adapter *adapter);
-void rtl8188fs_hal_check_bt_hang(_adapter *adapter);
+	void rtl8188fs_init_checkbthang_workqueue(_adapter *adapter);
+	void rtl8188fs_free_checkbthang_workqueue(_adapter *adapter);
+	void rtl8188fs_cancle_checkbthang_workqueue(_adapter *adapter);
+	void rtl8188fs_hal_check_bt_hang(_adapter *adapter);
 #endif
 
 #ifdef CONFIG_GPIO_WAKEUP

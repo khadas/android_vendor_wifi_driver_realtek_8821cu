@@ -44,21 +44,21 @@
  *	alive mechanism. PREQ's da = path dst
  * @RTW_MESH_PATH_BCAST_PREQ: for re-checking next hop resolve toward root.
  *	Use it to force path_discover sending broadcast PREQ for root.
- *
+ * 
  * RTW_MESH_PATH_RESOLVED is used by the mesh path timer to
  * decide when to stop or cancel the mesh path discovery.
  */
 enum rtw_mesh_path_flags {
-    RTW_MESH_PATH_ACTIVE =		BIT(0),
-    RTW_MESH_PATH_RESOLVING =	BIT(1),
-    RTW_MESH_PATH_SN_VALID =	BIT(2),
-    RTW_MESH_PATH_FIXED	=	BIT(3),
-    RTW_MESH_PATH_RESOLVED =	BIT(4),
-    RTW_MESH_PATH_REQ_QUEUED =	BIT(5),
-    RTW_MESH_PATH_DELETED =		BIT(6),
-    RTW_MESH_PATH_ROOT_ADD_CHK =	BIT(7),
-    RTW_MESH_PATH_PEER_AKA =	BIT(8),
-    RTW_MESH_PATH_BCAST_PREQ =	BIT(9),
+	RTW_MESH_PATH_ACTIVE =		BIT(0),
+	RTW_MESH_PATH_RESOLVING =	BIT(1),
+	RTW_MESH_PATH_SN_VALID =	BIT(2),
+	RTW_MESH_PATH_FIXED	=	BIT(3),
+	RTW_MESH_PATH_RESOLVED =	BIT(4),
+	RTW_MESH_PATH_REQ_QUEUED =	BIT(5),
+	RTW_MESH_PATH_DELETED =		BIT(6),
+	RTW_MESH_PATH_ROOT_ADD_CHK =	BIT(7),
+	RTW_MESH_PATH_PEER_AKA =	BIT(8),
+	RTW_MESH_PATH_BCAST_PREQ =	BIT(9),	
 };
 
 /**
@@ -99,35 +99,35 @@ enum rtw_mesh_path_flags {
  * destroying the STA completely.
  */
 struct rtw_mesh_path {
-    u8 dst[ETH_ALEN];
-    u8 mpp[ETH_ALEN];	/* used for MPP or MAP */
-    rtw_rhash_head rhash;
-    rtw_hlist_node gate_list;
-    _adapter *adapter;
-    struct sta_info __rcu *next_hop;
-    _timer timer;
-    _queue frame_queue;
-    u32 frame_queue_len;
-    rtw_rcu_head rcu;
-    u32 sn;
-    u32 metric;
-    u8 hop_count;
-    systime exp_time;
-    systime discovery_timeout;
-    systime gate_timeout;
-    u32 gate_ann_int;    /* gate announce interval */
-    u8 discovery_retries;
-    enum rtw_mesh_path_flags flags;
-    _lock state_lock;
-    u8 rann_snd_addr[ETH_ALEN];
+	u8 dst[ETH_ALEN];
+	u8 mpp[ETH_ALEN];	/* used for MPP or MAP */
+	rtw_rhash_head rhash;
+	rtw_hlist_node gate_list;
+	_adapter *adapter;
+	struct sta_info __rcu *next_hop;
+	_timer timer;
+	_queue frame_queue;
+	u32 frame_queue_len;
+	rtw_rcu_head rcu;
+	u32 sn;
+	u32 metric;
+	u8 hop_count;
+	systime exp_time;
+	systime discovery_timeout;
+	systime gate_timeout;
+	u32 gate_ann_int;    /* gate announce interval */
+	u8 discovery_retries;
+	enum rtw_mesh_path_flags flags;
+	_lock state_lock;
+	u8 rann_snd_addr[ETH_ALEN];
 #ifdef CONFIG_RTW_MESH_ADD_ROOT_CHK
-    u8 add_chk_rann_snd_addr[ETH_ALEN];
+	u8 add_chk_rann_snd_addr[ETH_ALEN];
 #endif
-    u32 rann_metric;
-    unsigned long last_preq_to_root;
-    bool is_root;
-    bool is_gate;
-    bool gate_asked;
+	u32 rann_metric;
+	unsigned long last_preq_to_root;
+	bool is_root;
+	bool is_gate;
+	bool gate_asked;
 };
 
 /**
@@ -140,10 +140,10 @@ struct rtw_mesh_path {
  * @entries: number of entries in the table
  */
 struct rtw_mesh_table {
-    rtw_hlist_head known_gates;
-    _lock gates_lock;
-    rtw_rhashtable rhead;
-    ATOMIC_T entries;
+	rtw_hlist_head known_gates;
+	_lock gates_lock;
+	rtw_rhashtable rhead;
+	ATOMIC_T entries;
 };
 
 #define RTW_MESH_PATH_EXPIRE (600 * HZ)
@@ -155,16 +155,16 @@ struct rtw_mesh_table {
 #define RTW_MESH_FRAME_QUEUE_LEN	10
 
 int rtw_mesh_nexthop_lookup(_adapter *adapter,
-                            const u8 *mda, const u8 *msa, u8 *ra);
+	const u8 *mda, const u8 *msa, u8 *ra);
 int rtw_mesh_nexthop_resolve(_adapter *adapter,
-                             struct xmit_frame *xframe);
+			 struct xmit_frame *xframe);
 
 struct rtw_mesh_path *rtw_mesh_path_lookup(_adapter *adapter,
-        const u8 *dst);
+				   const u8 *dst);
 struct rtw_mesh_path *rtw_mpp_path_lookup(_adapter *adapter,
-        const u8 *dst);
+				  const u8 *dst);
 int rtw_mpp_path_add(_adapter *adapter,
-                     const u8 *dst, const u8 *mpp);
+		 const u8 *dst, const u8 *mpp);
 void dump_mpp(void *sel, _adapter *adapter);
 
 struct rtw_mesh_path *
@@ -198,11 +198,11 @@ int rtw_mesh_path_del(_adapter *adapter, const u8 *addr);
 
 void rtw_mesh_path_flush_by_nexthop(struct sta_info *sta);
 void rtw_mesh_path_discard_frame(_adapter *adapter,
-                                 struct xmit_frame *xframe);
+			     struct xmit_frame *xframe);
 
 static inline void rtw_mesh_path_activate(struct rtw_mesh_path *mpath)
 {
-    mpath->flags |= RTW_MESH_PATH_ACTIVE | RTW_MESH_PATH_RESOLVED;
+	mpath->flags |= RTW_MESH_PATH_ACTIVE | RTW_MESH_PATH_RESOLVED;
 }
 
 void rtw_mesh_path_flush_by_iface(_adapter *adapter);

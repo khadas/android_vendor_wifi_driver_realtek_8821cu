@@ -17,12 +17,12 @@
 
 void
 PHY_RF6052SetBandwidth8812(
-    PADAPTER				Adapter,
-    enum channel_width		Bandwidth);
+		PADAPTER				Adapter,
+		enum channel_width		Bandwidth);
 
 
 int
 PHY_RF6052_Config_8812(
-    PADAPTER	Adapter);
+		PADAPTER	Adapter);
 
 #endif/* __RTL8188E_RF_H__ */

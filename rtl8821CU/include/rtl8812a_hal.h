@@ -69,13 +69,13 @@
 
 
 typedef struct _RT_FIRMWARE_8812 {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_SIZE_8812];
+	u8			szFwBuffer[FW_SIZE_8812];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8812, *PRT_FIRMWARE_8812;
 
 /*
@@ -123,15 +123,15 @@ typedef struct _RT_FIRMWARE_8812 {
 #define MAX_RX_DMA_BUFFER_SIZE_8812	0x3E80 /* RX 16K */
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8812	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8812	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8812	0x0	/* 0B */
+	#define RX_DMA_RESERVED_SIZE_8812	0x0	/* 0B */
 #endif
 #define RX_DMA_BOUNDARY_8812		(MAX_RX_DMA_BUFFER_SIZE_8812 - RX_DMA_RESERVED_SIZE_8812 - 1)
 
@@ -146,22 +146,22 @@ typedef struct _RT_FIRMWARE_8812 {
  * NS offload: 1 NDP info: 1
  */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8812	0x08
+	#define WOWLAN_PAGE_NUM_8812	0x08
 #else
-#define WOWLAN_PAGE_NUM_8812	0x00
+	#define WOWLAN_PAGE_NUM_8812	0x00
 #endif
 
 
 #ifdef CONFIG_BEAMFORMER_FW_NDPA
-#define FW_NDPA_PAGE_NUM	0x02
+	#define FW_NDPA_PAGE_NUM	0x02
 #else
-#define FW_NDPA_PAGE_NUM	0x00
+	#define FW_NDPA_PAGE_NUM	0x00
 #endif
 
 #ifdef DBG_FW_DEBUG_MSG_PKT
-#define FW_DBG_MSG_PKT_PAGE_NUM_8812	0x01
+	#define FW_DBG_MSG_PKT_PAGE_NUM_8812	0x01
 #else
-#define FW_DBG_MSG_PKT_PAGE_NUM_8812	0x00
+	#define FW_DBG_MSG_PKT_PAGE_NUM_8812	0x00
 #endif /*DBG_FW_DEBUG_MSG_PKT*/
 
 #define TX_TOTAL_PAGE_NUMBER_8812	(0xFF - BCNQ_PAGE_NUM_8812 - WOWLAN_PAGE_NUM_8812 - FW_NDPA_PAGE_NUM - FW_DBG_MSG_PKT_PAGE_NUM_8812)
@@ -191,9 +191,9 @@ typedef struct _RT_FIRMWARE_8812 {
 #define MAX_RX_DMA_BUFFER_SIZE_8821			0x3E80 /* RX 16K */
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8821	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8821	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8821	0x0	/* 0B */
+	#define RX_DMA_RESERVED_SIZE_8821	0x0	/* 0B */
 #endif
 #define RX_DMA_BOUNDARY_8821		(MAX_RX_DMA_BUFFER_SIZE_8821 - RX_DMA_RESERVED_SIZE_8821 - 1)
 
@@ -206,9 +206,9 @@ typedef struct _RT_FIRMWARE_8812 {
 /* For WoWLan , more reserved page
  * ARP Rsp:1, RWC:1, GTK Info:1,GTK RSP:1,GTK EXT MEM:1, PNO: 6 */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8821	0x06
+	#define WOWLAN_PAGE_NUM_8821	0x06
 #else
-#define WOWLAN_PAGE_NUM_8821	0x00
+	#define WOWLAN_PAGE_NUM_8821	0x00
 #endif
 
 #define TX_TOTAL_PAGE_NUMBER_8821	(0xFF - BCNQ_PAGE_NUM_8821 - WOWLAN_PAGE_NUM_8821)
@@ -362,8 +362,8 @@ void rtl8812a_combo_card_WifiOnlyHwInit(PADAPTER Adapter);
 
 void
 Hal_PatchwithJaguar_8812(
-    PADAPTER				Adapter,
-    RT_MEDIA_STATUS		MediaStatus
+		PADAPTER				Adapter,
+		RT_MEDIA_STATUS		MediaStatus
 );
 
 #endif /* __RTL8188E_HAL_H__ */

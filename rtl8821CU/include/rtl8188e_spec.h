@@ -93,8 +93,8 @@
  *
  * ----------------------------------------------------- */
 #ifdef CONFIG_WOWLAN
-#define REG_TXPKTBUF_IV_LOW             0x01a4
-#define REG_TXPKTBUF_IV_HIGH            0x01a8
+	#define REG_TXPKTBUF_IV_LOW             0x01a4
+	#define REG_TXPKTBUF_IV_HIGH            0x01a8
 #endif
 
 /* -----------------------------------------------------
@@ -109,9 +109,9 @@
  *
  * ----------------------------------------------------- */
 #ifdef CONFIG_RF_POWER_TRIM
-#define EEPROM_RF_GAIN_OFFSET			0xC1
-#define EEPROM_RF_GAIN_VAL				0xF6
-#define EEPROM_THERMAL_OFFSET			0xF5
+	#define EEPROM_RF_GAIN_OFFSET			0xC1
+	#define EEPROM_RF_GAIN_VAL				0xF6
+	#define EEPROM_THERMAL_OFFSET			0xF5
 #endif /*CONFIG_RF_POWER_TRIM*/
 /* ----------------------------------------------------------------------------
  * 88E Driver Initialization Offload REG_FDHM0(Offset 0x88, 8 bits)
@@ -137,16 +137,16 @@
 #define ISR_88E				REG_HISR_88E
 
 #ifdef CONFIG_PCI_HCI
-/* #define IMR_RX_MASK		(IMR_ROK_88E|IMR_RDU_88E|IMR_RXFOVW_88E) */
-#define IMR_TX_MASK			(IMR_VODOK_88E | IMR_VIDOK_88E | IMR_BEDOK_88E | IMR_BKDOK_88E | IMR_MGNTDOK_88E | IMR_HIGHDOK_88E | IMR_BCNDERR0_88E)
+	/* #define IMR_RX_MASK		(IMR_ROK_88E|IMR_RDU_88E|IMR_RXFOVW_88E) */
+	#define IMR_TX_MASK			(IMR_VODOK_88E | IMR_VIDOK_88E | IMR_BEDOK_88E | IMR_BKDOK_88E | IMR_MGNTDOK_88E | IMR_HIGHDOK_88E | IMR_BCNDERR0_88E)
 
-#ifdef CONFIG_CONCURRENT_MODE
-#define RT_BCN_INT_MASKS	(IMR_BCNDMAINT0_88E | IMR_TBDOK_88E | IMR_TBDER_88E | IMR_BCNDMAINT_E_88E)
-#else
-#define RT_BCN_INT_MASKS	(IMR_BCNDMAINT0_88E | IMR_TBDOK_88E | IMR_TBDER_88E)
-#endif
+	#ifdef CONFIG_CONCURRENT_MODE
+		#define RT_BCN_INT_MASKS	(IMR_BCNDMAINT0_88E | IMR_TBDOK_88E | IMR_TBDER_88E | IMR_BCNDMAINT_E_88E)
+	#else
+		#define RT_BCN_INT_MASKS	(IMR_BCNDMAINT0_88E | IMR_TBDOK_88E | IMR_TBDER_88E)
+	#endif
 
-#define RT_AC_INT_MASKS	(IMR_VIDOK_88E | IMR_VODOK_88E | IMR_BEDOK_88E | IMR_BKDOK_88E)
+	#define RT_AC_INT_MASKS	(IMR_VIDOK_88E | IMR_VODOK_88E | IMR_BEDOK_88E | IMR_BKDOK_88E)
 #endif
 
 /* ----------------------------------------------------------------------------

@@ -22,7 +22,7 @@
 
 enum halmac_ret_status
 download_flash_88xx(struct halmac_adapter *adapter, u8 *fw_bin, u32 size,
-                    u32 rom_addr);
+		    u32 rom_addr);
 
 enum halmac_ret_status
 read_flash_88xx(struct halmac_adapter *adapter, u32 addr, u32 length, u8 *data);
@@ -32,7 +32,7 @@ erase_flash_88xx(struct halmac_adapter *adapter, u8 erase_cmd, u32 addr);
 
 enum halmac_ret_status
 check_flash_88xx(struct halmac_adapter *adapter, u8 *fw_bin, u32 size,
-                 u32 addr);
+		 u32 addr);
 
 #endif /* HALMAC_88XX_SUPPORT */
 

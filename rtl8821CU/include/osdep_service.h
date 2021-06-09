@@ -30,6 +30,7 @@
 #define RTW_XBUF_UNAVAIL		11
 #define RTW_TX_BALANCE			12
 #define RTW_TX_WAIT_MORE_FRAME	13
+#define RTW_QUEUE_MGMT 14
 
 /* #define RTW_STATUS_TIMEDOUT -110 */
 
@@ -41,33 +42,39 @@
 
 
 #ifdef PLATFORM_FREEBSD
-#include <osdep_service_bsd.h>
+	#include <osdep_service_bsd.h>
 #endif
 
 #ifdef PLATFORM_LINUX
-#include <linux/version.h>
-#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
-#include <linux/sched/signal.h>
-#include <linux/sched/types.h>
+	#include <linux/version.h>
+#if defined(CONFIG_RTW_ANDROID_GKI)
+	#include <linux/firmware.h>
 #endif
-#include <osdep_service_linux.h>
-#include <drv_types_linux.h>
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0))
+	#include <linux/sched/signal.h>
+	#include <linux/sched/types.h>
+#endif
+	#include <osdep_service_linux.h>
+	#include <drv_types_linux.h>
 #endif
 
 #ifdef PLATFORM_OS_XP
-#include <osdep_service_xp.h>
-#include <drv_types_xp.h>
+	#include <osdep_service_xp.h>
+	#include <drv_types_xp.h>
 #endif
 
 #ifdef PLATFORM_OS_CE
-#include <osdep_service_ce.h>
-#include <drv_types_ce.h>
+	#include <osdep_service_ce.h>
+	#include <drv_types_ce.h>
 #endif
 
 /* #include <rtw_byteorder.h> */
 
 #ifndef BIT
-#define BIT(x)	(1 << (x))
+	#define BIT(x)	(1 << (x))
+#endif
+#ifndef BIT_ULL
+#define BIT_ULL(x)	(1ULL << (x))
 #endif
 
 #define CHECK_BIT(a, b) (!!((a) & (b)))
@@ -118,36 +125,36 @@
 extern int RTW_STATUS_CODE(int error_code);
 
 #ifndef RTK_DMP_PLATFORM
-#define CONFIG_USE_VMALLOC
+	#define CONFIG_USE_VMALLOC
 #endif
 
 /* flags used for rtw_mstat_update() */
 enum mstat_f {
-    /* type: 0x00ff */
-    MSTAT_TYPE_VIR = 0x00,
-    MSTAT_TYPE_PHY = 0x01,
-    MSTAT_TYPE_SKB = 0x02,
-    MSTAT_TYPE_USB = 0x03,
-    MSTAT_TYPE_MAX = 0x04,
+	/* type: 0x00ff */
+	MSTAT_TYPE_VIR = 0x00,
+	MSTAT_TYPE_PHY = 0x01,
+	MSTAT_TYPE_SKB = 0x02,
+	MSTAT_TYPE_USB = 0x03,
+	MSTAT_TYPE_MAX = 0x04,
 
-    /* func: 0xff00 */
-    MSTAT_FUNC_UNSPECIFIED = 0x00 << 8,
-    MSTAT_FUNC_IO = 0x01 << 8,
-    MSTAT_FUNC_TX_IO = 0x02 << 8,
-    MSTAT_FUNC_RX_IO = 0x03 << 8,
-    MSTAT_FUNC_TX = 0x04 << 8,
-    MSTAT_FUNC_RX = 0x05 << 8,
-    MSTAT_FUNC_CFG_VENDOR = 0x06 << 8,
-    MSTAT_FUNC_MAX = 0x07 << 8,
+	/* func: 0xff00 */
+	MSTAT_FUNC_UNSPECIFIED = 0x00 << 8,
+	MSTAT_FUNC_IO = 0x01 << 8,
+	MSTAT_FUNC_TX_IO = 0x02 << 8,
+	MSTAT_FUNC_RX_IO = 0x03 << 8,
+	MSTAT_FUNC_TX = 0x04 << 8,
+	MSTAT_FUNC_RX = 0x05 << 8,
+	MSTAT_FUNC_CFG_VENDOR = 0x06 << 8,
+	MSTAT_FUNC_MAX = 0x07 << 8,
 };
 
 #define mstat_tf_idx(flags) ((flags) & 0xff)
 #define mstat_ff_idx(flags) (((flags) & 0xff00) >> 8)
 
 typedef enum mstat_status {
-    MSTAT_ALLOC_SUCCESS = 0,
-    MSTAT_ALLOC_FAIL,
-    MSTAT_FREE
+	MSTAT_ALLOC_SUCCESS = 0,
+	MSTAT_ALLOC_FAIL,
+	MSTAT_FREE
 } MSTAT_STATUS;
 
 #ifdef DBG_MEM_ALLOC
@@ -309,6 +316,7 @@ u32 rtw_os_pkt_len(_pkt *pkt);
 extern void	_rtw_memcpy(void *dec, const void *sour, u32 sz);
 extern void _rtw_memmove(void *dst, const void *src, u32 sz);
 extern int	_rtw_memcmp(const void *dst, const void *src, u32 sz);
+extern int _rtw_memcmp2(const void *dst, const void *src, u32 sz);
 extern void	_rtw_memset(void *pbuf, int c, u32 sz);
 
 extern void	_rtw_init_listhead(_list *list);
@@ -380,6 +388,30 @@ extern bool _rtw_time_after(systime a, systime b);
 #define rtw_time_before(a,b) _rtw_time_after(b,a)
 #endif
 
+sysptime rtw_sptime_get(void);
+sysptime rtw_sptime_set(s64 secs, const u32 nsecs);
+sysptime rtw_sptime_zero(void);
+
+int rtw_sptime_cmp(const sysptime cmp1, const sysptime cmp2);
+bool rtw_sptime_eql(const sysptime cmp1, const sysptime cmp2);
+bool rtw_sptime_is_zero(const sysptime sptime);
+sysptime rtw_sptime_sub(const sysptime lhs, const sysptime rhs);
+sysptime rtw_sptime_add(const sysptime lhs, const sysptime rhs);
+
+s64 rtw_sptime_to_ms(const sysptime sptime);
+sysptime rtw_ms_to_sptime(u64 ms);
+s64 rtw_sptime_to_us(const sysptime sptime);
+sysptime rtw_us_to_sptime(u64 us);
+s64 rtw_sptime_to_ns(const sysptime sptime);
+sysptime rtw_ns_to_sptime(u64 ns);
+
+s64 rtw_sptime_diff_ms(const sysptime start, const sysptime end);
+s64 rtw_sptime_pass_ms(const sysptime start);
+s64 rtw_sptime_diff_us(const sysptime start, const sysptime end);
+s64 rtw_sptime_pass_us(const sysptime start);
+s64 rtw_sptime_diff_ns(const sysptime start, const sysptime end);
+s64 rtw_sptime_pass_ns(const sysptime start);
+
 extern void	rtw_sleep_schedulable(int ms);
 
 extern void	rtw_msleep_os(int ms);
@@ -399,26 +431,59 @@ extern void	rtw_udelay_os(int us);
 
 extern void rtw_yield_os(void);
 
+enum rtw_pwait_type {
+	RTW_PWAIT_TYPE_MSLEEP,
+	RTW_PWAIT_TYPE_USLEEP,
+	RTW_PWAIT_TYPE_YIELD,
+	RTW_PWAIT_TYPE_MDELAY,
+	RTW_PWAIT_TYPE_UDELAY,
+
+	RTW_PWAIT_TYPE_NUM,
+};
+
+#define RTW_PWAIT_TYPE_VALID(type) (type < RTW_PWAIT_TYPE_NUM)
+
+struct rtw_pwait_conf {
+	enum rtw_pwait_type type;
+	s32 wait_time;
+	s32 wait_cnt_lmt;
+};
+
+struct rtw_pwait_ctx {
+	struct rtw_pwait_conf conf;
+	s32 wait_cnt;
+	void (*wait_hdl)(int us);
+};
+
+extern const char *_rtw_pwait_type_str[];
+#define rtw_pwait_type_str(type) (RTW_PWAIT_TYPE_VALID(type) ? _rtw_pwait_type_str[type] : _rtw_pwait_type_str[RTW_PWAIT_TYPE_NUM])
+
+#define rtw_pwctx_reset(pwctx) (pwctx)->wait_cnt = 0
+#define rtw_pwctx_wait(pwctx) do { (pwctx)->wait_hdl((pwctx)->conf.wait_time); (pwctx)->wait_cnt++; } while(0)
+#define rtw_pwctx_waited(pwctx) ((pwctx)->wait_cnt)
+#define rtw_pwctx_exceed(pwctx) ((pwctx)->conf.wait_cnt_lmt >= 0 && (pwctx)->wait_cnt >= (pwctx)->conf.wait_cnt_lmt)
+
+int rtw_pwctx_config(struct rtw_pwait_ctx *pwctx, enum rtw_pwait_type type, s32 time, s32 cnt_lmt);
 
 extern void rtw_init_timer(_timer *ptimer, void *padapter, void *pfunc, void *ctx);
 
 
 __inline static unsigned char _cancel_timer_ex(_timer *ptimer)
 {
-    u8 bcancelled;
+	u8 bcancelled;
 
-    _cancel_timer(ptimer, &bcancelled);
+	_cancel_timer(ptimer, &bcancelled);
 
-    return bcancelled;
+	return bcancelled;
 }
 
 static __inline void thread_enter(char *name)
 {
 #ifdef PLATFORM_LINUX
-    allow_signal(SIGTERM);
+	allow_signal(SIGTERM);
 #endif
 #ifdef PLATFORM_FREEBSD
-    printf("%s", "RTKTHREAD_enter");
+	printf("%s", "RTKTHREAD_enter");
 #endif
 }
 void thread_exit(_completion *comp);
@@ -429,31 +494,31 @@ void _rtw_wait_for_comp(_completion *comp);
 static inline bool rtw_thread_stop(_thread_hdl_ th)
 {
 #ifdef PLATFORM_LINUX
-    return kthread_stop(th);
+	return kthread_stop(th);
 #endif
 }
 static inline void rtw_thread_wait_stop(void)
 {
 #ifdef PLATFORM_LINUX
-#if 0
-    while (!kthread_should_stop())
-        rtw_msleep_os(10);
-#else
-    set_current_state(TASK_INTERRUPTIBLE);
-    while (!kthread_should_stop()) {
-        schedule();
-        set_current_state(TASK_INTERRUPTIBLE);
-    }
-    __set_current_state(TASK_RUNNING);
-#endif
+	#if 0
+	while (!kthread_should_stop())
+		rtw_msleep_os(10);
+	#else
+	set_current_state(TASK_INTERRUPTIBLE);
+	while (!kthread_should_stop()) {
+		schedule();
+		set_current_state(TASK_INTERRUPTIBLE);
+	}
+	__set_current_state(TASK_RUNNING);
+	#endif
 #endif
 }
 
 __inline static void flush_signals_thread(void)
 {
 #ifdef PLATFORM_LINUX
-    if (signal_pending(current))
-        flush_signals(current);
+	if (signal_pending(current))
+		flush_signals(current);
 #endif
 }
 
@@ -461,15 +526,15 @@ __inline static _OS_STATUS res_to_status(sint res)
 {
 
 #if defined(PLATFORM_LINUX) || defined (PLATFORM_MPIXEL) || defined (PLATFORM_FREEBSD)
-    return res;
+	return res;
 #endif
 
 #ifdef PLATFORM_WINDOWS
 
-    if (res == _SUCCESS)
-        return NDIS_STATUS_SUCCESS;
-    else
-        return NDIS_STATUS_FAILURE;
+	if (res == _SUCCESS)
+		return NDIS_STATUS_SUCCESS;
+	else
+		return NDIS_STATUS_FAILURE;
 
 #endif
 
@@ -478,7 +543,7 @@ __inline static _OS_STATUS res_to_status(sint res)
 __inline static void rtw_dump_stack(void)
 {
 #ifdef PLATFORM_LINUX
-    dump_stack();
+	dump_stack();
 #endif
 }
 
@@ -490,19 +555,19 @@ __inline static void rtw_dump_stack(void)
 
 __inline static int rtw_bug_check(void *parg1, void *parg2, void *parg3, void *parg4)
 {
-    int ret = _TRUE;
+	int ret = _TRUE;
 
 #ifdef PLATFORM_WINDOWS
-    if (((uint)parg1) <= 0x7fffffff ||
-            ((uint)parg2) <= 0x7fffffff ||
-            ((uint)parg3) <= 0x7fffffff ||
-            ((uint)parg4) <= 0x7fffffff) {
-        ret = _FALSE;
-        KeBugCheckEx(0x87110000, (ULONG_PTR)parg1, (ULONG_PTR)parg2, (ULONG_PTR)parg3, (ULONG_PTR)parg4);
-    }
+	if (((uint)parg1) <= 0x7fffffff ||
+	    ((uint)parg2) <= 0x7fffffff ||
+	    ((uint)parg3) <= 0x7fffffff ||
+	    ((uint)parg4) <= 0x7fffffff) {
+		ret = _FALSE;
+		KeBugCheckEx(0x87110000, (ULONG_PTR)parg1, (ULONG_PTR)parg2, (ULONG_PTR)parg3, (ULONG_PTR)parg4);
+	}
 #endif
 
-    return ret;
+	return ret;
 
 }
 #ifdef PLATFORM_LINUX
@@ -517,93 +582,94 @@ __inline static int rtw_bug_check(void *parg1, void *parg2, void *parg3, void *p
 __inline static u32 _RND4(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 2) + ((sz & 3) ? 1 : 0)) << 2;
+	val = ((sz >> 2) + ((sz & 3) ? 1 : 0)) << 2;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND8(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 3) + ((sz & 7) ? 1 : 0)) << 3;
+	val = ((sz >> 3) + ((sz & 7) ? 1 : 0)) << 3;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND128(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 7) + ((sz & 127) ? 1 : 0)) << 7;
+	val = ((sz >> 7) + ((sz & 127) ? 1 : 0)) << 7;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND256(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 8) + ((sz & 255) ? 1 : 0)) << 8;
+	val = ((sz >> 8) + ((sz & 255) ? 1 : 0)) << 8;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 _RND512(u32 sz)
 {
 
-    u32	val;
+	u32	val;
 
-    val = ((sz >> 9) + ((sz & 511) ? 1 : 0)) << 9;
+	val = ((sz >> 9) + ((sz & 511) ? 1 : 0)) << 9;
 
-    return val;
+	return val;
 
 }
 
 __inline static u32 bitshift(u32 bitmask)
 {
-    u32 i;
+	u32 i;
 
-    for (i = 0; i <= 31; i++)
-        if (((bitmask >> i) &  0x1) == 1)
-            break;
+	for (i = 0; i <= 31; i++)
+		if (((bitmask >> i) &  0x1) == 1)
+			break;
 
-    return i;
+	return i;
 }
 
 static inline int largest_bit(u32 bitmask)
 {
-    int i;
+	int i;
 
-    for (i = 31; i >= 0; i--)
-        if (bitmask & BIT(i))
-            break;
+	for (i = 31; i >= 0; i--)
+		if (bitmask & BIT(i))
+			break;
 
-    return i;
+	return i;
 }
 
 static inline int largest_bit_64(u64 bitmask)
 {
-    int i;
+	int i;
 
-    for (i = 63; i >= 0; i--)
-        if (bitmask & BIT(i))
-            break;
+	for (i = 63; i >= 0; i--)
+		if (bitmask & BIT_ULL(i))
+			break;
 
-    return i;
+	return i;
 }
 
 #define rtw_abs(a) (a < 0 ? -a : a)
 #define rtw_min(a, b) ((a > b) ? b : a)
+#define rtw_max(a, b) ((a > b) ? a : b)
 #define rtw_is_range_a_in_b(hi_a, lo_a, hi_b, lo_b) (((hi_a) <= (hi_b)) && ((lo_a) >= (lo_b)))
 #define rtw_is_range_overlap(hi_a, lo_a, hi_b, lo_b) (((hi_a) > (lo_b)) && ((lo_a) < (hi_b)))
 
@@ -646,12 +712,14 @@ extern int ATOMIC_DEC_RETURN(ATOMIC_T *v);
 extern bool ATOMIC_INC_UNLESS(ATOMIC_T *v, int u);
 
 /* File operation APIs, just for linux now */
+#if !defined(CONFIG_RTW_ANDROID_GKI)
 extern int rtw_is_dir_readable(const char *path);
+extern int rtw_store_to_file(const char *path, u8 *buf, u32 sz);
+#endif /* !defined(CONFIG_RTW_ANDROID_GKI) */
 extern int rtw_is_file_readable(const char *path);
 extern int rtw_is_file_readable_with_size(const char *path, u32 *sz);
 extern int rtw_readable_file_sz_chk(const char *path, u32 sz);
 extern int rtw_retrieve_from_file(const char *path, u8 *buf, u32 sz);
-extern int rtw_store_to_file(const char *path, u8 *buf, u32 sz);
 
 
 #ifndef PLATFORM_FREEBSD
@@ -744,10 +812,10 @@ void rtw_buf_free(u8 **buf, u32 *buf_len);
 void rtw_buf_update(u8 **buf, u32 *buf_len, u8 *src, u32 src_len);
 
 struct rtw_cbuf {
-    u32 write;
-    u32 read;
-    u32 size;
-    void *bufs[0];
+	u32 write;
+	u32 read;
+	u32 size;
+	void *bufs[0];
 };
 
 bool rtw_cbuf_full(struct rtw_cbuf *cbuf);
@@ -758,16 +826,16 @@ struct rtw_cbuf *rtw_cbuf_alloc(u32 size);
 void rtw_cbuf_free(struct rtw_cbuf *cbuf);
 
 struct map_seg_t {
-    u16 sa;
-    u16 len;
-    u8 *c;
+	u16 sa;
+	u16 len;
+	u8 *c;
 };
 
 struct map_t {
-    u16 len;
-    u16 seg_num;
-    u8 init_value;
-    struct map_seg_t *segs;
+	u16 len;
+	u16 seg_num;
+	u8 init_value;
+	struct map_seg_t *segs;
 };
 
 #define MAPSEG_ARRAY_ENT(_sa, _len, _c, arg...) \
@@ -783,16 +851,18 @@ int map_readN(const struct map_t *map, u16 offset, u16 len, u8 *buf);
 u8 map_read8(const struct map_t *map, u16 offset);
 
 struct blacklist_ent {
-    _list list;
-    u8 addr[ETH_ALEN];
-    systime exp_time;
+	_list list;
+	u8 addr[ETH_ALEN];
+	systime exp_time;
 };
 
+#ifdef CONFIG_RTW_MESH
 int rtw_blacklist_add(_queue *blist, const u8 *addr, u32 timeout_ms);
 int rtw_blacklist_del(_queue *blist, const u8 *addr);
 int rtw_blacklist_search(_queue *blist, const u8 *addr);
 void rtw_blacklist_flush(_queue *blist);
 void dump_blacklist(void *sel, _queue *blist, const char *title);
+#endif
 
 /* String handler */
 
@@ -807,6 +877,8 @@ char alpha_to_upper(char c);
 int hex2num_i(char c);
 int hex2byte_i(const char *hex);
 int hexstr2bin(const char *hex, u8 *buf, size_t len);
+
+int hwaddr_aton_i(const char *txt, u8 *addr);
 
 /*
  * Write formatted output to sized buffer

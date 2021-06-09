@@ -19,9 +19,9 @@
 
 #if (RTK_ACS_VERSION == 3)
 enum NHM_PID {
-    NHM_PID_ACS,
-    NHM_PID_IEEE_11K_HIGH,
-    NHM_PID_IEEE_11K_LOW,
+	NHM_PID_ACS,
+	NHM_PID_IEEE_11K_HIGH,
+	NHM_PID_IEEE_11K_LOW,
 };
 
 #define init_clm_param(clm, app, lv, time) \
@@ -41,7 +41,7 @@ enum NHM_PID {
 		nhm.mntr_time = time;\
 	} while (0)
 
-
+	
 #define init_acs_clm(clm, time) \
 	init_clm_param(clm, CLM_ACS, CLM_LV_2, time)
 
@@ -50,7 +50,7 @@ enum NHM_PID {
 
 #define init_11K_high_nhm(nhm, time) \
 	init_nhm_param(nhm, NHM_EXCLUDE_TXON, NHM_EXCLUDE_CCA, NHM_CNT_ALL, IEEE_11K_HIGH, NHM_LV_2, time)
-
+	
 #define init_11K_low_nhm(nhm, time) \
 		init_nhm_param(nhm, NHM_EXCLUDE_TXON, NHM_EXCLUDE_CCA, NHM_CNT_ALL, IEEE_11K_LOW, NHM_LV_2, time)
 
@@ -65,8 +65,8 @@ extern void phydm_ccx_monitor_result(void *p_dm_void);
 #define IS_ACS_ENABLE(padapter)					((GET_ACS_STATE(padapter) == ACS_ENABLE) ? _TRUE : _FALSE)
 
 enum ACS_STATE {
-    ACS_DISABLE,
-    ACS_ENABLE,
+	ACS_DISABLE,
+	ACS_ENABLE,
 };
 
 #define ACS_BW_20M	BIT(0)
@@ -75,32 +75,33 @@ enum ACS_STATE {
 #define ACS_BW_160M	BIT(3)
 
 struct auto_chan_sel {
-    ATOMIC_T state;
-    u8 trigger_ch;
-    bool triggered;
-    u8 clm_ratio[MAX_CHANNEL_NUM];
-    u8 nhm_ratio[MAX_CHANNEL_NUM];
-#if (RTK_ACS_VERSION == 3)
-    u8 nhm[MAX_CHANNEL_NUM][NHM_RPT_NUM];
-#endif
-    u8 bss_nums[MAX_CHANNEL_NUM];
-    u8 interference_time[MAX_CHANNEL_NUM];
-    u8 cur_ch_clm_ratio;
-    u8 cur_ch_nhm_ratio;
-    u8 best_chan_5g;
-    u8 best_chan_24g;
+	ATOMIC_T state;
+	u8 trigger_ch;
+	bool triggered;
+	u8 clm_ratio[MAX_CHANNEL_NUM];
+	u8 nhm_ratio[MAX_CHANNEL_NUM];
+	s8 env_mntr_rpt[MAX_CHANNEL_NUM];
+	#if (RTK_ACS_VERSION == 3)
+	u8 nhm[MAX_CHANNEL_NUM][NHM_RPT_NUM];
+	#endif
+	u8 bss_nums[MAX_CHANNEL_NUM];
+	u8 interference_time[MAX_CHANNEL_NUM];
+	u8 cur_ch_clm_ratio;
+	u8 cur_ch_nhm_ratio;
+	u8 best_chan_5g;
+	u8 best_chan_24g;
 
-#if (RTK_ACS_VERSION == 3)
-    u8 trig_rst;
-    struct env_trig_rpt	trig_rpt;
-#endif
+	#if (RTK_ACS_VERSION == 3)
+	u8 trig_rst;
+	struct env_trig_rpt	trig_rpt;
+	#endif
 
-#ifdef CONFIG_RTW_ACS_DBG
-    RT_SCAN_TYPE scan_type;
-    u16 scan_time;
-    u8 igi;
-    u8 bw;
-#endif
+	#ifdef CONFIG_RTW_ACS_DBG
+	RT_SCAN_TYPE scan_type;
+	u16 scan_time;
+	u8 igi;
+	u8 bw;
+	#endif
 };
 
 #define rtw_acs_get_best_chan_24g(adapter)		(GET_HAL_DATA(adapter)->acs.best_chan_24g)
@@ -124,7 +125,12 @@ void rtw_acs_adv_reset(_adapter *adapter);
 u8 rtw_acs_get_clm_ratio_by_ch_num(_adapter *adapter, u8 chan);
 u8 rtw_acs_get_clm_ratio_by_ch_idx(_adapter *adapter, u8 ch_idx);
 u8 rtw_acs_get_nhm_ratio_by_ch_num(_adapter *adapter, u8 chan);
+u8 rtw_acs_get_nhm_noise_pwr_by_ch_idx(_adapter *adapter, u8 ch_idx);
 u8 rtw_acs_get_num_ratio_by_ch_idx(_adapter *adapter, u8 ch_idx);
+
+u8 rtw_phydm_clm_ratio(_adapter *adapter);
+u8 rtw_phydm_nhm_ratio(_adapter *adapter);
+u8 rtw_phydm_nhm_noise_pwr(_adapter *adapter);
 
 void rtw_acs_reset(_adapter *adapter);
 void rtw_acs_trigger(_adapter *adapter, u16 scan_time_ms, u8 scan_chan, enum NHM_PID pid);
@@ -147,14 +153,14 @@ void rtw_acs_stop(_adapter *adapter);
 #define IS_NM_ENABLE(padapter)					((GET_NM_STATE(padapter) == NM_ENABLE) ? _TRUE : _FALSE)
 
 enum NM_STATE {
-    NM_DISABLE,
-    NM_ENABLE,
+	NM_DISABLE,
+	NM_ENABLE,
 };
 
 struct noise_monitor {
-    ATOMIC_T state;
-    s16 noise[MAX_CHANNEL_NUM];
-    u8 bss_nums[MAX_CHANNEL_NUM];
+	ATOMIC_T state;
+	s16 noise[MAX_CHANNEL_NUM];
+	u8 bss_nums[MAX_CHANNEL_NUM];
 };
 void rtw_nm_enable(_adapter *adapter);
 void rtw_nm_disable(_adapter *adapter);

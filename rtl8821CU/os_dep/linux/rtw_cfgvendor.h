@@ -116,13 +116,13 @@ enum rtw_vendor_subcmd {
 
     GSCAN_SUBCMD_MAX,
 
-    RTT_SUBCMD_SET_CONFIG = ANDROID_NL80211_SUBCMD_RTT_RANGE_START,
-    RTT_SUBCMD_CANCEL_CONFIG,
-    RTT_SUBCMD_GETCAPABILITY,
+	RTT_SUBCMD_SET_CONFIG = ANDROID_NL80211_SUBCMD_RTT_RANGE_START,
+	RTT_SUBCMD_CANCEL_CONFIG,
+	RTT_SUBCMD_GETCAPABILITY,
 
     APF_SUBCMD_GET_CAPABILITIES = ANDROID_NL80211_SUBCMD_PKT_FILTER_RANGE_START,
     APF_SUBCMD_SET_FILTER,
-
+    
     LOGGER_START_LOGGING = ANDROID_NL80211_SUBCMD_DEBUG_RANGE_START,
     LOGGER_TRIGGER_MEM_DUMP,
     LOGGER_GET_MEM_DUMP,
@@ -137,119 +137,122 @@ enum rtw_vendor_subcmd {
     LOGGER_GET_TX_PKT_FATES,
     LOGGER_GET_RX_PKT_FATES,
 
-    VENDOR_SUBCMD_MAX
+	WIFI_OFFLOAD_SUBCMD_START_MKEEP_ALIVE = ANDROID_NL80211_SUBCMD_WIFI_OFFLOAD_RANGE_START,
+	WIFI_OFFLOAD_SUBCMD_STOP_MKEEP_ALIVE,
+
+	VENDOR_SUBCMD_MAX
 };
 
 enum gscan_attributes {
-    GSCAN_ATTRIBUTE_NUM_BUCKETS = 10,
-    GSCAN_ATTRIBUTE_BASE_PERIOD,
-    GSCAN_ATTRIBUTE_BUCKETS_BAND,
-    GSCAN_ATTRIBUTE_BUCKET_ID,
-    GSCAN_ATTRIBUTE_BUCKET_PERIOD,
-    GSCAN_ATTRIBUTE_BUCKET_NUM_CHANNELS,
-    GSCAN_ATTRIBUTE_BUCKET_CHANNELS,
-    GSCAN_ATTRIBUTE_NUM_AP_PER_SCAN,
-    GSCAN_ATTRIBUTE_REPORT_THRESHOLD,
-    GSCAN_ATTRIBUTE_NUM_SCANS_TO_CACHE,
-    GSCAN_ATTRIBUTE_BAND = GSCAN_ATTRIBUTE_BUCKETS_BAND,
+	GSCAN_ATTRIBUTE_NUM_BUCKETS = 10,
+	GSCAN_ATTRIBUTE_BASE_PERIOD,
+	GSCAN_ATTRIBUTE_BUCKETS_BAND,
+	GSCAN_ATTRIBUTE_BUCKET_ID,
+	GSCAN_ATTRIBUTE_BUCKET_PERIOD,
+	GSCAN_ATTRIBUTE_BUCKET_NUM_CHANNELS,
+	GSCAN_ATTRIBUTE_BUCKET_CHANNELS,
+	GSCAN_ATTRIBUTE_NUM_AP_PER_SCAN,
+	GSCAN_ATTRIBUTE_REPORT_THRESHOLD,
+	GSCAN_ATTRIBUTE_NUM_SCANS_TO_CACHE,
+	GSCAN_ATTRIBUTE_BAND = GSCAN_ATTRIBUTE_BUCKETS_BAND,
 
-    GSCAN_ATTRIBUTE_ENABLE_FEATURE = 20,
-    GSCAN_ATTRIBUTE_SCAN_RESULTS_COMPLETE,
-    GSCAN_ATTRIBUTE_FLUSH_FEATURE,
-    GSCAN_ATTRIBUTE_ENABLE_FULL_SCAN_RESULTS,
-    GSCAN_ATTRIBUTE_REPORT_EVENTS,
-    /* remaining reserved for additional attributes */
-    GSCAN_ATTRIBUTE_NUM_OF_RESULTS = 30,
-    GSCAN_ATTRIBUTE_FLUSH_RESULTS,
-    GSCAN_ATTRIBUTE_SCAN_RESULTS,                       /* flat array of wifi_scan_result */
-    GSCAN_ATTRIBUTE_SCAN_ID,                            /* indicates scan number */
-    GSCAN_ATTRIBUTE_SCAN_FLAGS,                         /* indicates if scan was aborted */
-    GSCAN_ATTRIBUTE_AP_FLAGS,                           /* flags on significant change event */
-    GSCAN_ATTRIBUTE_NUM_CHANNELS,
-    GSCAN_ATTRIBUTE_CHANNEL_LIST,
+	GSCAN_ATTRIBUTE_ENABLE_FEATURE = 20,
+	GSCAN_ATTRIBUTE_SCAN_RESULTS_COMPLETE,
+	GSCAN_ATTRIBUTE_FLUSH_FEATURE,
+	GSCAN_ATTRIBUTE_ENABLE_FULL_SCAN_RESULTS,
+	GSCAN_ATTRIBUTE_REPORT_EVENTS,
+	/* remaining reserved for additional attributes */
+	GSCAN_ATTRIBUTE_NUM_OF_RESULTS = 30,
+	GSCAN_ATTRIBUTE_FLUSH_RESULTS,
+	GSCAN_ATTRIBUTE_SCAN_RESULTS,                       /* flat array of wifi_scan_result */
+	GSCAN_ATTRIBUTE_SCAN_ID,                            /* indicates scan number */
+	GSCAN_ATTRIBUTE_SCAN_FLAGS,                         /* indicates if scan was aborted */
+	GSCAN_ATTRIBUTE_AP_FLAGS,                           /* flags on significant change event */
+	GSCAN_ATTRIBUTE_NUM_CHANNELS,
+	GSCAN_ATTRIBUTE_CHANNEL_LIST,
 
-    /* remaining reserved for additional attributes */
+	/* remaining reserved for additional attributes */
 
-    GSCAN_ATTRIBUTE_SSID = 40,
-    GSCAN_ATTRIBUTE_BSSID,
-    GSCAN_ATTRIBUTE_CHANNEL,
-    GSCAN_ATTRIBUTE_RSSI,
-    GSCAN_ATTRIBUTE_TIMESTAMP,
-    GSCAN_ATTRIBUTE_RTT,
-    GSCAN_ATTRIBUTE_RTTSD,
+	GSCAN_ATTRIBUTE_SSID = 40,
+	GSCAN_ATTRIBUTE_BSSID,
+	GSCAN_ATTRIBUTE_CHANNEL,
+	GSCAN_ATTRIBUTE_RSSI,
+	GSCAN_ATTRIBUTE_TIMESTAMP,
+	GSCAN_ATTRIBUTE_RTT,
+	GSCAN_ATTRIBUTE_RTTSD,
 
-    /* remaining reserved for additional attributes */
+	/* remaining reserved for additional attributes */
 
-    GSCAN_ATTRIBUTE_HOTLIST_BSSIDS = 50,
-    GSCAN_ATTRIBUTE_RSSI_LOW,
-    GSCAN_ATTRIBUTE_RSSI_HIGH,
-    GSCAN_ATTRIBUTE_HOSTLIST_BSSID_ELEM,
-    GSCAN_ATTRIBUTE_HOTLIST_FLUSH,
+	GSCAN_ATTRIBUTE_HOTLIST_BSSIDS = 50,
+	GSCAN_ATTRIBUTE_RSSI_LOW,
+	GSCAN_ATTRIBUTE_RSSI_HIGH,
+	GSCAN_ATTRIBUTE_HOSTLIST_BSSID_ELEM,
+	GSCAN_ATTRIBUTE_HOTLIST_FLUSH,
 
-    /* remaining reserved for additional attributes */
-    GSCAN_ATTRIBUTE_RSSI_SAMPLE_SIZE = 60,
-    GSCAN_ATTRIBUTE_LOST_AP_SAMPLE_SIZE,
-    GSCAN_ATTRIBUTE_MIN_BREACHING,
-    GSCAN_ATTRIBUTE_SIGNIFICANT_CHANGE_BSSIDS,
-    GSCAN_ATTRIBUTE_SIGNIFICANT_CHANGE_FLUSH,
-    GSCAN_ATTRIBUTE_MAX
+	/* remaining reserved for additional attributes */
+	GSCAN_ATTRIBUTE_RSSI_SAMPLE_SIZE = 60,
+	GSCAN_ATTRIBUTE_LOST_AP_SAMPLE_SIZE,
+	GSCAN_ATTRIBUTE_MIN_BREACHING,
+	GSCAN_ATTRIBUTE_SIGNIFICANT_CHANGE_BSSIDS,
+	GSCAN_ATTRIBUTE_SIGNIFICANT_CHANGE_FLUSH,
+	GSCAN_ATTRIBUTE_MAX
 };
 
 enum gscan_bucket_attributes {
-    GSCAN_ATTRIBUTE_CH_BUCKET_1,
-    GSCAN_ATTRIBUTE_CH_BUCKET_2,
-    GSCAN_ATTRIBUTE_CH_BUCKET_3,
-    GSCAN_ATTRIBUTE_CH_BUCKET_4,
-    GSCAN_ATTRIBUTE_CH_BUCKET_5,
-    GSCAN_ATTRIBUTE_CH_BUCKET_6,
-    GSCAN_ATTRIBUTE_CH_BUCKET_7
+	GSCAN_ATTRIBUTE_CH_BUCKET_1,
+	GSCAN_ATTRIBUTE_CH_BUCKET_2,
+	GSCAN_ATTRIBUTE_CH_BUCKET_3,
+	GSCAN_ATTRIBUTE_CH_BUCKET_4,
+	GSCAN_ATTRIBUTE_CH_BUCKET_5,
+	GSCAN_ATTRIBUTE_CH_BUCKET_6,
+	GSCAN_ATTRIBUTE_CH_BUCKET_7
 };
 
 enum gscan_ch_attributes {
-    GSCAN_ATTRIBUTE_CH_ID_1,
-    GSCAN_ATTRIBUTE_CH_ID_2,
-    GSCAN_ATTRIBUTE_CH_ID_3,
-    GSCAN_ATTRIBUTE_CH_ID_4,
-    GSCAN_ATTRIBUTE_CH_ID_5,
-    GSCAN_ATTRIBUTE_CH_ID_6,
-    GSCAN_ATTRIBUTE_CH_ID_7
+	GSCAN_ATTRIBUTE_CH_ID_1,
+	GSCAN_ATTRIBUTE_CH_ID_2,
+	GSCAN_ATTRIBUTE_CH_ID_3,
+	GSCAN_ATTRIBUTE_CH_ID_4,
+	GSCAN_ATTRIBUTE_CH_ID_5,
+	GSCAN_ATTRIBUTE_CH_ID_6,
+	GSCAN_ATTRIBUTE_CH_ID_7
 };
 
 enum wifi_rssi_monitor_attr {
-    RSSI_MONITOR_ATTRIBUTE_MAX_RSSI,
-    RSSI_MONITOR_ATTRIBUTE_MIN_RSSI,
-    RSSI_MONITOR_ATTRIBUTE_START,
+        RSSI_MONITOR_ATTRIBUTE_MAX_RSSI,
+        RSSI_MONITOR_ATTRIBUTE_MIN_RSSI,
+        RSSI_MONITOR_ATTRIBUTE_START,
 };
 
 
 enum rtt_attributes {
-    RTT_ATTRIBUTE_TARGET_CNT,
-    RTT_ATTRIBUTE_TARGET_INFO,
-    RTT_ATTRIBUTE_TARGET_MAC,
-    RTT_ATTRIBUTE_TARGET_TYPE,
-    RTT_ATTRIBUTE_TARGET_PEER,
-    RTT_ATTRIBUTE_TARGET_CHAN,
-    RTT_ATTRIBUTE_TARGET_MODE,
-    RTT_ATTRIBUTE_TARGET_INTERVAL,
-    RTT_ATTRIBUTE_TARGET_NUM_MEASUREMENT,
-    RTT_ATTRIBUTE_TARGET_NUM_PKT,
-    RTT_ATTRIBUTE_TARGET_NUM_RETRY
+	RTT_ATTRIBUTE_TARGET_CNT,
+	RTT_ATTRIBUTE_TARGET_INFO,
+	RTT_ATTRIBUTE_TARGET_MAC,
+	RTT_ATTRIBUTE_TARGET_TYPE,
+	RTT_ATTRIBUTE_TARGET_PEER,
+	RTT_ATTRIBUTE_TARGET_CHAN,
+	RTT_ATTRIBUTE_TARGET_MODE,
+	RTT_ATTRIBUTE_TARGET_INTERVAL,
+	RTT_ATTRIBUTE_TARGET_NUM_MEASUREMENT,
+	RTT_ATTRIBUTE_TARGET_NUM_PKT,
+	RTT_ATTRIBUTE_TARGET_NUM_RETRY
 };
 
 enum logger_attributes {
-    LOGGER_ATTRIBUTE_GET_DRIVER,
-    LOGGER_ATTRIBUTE_GET_FW,
-    LOGGER_ATTRIBUTE_RING_ID,
-    LOGGER_ATTRIBUTE_RING_NAME,
-    LOGGER_ATTRIBUTE_RING_FLAGS,
-    LOGGER_ATTRIBUTE_LOG_LEVEL,
-    LOGGER_ATTRIBUTE_LOG_TIME_INTVAL,
-    LOGGER_ATTRIBUTE_LOG_MIN_DATA_SIZE,
-    LOGGER_ATTRIBUTE_FW_DUMP_LEN,
-    LOGGER_ATTRIBUTE_FW_DUMP_DATA,
-    LOGGERG_ATTRIBUTE_RING_DATA,
-    LOGGER_ATTRIBUTE_RING_STATUS,
-    LOGGER_ATTRIBUTE_RING_NUM
+	LOGGER_ATTRIBUTE_GET_DRIVER,
+	LOGGER_ATTRIBUTE_GET_FW,
+	LOGGER_ATTRIBUTE_RING_ID,
+	LOGGER_ATTRIBUTE_RING_NAME,
+	LOGGER_ATTRIBUTE_RING_FLAGS,
+	LOGGER_ATTRIBUTE_LOG_LEVEL,
+	LOGGER_ATTRIBUTE_LOG_TIME_INTVAL,
+	LOGGER_ATTRIBUTE_LOG_MIN_DATA_SIZE,
+	LOGGER_ATTRIBUTE_FW_DUMP_LEN,
+	LOGGER_ATTRIBUTE_FW_DUMP_DATA,
+	LOGGERG_ATTRIBUTE_RING_DATA,
+	LOGGER_ATTRIBUTE_RING_STATUS,
+	LOGGER_ATTRIBUTE_RING_NUM
 };
 typedef enum rtw_vendor_event {
     RTK_RESERVED1,
@@ -269,41 +272,41 @@ typedef enum rtw_vendor_event {
 } rtw_vendor_event_t;
 
 enum andr_wifi_feature_set_attr {
-    ANDR_WIFI_ATTRIBUTE_NUM_FEATURE_SET,
-    ANDR_WIFI_ATTRIBUTE_FEATURE_SET,
-    ANDR_WIFI_ATTRIBUTE_RANDOM_MAC_OUI,
-    ANDR_WIFI_ATTRIBUTE_NODFS_SET,
-    ANDR_WIFI_ATTRIBUTE_COUNTRY,
-    ANDR_WIFI_ATTRIBUTE_ND_OFFLOAD_VALUE
-    // Add more attribute here
+	ANDR_WIFI_ATTRIBUTE_NUM_FEATURE_SET,
+	ANDR_WIFI_ATTRIBUTE_FEATURE_SET,
+	ANDR_WIFI_ATTRIBUTE_RANDOM_MAC_OUI,
+	ANDR_WIFI_ATTRIBUTE_NODFS_SET,
+	ANDR_WIFI_ATTRIBUTE_COUNTRY,
+	ANDR_WIFI_ATTRIBUTE_ND_OFFLOAD_VALUE
+	// Add more attribute here
 };
 
 typedef enum rtw_vendor_gscan_attribute {
-    ATTR_START_GSCAN,
-    ATTR_STOP_GSCAN,
-    ATTR_SET_SCAN_BATCH_CFG_ID, /* set batch scan params */
-    ATTR_SET_SCAN_GEOFENCE_CFG_ID, /* set list of bssids to track */
-    ATTR_SET_SCAN_SIGNIFICANT_CFG_ID, /* set list of bssids, rssi threshold etc.. */
-    ATTR_SET_SCAN_CFG_ID, /* set common scan config params here */
-    ATTR_GET_GSCAN_CAPABILITIES_ID,
-    /* Add more sub commands here */
-    ATTR_GSCAN_MAX
+	ATTR_START_GSCAN,
+	ATTR_STOP_GSCAN,
+	ATTR_SET_SCAN_BATCH_CFG_ID, /* set batch scan params */
+	ATTR_SET_SCAN_GEOFENCE_CFG_ID, /* set list of bssids to track */
+	ATTR_SET_SCAN_SIGNIFICANT_CFG_ID, /* set list of bssids, rssi threshold etc.. */
+	ATTR_SET_SCAN_CFG_ID, /* set common scan config params here */
+	ATTR_GET_GSCAN_CAPABILITIES_ID,
+	/* Add more sub commands here */
+	ATTR_GSCAN_MAX
 } rtw_vendor_gscan_attribute_t;
 
 typedef enum gscan_batch_attribute {
-    ATTR_GSCAN_BATCH_BESTN,
-    ATTR_GSCAN_BATCH_MSCAN,
-    ATTR_GSCAN_BATCH_BUFFER_THRESHOLD
+	ATTR_GSCAN_BATCH_BESTN,
+	ATTR_GSCAN_BATCH_MSCAN,
+	ATTR_GSCAN_BATCH_BUFFER_THRESHOLD
 } gscan_batch_attribute_t;
 
 typedef enum gscan_geofence_attribute {
-    ATTR_GSCAN_NUM_HOTLIST_BSSID,
-    ATTR_GSCAN_HOTLIST_BSSID
+	ATTR_GSCAN_NUM_HOTLIST_BSSID,
+	ATTR_GSCAN_HOTLIST_BSSID
 } gscan_geofence_attribute_t;
 
 typedef enum gscan_complete_event {
-    WIFI_SCAN_BUFFER_FULL,
-    WIFI_SCAN_COMPLETE
+	WIFI_SCAN_BUFFER_FULL,
+	WIFI_SCAN_COMPLETE
 } gscan_complete_event_t;
 /* wifi_hal.h */
 /* WiFi Common definitions */
@@ -373,14 +376,14 @@ typedef struct {
     u32 ring_buffer_byte_size;   // total memory size allocated for the buffer
     u32 verbose_level;           // verbose level for ring buffer
     u32 written_bytes;           // number of bytes that was written to the buffer by driver,
-    // monotonously increasing integer
+                                 // monotonously increasing integer
     u32 read_bytes;              // number of bytes that was read from the buffer by user land,
-    // monotonously increasing integer
+                                 // monotonously increasing integer
     u32 written_records;         // number of records that was written to the buffer by driver,
-    // monotonously increasing integer
+                                 // monotonously increasing integer
 } wifi_ring_buffer_status;
 
-#ifdef CONFIG_RTW_CFGVEDNOR_LLSTATS
+#ifdef CONFIG_RTW_CFGVENDOR_LLSTATS
 #define STATS_MAJOR_VERSION      1
 #define STATS_MINOR_VERSION      0
 #define STATS_MICRO_VERSION      0
@@ -408,7 +411,7 @@ typedef enum {
     WIFI_INTERFACE_NAN = 5,
     WIFI_INTERFACE_MESH = 6,
     WIFI_INTERFACE_UNKNOWN = -1
-} wifi_interface_mode;
+ } wifi_interface_mode;
 
 #define WIFI_CAPABILITY_QOS          0x00000001     // set for QOS association
 #define WIFI_CAPABILITY_PROTECTED    0x00000002     // set for protected association (802.11 beacon frame control protected bit set)
@@ -418,41 +421,41 @@ typedef enum {
 #define WIFI_CAPABILITY_COUNTRY      0x00000020     // set is 802.11 Country Element is present
 
 typedef struct {
-    wifi_interface_mode mode;     // interface mode
-    u8 mac_addr[6];               // interface mac address (self)
-    wifi_connection_state state;  // connection state (valid for STA, CLI only)
-    wifi_roam_state roaming;      // roaming state
-    u32 capabilities;             // WIFI_CAPABILITY_XXX (self)
-    u8 ssid[33];                  // null terminated SSID
-    u8 bssid[6];                  // bssid
-    u8 ap_country_str[3];         // country string advertised by AP
-    u8 country_str[3];            // country string for this association
+   wifi_interface_mode mode;     // interface mode
+   u8 mac_addr[6];               // interface mac address (self)
+   wifi_connection_state state;  // connection state (valid for STA, CLI only)
+   wifi_roam_state roaming;      // roaming state
+   u32 capabilities;             // WIFI_CAPABILITY_XXX (self)
+   u8 ssid[33];                  // null terminated SSID
+   u8 bssid[6];                  // bssid
+   u8 ap_country_str[3];         // country string advertised by AP
+   u8 country_str[3];            // country string for this association
 } wifi_interface_link_layer_info;
 
 /* channel information */
 typedef struct {
-    wifi_channel_width width;   // channel width (20, 40, 80, 80+80, 160)
-    wifi_channel center_freq;   // primary 20 MHz channel
-    wifi_channel center_freq0;  // center frequency (MHz) first segment
-    wifi_channel center_freq1;  // center frequency (MHz) second segment
+   wifi_channel_width width;   // channel width (20, 40, 80, 80+80, 160)
+   wifi_channel center_freq;   // primary 20 MHz channel
+   wifi_channel center_freq0;  // center frequency (MHz) first segment
+   wifi_channel center_freq1;  // center frequency (MHz) second segment
 } wifi_channel_info;
 
 /* wifi rate */
 typedef struct {
-    u32 preamble   :3;   // 0: OFDM, 1:CCK, 2:HT 3:VHT 4..7 reserved
-    u32 nss        :2;   // 0:1x1, 1:2x2, 3:3x3, 4:4x4
-    u32 bw         :3;   // 0:20MHz, 1:40Mhz, 2:80Mhz, 3:160Mhz
-    u32 rateMcsIdx :8;   // OFDM/CCK rate code would be as per ieee std in the units of 0.5mbps
-    // HT/VHT it would be mcs index
-    u32 reserved  :16;   // reserved
-    u32 bitrate;         // units of 100 Kbps
+   u32 preamble   :3;   // 0: OFDM, 1:CCK, 2:HT 3:VHT 4..7 reserved
+   u32 nss        :2;   // 0:1x1, 1:2x2, 3:3x3, 4:4x4
+   u32 bw         :3;   // 0:20MHz, 1:40Mhz, 2:80Mhz, 3:160Mhz
+   u32 rateMcsIdx :8;   // OFDM/CCK rate code would be as per ieee std in the units of 0.5mbps
+                        // HT/VHT it would be mcs index
+   u32 reserved  :16;   // reserved
+   u32 bitrate;         // units of 100 Kbps
 } wifi_rate;
 
 /* channel statistics */
 typedef struct {
-    wifi_channel_info channel;  // channel
-    u32 on_time;                // msecs the radio is awake (32 bits number accruing over time)
-    u32 cca_busy_time;          // msecs the CCA register is busy (32 bits number accruing over time)
+   wifi_channel_info channel;  // channel
+   u32 on_time;                // msecs the radio is awake (32 bits number accruing over time)
+   u32 cca_busy_time;          // msecs the CCA register is busy (32 bits number accruing over time)
 } wifi_channel_stat;
 
 // Max number of tx power levels. The actual number vary per device and is specified by |num_tx_levels|
@@ -460,18 +463,18 @@ typedef struct {
 
 /* Internal radio statistics structure in the driver */
 typedef struct {
-    wifi_radio radio;                      // wifi radio (if multiple radio supported)
-    u32 on_time;                           // msecs the radio is awake (32 bits number accruing over time)
-    u32 tx_time;                           // msecs the radio is transmitting (32 bits number accruing over time)
-    u32 rx_time;                           // msecs the radio is in active receive (32 bits number accruing over time)
-    u32 on_time_scan;                      // msecs the radio is awake due to all scan (32 bits number accruing over time)
-    u32 on_time_nbd;                       // msecs the radio is awake due to NAN (32 bits number accruing over time)
-    u32 on_time_gscan;                     // msecs the radio is awake due to G?scan (32 bits number accruing over time)
-    u32 on_time_roam_scan;                 // msecs the radio is awake due to roam?scan (32 bits number accruing over time)
-    u32 on_time_pno_scan;                  // msecs the radio is awake due to PNO scan (32 bits number accruing over time)
-    u32 on_time_hs20;                      // msecs the radio is awake due to HS2.0 scans and GAS exchange (32 bits number accruing over time)
-    u32 num_channels;                      // number of channels
-    wifi_channel_stat channels[];          // channel statistics
+   wifi_radio radio;                      // wifi radio (if multiple radio supported)
+   u32 on_time;                           // msecs the radio is awake (32 bits number accruing over time)
+   u32 tx_time;                           // msecs the radio is transmitting (32 bits number accruing over time)
+   u32 rx_time;                           // msecs the radio is in active receive (32 bits number accruing over time)
+   u32 on_time_scan;                      // msecs the radio is awake due to all scan (32 bits number accruing over time)
+   u32 on_time_nbd;                       // msecs the radio is awake due to NAN (32 bits number accruing over time)
+   u32 on_time_gscan;                     // msecs the radio is awake due to G?scan (32 bits number accruing over time)
+   u32 on_time_roam_scan;                 // msecs the radio is awake due to roam?scan (32 bits number accruing over time)
+   u32 on_time_pno_scan;                  // msecs the radio is awake due to PNO scan (32 bits number accruing over time)
+   u32 on_time_hs20;                      // msecs the radio is awake due to HS2.0 scans and GAS exchange (32 bits number accruing over time)
+   u32 num_channels;                      // number of channels
+   wifi_channel_stat channels[];          // channel statistics
 } wifi_radio_stat_internal;
 
 /**
@@ -497,95 +500,95 @@ typedef struct {
 
 /* per rate statistics */
 typedef struct {
-    wifi_rate rate;     // rate information
-    u32 tx_mpdu;        // number of successfully transmitted data pkts (ACK rcvd)
-    u32 rx_mpdu;        // number of received data pkts
-    u32 mpdu_lost;      // number of data packet losses (no ACK)
-    u32 retries;        // total number of data pkt retries
-    u32 retries_short;  // number of short data pkt retries
-    u32 retries_long;   // number of long data pkt retries
+   wifi_rate rate;     // rate information
+   u32 tx_mpdu;        // number of successfully transmitted data pkts (ACK rcvd)
+   u32 rx_mpdu;        // number of received data pkts
+   u32 mpdu_lost;      // number of data packet losses (no ACK)
+   u32 retries;        // total number of data pkt retries
+   u32 retries_short;  // number of short data pkt retries
+   u32 retries_long;   // number of long data pkt retries
 } wifi_rate_stat;
 
 /* access categories */
 typedef enum {
-    WIFI_AC_VO  = 0,
-    WIFI_AC_VI  = 1,
-    WIFI_AC_BE  = 2,
-    WIFI_AC_BK  = 3,
-    WIFI_AC_MAX = 4,
+   WIFI_AC_VO  = 0,
+   WIFI_AC_VI  = 1,
+   WIFI_AC_BE  = 2,
+   WIFI_AC_BK  = 3,
+   WIFI_AC_MAX = 4,
 } wifi_traffic_ac;
 
 /* wifi peer type */
 typedef enum
 {
-    WIFI_PEER_STA,
-    WIFI_PEER_AP,
-    WIFI_PEER_P2P_GO,
-    WIFI_PEER_P2P_CLIENT,
-    WIFI_PEER_NAN,
-    WIFI_PEER_TDLS,
-    WIFI_PEER_INVALID,
+   WIFI_PEER_STA,
+   WIFI_PEER_AP,
+   WIFI_PEER_P2P_GO,
+   WIFI_PEER_P2P_CLIENT,
+   WIFI_PEER_NAN,
+   WIFI_PEER_TDLS,
+   WIFI_PEER_INVALID,
 } wifi_peer_type;
 
 /* per peer statistics */
 typedef struct {
-    wifi_peer_type type;           // peer type (AP, TDLS, GO etc.)
-    u8 peer_mac_address[6];        // mac address
-    u32 capabilities;              // peer WIFI_CAPABILITY_XXX
-    u32 num_rate;                  // number of rates
-    wifi_rate_stat rate_stats[];   // per rate statistics, number of entries  = num_rate
+   wifi_peer_type type;           // peer type (AP, TDLS, GO etc.)
+   u8 peer_mac_address[6];        // mac address
+   u32 capabilities;              // peer WIFI_CAPABILITY_XXX
+   u32 num_rate;                  // number of rates
+   wifi_rate_stat rate_stats[];   // per rate statistics, number of entries  = num_rate
 } wifi_peer_info;
 
 /* Per access category statistics */
 typedef struct {
-    wifi_traffic_ac ac;             // access category (VI, VO, BE, BK)
-    u32 tx_mpdu;                    // number of successfully transmitted unicast data pkts (ACK rcvd)
-    u32 rx_mpdu;                    // number of received unicast data packets
-    u32 tx_mcast;                   // number of succesfully transmitted multicast data packets
-    // STA case: implies ACK received from AP for the unicast packet in which mcast pkt was sent
-    u32 rx_mcast;                   // number of received multicast data packets
-    u32 rx_ampdu;                   // number of received unicast a-mpdus; support of this counter is optional
-    u32 tx_ampdu;                   // number of transmitted unicast a-mpdus; support of this counter is optional
-    u32 mpdu_lost;                  // number of data pkt losses (no ACK)
-    u32 retries;                    // total number of data pkt retries
-    u32 retries_short;              // number of short data pkt retries
-    u32 retries_long;               // number of long data pkt retries
-    u32 contention_time_min;        // data pkt min contention time (usecs)
-    u32 contention_time_max;        // data pkt max contention time (usecs)
-    u32 contention_time_avg;        // data pkt avg contention time (usecs)
-    u32 contention_num_samples;     // num of data pkts used for contention statistics
+   wifi_traffic_ac ac;             // access category (VI, VO, BE, BK)
+   u32 tx_mpdu;                    // number of successfully transmitted unicast data pkts (ACK rcvd)
+   u32 rx_mpdu;                    // number of received unicast data packets
+   u32 tx_mcast;                   // number of succesfully transmitted multicast data packets
+                                   // STA case: implies ACK received from AP for the unicast packet in which mcast pkt was sent
+   u32 rx_mcast;                   // number of received multicast data packets
+   u32 rx_ampdu;                   // number of received unicast a-mpdus; support of this counter is optional
+   u32 tx_ampdu;                   // number of transmitted unicast a-mpdus; support of this counter is optional
+   u32 mpdu_lost;                  // number of data pkt losses (no ACK)
+   u32 retries;                    // total number of data pkt retries
+   u32 retries_short;              // number of short data pkt retries
+   u32 retries_long;               // number of long data pkt retries
+   u32 contention_time_min;        // data pkt min contention time (usecs)
+   u32 contention_time_max;        // data pkt max contention time (usecs)
+   u32 contention_time_avg;        // data pkt avg contention time (usecs)
+   u32 contention_num_samples;     // num of data pkts used for contention statistics
 } wifi_wmm_ac_stat;
 
 /* interface statistics */
 typedef struct {
-    wifi_interface_handle iface;          // wifi interface
-    wifi_interface_link_layer_info info;  // current state of the interface
-    u32 beacon_rx;                        // access point beacon received count from connected AP
-    u64 average_tsf_offset;               // average beacon offset encountered (beacon_TSF - TBTT)
-    // The average_tsf_offset field is used so as to calculate the
-    // typical beacon contention time on the channel as well may be
-    // used to debug beacon synchronization and related power consumption issue
-    u32 leaky_ap_detected;                // indicate that this AP typically leaks packets beyond the driver guard time.
-    u32 leaky_ap_avg_num_frames_leaked;  // average number of frame leaked by AP after frame with PM bit set was ACK'ed by AP
-    u32 leaky_ap_guard_time;              // guard time currently in force (when implementing IEEE power management based on
-    // frame control PM bit), How long driver waits before shutting down the radio and
-    // after receiving an ACK for a data frame with PM bit set)
-    u32 mgmt_rx;                          // access point mgmt frames received count from connected AP (including Beacon)
-    u32 mgmt_action_rx;                   // action frames received count
-    u32 mgmt_action_tx;                   // action frames transmit count
-    wifi_rssi rssi_mgmt;                  // access Point Beacon and Management frames RSSI (averaged)
-    wifi_rssi rssi_data;                  // access Point Data Frames RSSI (averaged) from connected AP
-    wifi_rssi rssi_ack;                   // access Point ACK RSSI (averaged) from connected AP
-    wifi_wmm_ac_stat ac[WIFI_AC_MAX];     // per ac data packet statistics
-    u32 num_peers;                        // number of peers
-    wifi_peer_info peer_info[];           // per peer statistics
+   wifi_interface_handle iface;          // wifi interface
+   wifi_interface_link_layer_info info;  // current state of the interface
+   u32 beacon_rx;                        // access point beacon received count from connected AP
+   u64 average_tsf_offset;               // average beacon offset encountered (beacon_TSF - TBTT)
+                                         // The average_tsf_offset field is used so as to calculate the
+                                         // typical beacon contention time on the channel as well may be
+                                         // used to debug beacon synchronization and related power consumption issue
+   u32 leaky_ap_detected;                // indicate that this AP typically leaks packets beyond the driver guard time.
+   u32 leaky_ap_avg_num_frames_leaked;  // average number of frame leaked by AP after frame with PM bit set was ACK'ed by AP
+   u32 leaky_ap_guard_time;              // guard time currently in force (when implementing IEEE power management based on
+                                         // frame control PM bit), How long driver waits before shutting down the radio and
+                                         // after receiving an ACK for a data frame with PM bit set)
+   u32 mgmt_rx;                          // access point mgmt frames received count from connected AP (including Beacon)
+   u32 mgmt_action_rx;                   // action frames received count
+   u32 mgmt_action_tx;                   // action frames transmit count
+   wifi_rssi rssi_mgmt;                  // access Point Beacon and Management frames RSSI (averaged)
+   wifi_rssi rssi_data;                  // access Point Data Frames RSSI (averaged) from connected AP
+   wifi_rssi rssi_ack;                   // access Point ACK RSSI (averaged) from connected AP
+   wifi_wmm_ac_stat ac[WIFI_AC_MAX];     // per ac data packet statistics
+   u32 num_peers;                        // number of peers
+   wifi_peer_info peer_info[];           // per peer statistics
 } wifi_iface_stat;
 
 /* configuration params */
 typedef struct {
-    u32 mpdu_size_threshold;             // threshold to classify the pkts as short or long
-    // packet size < mpdu_size_threshold => short
-    u32 aggressive_statistics_gathering; // set for field debug mode. Driver should collect all statistics regardless of performance impact.
+   u32 mpdu_size_threshold;             // threshold to classify the pkts as short or long
+                                        // packet size < mpdu_size_threshold => short
+   u32 aggressive_statistics_gathering; // set for field debug mode. Driver should collect all statistics regardless of performance impact.
 } wifi_link_layer_params;
 
 #define RSSI_MONITOR_EVT_VERSION   1
@@ -606,28 +609,26 @@ typedef struct {
 #define WIFI_STATS_IFACE_AC           0x00000040      // all ac statistics (within interface statistics)
 #define WIFI_STATS_IFACE_CONTENTION   0x00000080      // all contention (min, max, avg) statistics (within ac statisctics)
 
-#endif /* CONFIG_RTW_CFGVEDNOR_LLSTATS */
+#endif /* CONFIG_RTW_CFGVENDOR_LLSTATS */
 
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0)) || defined(RTW_VENDOR_EXT_SUPPORT)
 extern int rtw_cfgvendor_attach(struct wiphy *wiphy);
 extern int rtw_cfgvendor_detach(struct wiphy *wiphy);
 extern int rtw_cfgvendor_send_async_event(struct wiphy *wiphy,
-        struct net_device *dev, int event_id, const void  *data, int len);
+	struct net_device *dev, int event_id, const void  *data, int len);
 #if defined(GSCAN_SUPPORT) && 0
 extern int rtw_cfgvendor_send_hotlist_event(struct wiphy *wiphy,
-        struct net_device *dev, void  *data, int len, rtw_vendor_event_t event);
+	struct net_device *dev, void  *data, int len, rtw_vendor_event_t event);
 #endif
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 14, 0)) || defined(RTW_VENDOR_EXT_SUPPORT) */
 
-#ifdef CONFIG_RTW_CFGVEDNOR_RSSIMONITOR
+#ifdef CONFIG_RTW_CFGVENDOR_RSSIMONITOR
 void rtw_cfgvendor_rssi_monitor_evt(_adapter *padapter);
 #endif
 
 #ifdef CONFIG_RTW_CFGVENDOR_RANDOM_MAC_OUI
 void rtw_hal_pno_random_gen_mac_addr(PADAPTER adapter);
-void rtw_hal_set_hw_mac_addr(PADAPTER adapter, u8 *mac_addr);
 #endif
-
 
 #endif /* _RTW_CFGVENDOR_H_ */

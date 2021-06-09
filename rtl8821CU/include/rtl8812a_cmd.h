@@ -16,55 +16,55 @@
 #define __RTL8812A_CMD_H__
 
 typedef enum _RTL8812_H2C_CMD {
-    H2C_8812_RSVDPAGE = 0,
-    H2C_8812_MSRRPT = 1,
-    H2C_8812_SCAN = 2,
-    H2C_8812_KEEP_ALIVE_CTRL = 3,
-    H2C_8812_DISCONNECT_DECISION = 4,
+	H2C_8812_RSVDPAGE = 0,
+	H2C_8812_MSRRPT = 1,
+	H2C_8812_SCAN = 2,
+	H2C_8812_KEEP_ALIVE_CTRL = 3,
+	H2C_8812_DISCONNECT_DECISION = 4,
 
-    H2C_8812_INIT_OFFLOAD = 6,
-    H2C_8812_AP_OFFLOAD = 8,
-    H2C_8812_BCN_RSVDPAGE = 9,
-    H2C_8812_PROBERSP_RSVDPAGE = 10,
+	H2C_8812_INIT_OFFLOAD = 6,
+	H2C_8812_AP_OFFLOAD = 8,
+	H2C_8812_BCN_RSVDPAGE = 9,
+	H2C_8812_PROBERSP_RSVDPAGE = 10,
 
-    H2C_8812_SETPWRMODE = 0x20,
-    H2C_8812_PS_TUNING_PARA = 0x21,
-    H2C_8812_PS_TUNING_PARA2 = 0x22,
-    H2C_8812_PS_LPS_PARA = 0x23,
-    H2C_8812_P2P_PS_OFFLOAD = 0x24,
-    H2C_8812_INACTIVE_PS = 0x27,
-    H2C_8812_RA_MASK = 0x40,
-    H2C_8812_TxBF = 0x41,
-    H2C_8812_RSSI_REPORT = 0x42,
-    H2C_8812_IQ_CALIBRATION = 0x45,
-    H2C_8812_RA_PARA_ADJUST = 0x46,
+	H2C_8812_SETPWRMODE = 0x20,
+	H2C_8812_PS_TUNING_PARA = 0x21,
+	H2C_8812_PS_TUNING_PARA2 = 0x22,
+	H2C_8812_PS_LPS_PARA = 0x23,
+	H2C_8812_P2P_PS_OFFLOAD = 0x24,
+	H2C_8812_INACTIVE_PS = 0x27,
+	H2C_8812_RA_MASK = 0x40,
+	H2C_8812_TxBF = 0x41,
+	H2C_8812_RSSI_REPORT = 0x42,
+	H2C_8812_IQ_CALIBRATION = 0x45,
+	H2C_8812_RA_PARA_ADJUST = 0x46,
 
-    H2C_8812_BT_FW_PATCH = 0x6a,
+	H2C_8812_BT_FW_PATCH = 0x6a,
 
-    H2C_8812_WO_WLAN = 0x80,
-    H2C_8812_REMOTE_WAKE_CTRL = 0x81,
-    H2C_8812_AOAC_GLOBAL_INFO = 0x82,
-    H2C_8812_AOAC_RSVDPAGE = 0x83,
-    H2C_8812_FW_SWCHANNL = 0x87,
+	H2C_8812_WO_WLAN = 0x80,
+	H2C_8812_REMOTE_WAKE_CTRL = 0x81,
+	H2C_8812_AOAC_GLOBAL_INFO = 0x82,
+	H2C_8812_AOAC_RSVDPAGE = 0x83,
+	H2C_8812_FW_SWCHANNL = 0x87,
 
-    H2C_8812_TSF_RESET = 0xC0,
+	H2C_8812_TSF_RESET = 0xC0,
 
-    MAX_8812_H2CCMD
+	MAX_8812_H2CCMD
 } RTL8812_H2C_CMD;
 
 struct cmd_msg_parm {
-    u8 eid; /* element id */
-    u8 sz; /* sz */
-    u8 buf[6];
+	u8 eid; /* element id */
+	u8 sz; /* sz */
+	u8 buf[6];
 };
 
 enum {
-    PWRS
+	PWRS
 };
 
 struct H2C_SS_RFOFF_PARAM {
-    u8 ROFOn; /* 1: on, 0:off */
-    u16 gpio_period; /* unit: 1024 us */
+	u8 ROFOn; /* 1: on, 0:off */
+	u16 gpio_period; /* unit: 1024 us */
 } __attribute__((packed));
 
 
@@ -116,12 +116,6 @@ void rtl8812_set_p2p_ps_offload_cmd(PADAPTER padapter, u8 p2p_ps_state);
 
 #ifdef CONFIG_FWLPS_IN_IPS
 void rtl8812_set_FwPwrModeInIPS_cmd(PADAPTER padapter, u8 cmd_param);
-#endif
-
-#ifdef CONFIG_TDLS
-#ifdef CONFIG_TDLS_CH_SW
-void rtl8812_set_BcnEarly_C2H_Rpt_cmd(PADAPTER padapter, u8 enable);
-#endif
 #endif
 
 /* ------------------------------------

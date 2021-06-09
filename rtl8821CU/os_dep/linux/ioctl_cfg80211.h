@@ -27,11 +27,11 @@
 #endif
 
 #if defined(RTW_USE_CFG80211_STA_EVENT)
-#undef CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
+	#undef CONFIG_CFG80211_FORCE_COMPATIBLE_2_6_37_UNDER
 #endif
 
 #ifndef RTW_P2P_GROUP_INTERFACE
-#define RTW_P2P_GROUP_INTERFACE 0
+	#define RTW_P2P_GROUP_INTERFACE 0
 #endif
 
 /*
@@ -42,18 +42,18 @@
 */
 
 #if RTW_P2P_GROUP_INTERFACE
-#ifndef CONFIG_RTW_DYNAMIC_NDEV
-#define CONFIG_RTW_DYNAMIC_NDEV
-#endif
-#ifndef RTW_SINGLE_WIPHY
-#define RTW_SINGLE_WIPHY
-#endif
-#ifndef CONFIG_RADIO_WORK
-#define CONFIG_RADIO_WORK
-#endif
-#ifndef RTW_DEDICATED_P2P_DEVICE
-#define RTW_DEDICATED_P2P_DEVICE
-#endif
+	#ifndef CONFIG_RTW_DYNAMIC_NDEV
+		#define CONFIG_RTW_DYNAMIC_NDEV
+	#endif
+	#ifndef RTW_SINGLE_WIPHY
+		#define RTW_SINGLE_WIPHY
+	#endif
+	#ifndef CONFIG_RADIO_WORK
+		#define CONFIG_RADIO_WORK
+	#endif
+	#ifndef RTW_DEDICATED_P2P_DEVICE
+		#define RTW_DEDICATED_P2P_DEVICE
+	#endif
 #endif
 
 #ifndef CONFIG_RADIO_WORK
@@ -62,33 +62,33 @@
 #endif
 
 #if !defined(CONFIG_P2P) && RTW_P2P_GROUP_INTERFACE
-#error "RTW_P2P_GROUP_INTERFACE can't be enabled when CONFIG_P2P is disabled\n"
+	#error "RTW_P2P_GROUP_INTERFACE can't be enabled when CONFIG_P2P is disabled\n"
 #endif
 
 #if !RTW_P2P_GROUP_INTERFACE && defined(RTW_DEDICATED_P2P_DEVICE)
-#error "RTW_DEDICATED_P2P_DEVICE can't be enabled when RTW_P2P_GROUP_INTERFACE is disabled\n"
+	#error "RTW_DEDICATED_P2P_DEVICE can't be enabled when RTW_P2P_GROUP_INTERFACE is disabled\n"
 #endif
 
 #if defined(RTW_DEDICATED_P2P_DEVICE) && (LINUX_VERSION_CODE < KERNEL_VERSION(3, 7, 0))
-#error "RTW_DEDICATED_P2P_DEVICE can't be enabled when kernel < 3.7.0\n"
+	#error "RTW_DEDICATED_P2P_DEVICE can't be enabled when kernel < 3.7.0\n"
 #endif
 
 #ifdef CONFIG_RTW_MESH
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0))
-#error "CONFIG_RTW_MESH can't be enabled when kernel < 3.10.0\n"
-#endif
+	#if (LINUX_VERSION_CODE < KERNEL_VERSION(3, 10, 0))
+		#error "CONFIG_RTW_MESH can't be enabled when kernel < 3.10.0\n"
+	#endif
 #endif
 
 struct rtw_wdev_invit_info {
-    u8 state; /* 0: req, 1:rep */
-    u8 peer_mac[ETH_ALEN];
-    u8 group_bssid[ETH_ALEN];
-    u8 active;
-    u8 token;
-    u8 flags;
-    u8 status;
-    u8 req_op_ch;
-    u8 rsp_op_ch;
+	u8 state; /* 0: req, 1:rep */
+	u8 peer_mac[ETH_ALEN];
+	u8 group_bssid[ETH_ALEN];
+	u8 active;
+	u8 token;
+	u8 flags;
+	u8 status;
+	u8 req_op_ch;
+	u8 rsp_op_ch;
 };
 
 #define rtw_wdev_invit_info_init(invit_info) \
@@ -105,19 +105,19 @@ struct rtw_wdev_invit_info {
 	} while (0)
 
 struct rtw_wdev_nego_info {
-    u8 state; /* 0: req, 1:rep, 2:conf */
-    u8 iface_addr[ETH_ALEN];
-    u8 peer_mac[ETH_ALEN];
-    u8 peer_iface_addr[ETH_ALEN];
-    u8 active;
-    u8 token;
-    u8 status;
-    u8 req_intent;
-    u8 req_op_ch;
-    u8 req_listen_ch;
-    u8 rsp_intent;
-    u8 rsp_op_ch;
-    u8 conf_op_ch;
+	u8 state; /* 0: req, 1:rep, 2:conf */
+	u8 iface_addr[ETH_ALEN];
+	u8 peer_mac[ETH_ALEN];
+	u8 peer_iface_addr[ETH_ALEN];
+	u8 active;
+	u8 token;
+	u8 status;
+	u8 req_intent;
+	u8 req_op_ch;
+	u8 req_listen_ch;
+	u8 rsp_intent;
+	u8 rsp_op_ch;
+	u8 conf_op_ch;
 };
 
 #define rtw_wdev_nego_info_init(nego_info) \
@@ -138,73 +138,78 @@ struct rtw_wdev_nego_info {
 	} while (0)
 
 struct rtw_wdev_priv {
-    struct wireless_dev *rtw_wdev;
+	struct wireless_dev *rtw_wdev;
 
-    _adapter *padapter;
+	_adapter *padapter;
 
-#if RTW_CFG80211_BLOCK_STA_DISCON_EVENT
-    u8 not_indic_disco;
-#endif
+	#if RTW_CFG80211_BLOCK_STA_DISCON_EVENT
+	u8 not_indic_disco;
+	#endif
 
-    struct cfg80211_scan_request *scan_request;
-    _lock scan_req_lock;
+	struct cfg80211_scan_request *scan_request;
+	_lock scan_req_lock;
 
-    struct cfg80211_connect_params *connect_req;
-    _lock connect_req_lock;
+	struct cfg80211_connect_params *connect_req;
+	_lock connect_req_lock;
 
-    struct net_device *pmon_ndev;/* for monitor interface */
-    char ifname_mon[IFNAMSIZ + 1]; /* interface name for monitor interface */
+	struct net_device *pmon_ndev;/* for monitor interface */
+	char ifname_mon[IFNAMSIZ + 1]; /* interface name for monitor interface */
 
-    u8 p2p_enabled;
-    systime probe_resp_ie_update_time;
+	u8 p2p_enabled;
+	systime probe_resp_ie_update_time;
 
-    u8 provdisc_req_issued;
+	u8 provdisc_req_issued;
 
-    struct rtw_wdev_invit_info invit_info;
-    struct rtw_wdev_nego_info nego_info;
+	struct rtw_wdev_invit_info invit_info;
+	struct rtw_wdev_nego_info nego_info;
 
-    u8 bandroid_scan;
-    bool block;
-    bool block_scan;
-    bool power_mgmt;
+	u8 bandroid_scan;
+	bool block;
+	bool block_scan;
 
-    /* report mgmt_frame registered */
-    u16 report_mgmt;
+	/**
+	 * mgmt_regs: bitmap of management frame subtypes registered for the
+	 * 	given interface
+	 * mcast_mgmt_regs: mcast RX is needed on this interface for these
+	 * 	subtypes
+	 */
+	u32 mgmt_regs;
+	/* u32 mcast_mgmt_regs; */
 
-    u8 is_mgmt_tx;
-    u16 mgmt_tx_cookie;
+	u8 is_mgmt_tx;
+	u16 mgmt_tx_cookie;
 
-    _mutex roch_mutex;
+	_mutex roch_mutex;
 
 #ifdef CONFIG_CONCURRENT_MODE
-    ATOMIC_T switch_ch_to;
+	ATOMIC_T switch_ch_to;
 #endif
 
-#ifdef CONFIG_RTW_CFGVENDOR_RANDOM_MAC_OUI
-    u8 pno_mac_addr[ETH_ALEN];
-    u16 pno_scan_seq_num;
+#if defined(CONFIG_RTW_CFGVENDOR_RANDOM_MAC_OUI) || defined(CONFIG_RTW_SCAN_RAND)
+	u8 pno_mac_addr[ETH_ALEN];
+	u16 pno_scan_seq_num;
 #endif
 
-#ifdef CONFIG_RTW_CFGVEDNOR_RSSIMONITOR
-    s8 rssi_monitor_max;
-    s8 rssi_monitor_min;
-    u8 rssi_monitor_enable;
+#ifdef CONFIG_RTW_CFGVENDOR_RSSIMONITOR
+        s8 rssi_monitor_max;
+        s8 rssi_monitor_min;
+        u8 rssi_monitor_enable;
 #endif
 
 };
 
 enum external_auth_action {
-    EXTERNAL_AUTH_START,
-    EXTERNAL_AUTH_ABORT,
+	EXTERNAL_AUTH_START,
+	EXTERNAL_AUTH_ABORT,
 };
 
 struct rtw_external_auth_params {
-    enum external_auth_action action;
-    u8 bssid[ETH_ALEN]__aligned(2);
-    struct cfg80211_ssid ssid;
-    unsigned int key_mgmt_suite;
-    u16 status;
-    u8 pmkid[PMKID_LEN];
+	enum external_auth_action action;
+	u8 bssid[ETH_ALEN]__aligned(2);
+	struct cfg80211_ssid ssid;
+	unsigned int key_mgmt_suite;
+	u16 status;
+	u8 pmkid[PMKID_LEN];
 };
 
 bool rtw_cfg80211_is_connect_requested(_adapter *adapter);
@@ -230,15 +235,18 @@ bool rtw_cfg80211_is_connect_requested(_adapter *adapter);
 #define ndev_to_wdev(n) ((n)->ieee80211_ptr)
 
 struct rtw_wiphy_data {
-    struct dvobj_priv *dvobj;
+	struct dvobj_priv *dvobj;
 
 #ifndef RTW_SINGLE_WIPHY
-    _adapter *adapter;
+	_adapter *adapter;
 #endif
 
 #if defined(RTW_DEDICATED_P2P_DEVICE)
-    struct wireless_dev *pd_wdev; /* P2P device wdev */
+	struct wireless_dev *pd_wdev; /* P2P device wdev */
 #endif
+
+	s16 txpwr_total_lmt_mbm;	/* EIRP */
+	s16 txpwr_total_target_mbm;	/* EIRP */
 };
 
 #define rtw_wiphy_priv(wiphy) ((struct rtw_wiphy_data *)wiphy_priv(wiphy))
@@ -260,9 +268,13 @@ struct rtw_wiphy_data {
 #define FUNC_WIPHY_FMT "%s("WIPHY_FMT")"
 #define FUNC_WIPHY_ARG(wiphy) __func__, WIPHY_ARG(wiphy)
 
-#define SET_CFG80211_REPORT_MGMT(w, t, v) (w->report_mgmt |= BIT(t >> 4))
-#define CLR_CFG80211_REPORT_MGMT(w, t, v) (w->report_mgmt &= (~BIT(t >> 4)))
-#define GET_CFG80211_REPORT_MGMT(w, t) ((w->report_mgmt & BIT(t >> 4)) > 0)
+#define SET_CFG80211_MGMT_REGS(w, t) (w |= BIT(t >> 4))
+#define CLR_CFG80211_MGMT_REGS(w, t) (w &= (~BIT(t >> 4)))
+#define GET_CFG80211_MGMT_REGS(w, t) ((w & BIT(t >> 4)) > 0)
+
+#define SET_CFG80211_REPORT_MGMT(w, t) (SET_CFG80211_MGMT_REGS(w->mgmt_regs, t))
+#define CLR_CFG80211_REPORT_MGMT(w, t) (CLR_CFG80211_MGMT_REGS(w->mgmt_regs, t))
+#define GET_CFG80211_REPORT_MGMT(w, t) (GET_CFG80211_MGMT_REGS(w->mgmt_regs, t))
 
 struct wiphy *rtw_wiphy_alloc(_adapter *padapter, struct device *dev);
 void rtw_wiphy_free(struct wiphy *wiphy);
@@ -282,9 +294,10 @@ int rtw_cfg80211_dev_res_alloc(struct dvobj_priv *dvobj);
 void rtw_cfg80211_dev_res_free(struct dvobj_priv *dvobj);
 int rtw_cfg80211_dev_res_register(struct dvobj_priv *dvobj);
 void rtw_cfg80211_dev_res_unregister(struct dvobj_priv *dvobj);
+s16 rtw_cfg80211_dev_get_total_txpwr_lmt_mbm(struct dvobj_priv *dvobj);
+s16 rtw_cfg80211_dev_get_total_txpwr_target_mbm(struct dvobj_priv *dvobj);
 
 void rtw_cfg80211_init_wdev_data(_adapter *padapter);
-void rtw_cfg80211_init_wiphy(_adapter *padapter);
 
 void rtw_cfg80211_unlink_bss(_adapter *padapter, struct wlan_network *pnetwork);
 void rtw_cfg80211_surveydone_event_callback(_adapter *padapter);
@@ -304,15 +317,16 @@ void rtw_cfg80211_indicate_scan_done_for_buddy(_adapter *padapter, bool bscan_ab
 #ifdef CONFIG_AP_MODE
 void rtw_cfg80211_indicate_sta_assoc(_adapter *padapter, u8 *pmgmt_frame, uint frame_len);
 void rtw_cfg80211_indicate_sta_disassoc(_adapter *padapter, const u8 *da, unsigned short reason);
+int rtw_cfg80211_set_mgnt_wpsp2pie(struct net_device *net, char *buf, int len, int type);
 #endif /* CONFIG_AP_MODE */
 
-#ifdef CONFIG_P2P
 void rtw_cfg80211_set_is_roch(_adapter *adapter, bool val);
 bool rtw_cfg80211_get_is_roch(_adapter *adapter);
 bool rtw_cfg80211_is_ro_ch_once(_adapter *adapter);
 void rtw_cfg80211_set_last_ro_ch_time(_adapter *adapter);
 s32 rtw_cfg80211_get_last_ro_ch_passing_ms(_adapter *adapter);
 
+#ifdef CONFIG_P2P
 int rtw_cfg80211_iface_has_p2p_group_cap(_adapter *adapter);
 int rtw_cfg80211_is_p2p_scan(_adapter *adapter);
 #if defined(RTW_DEDICATED_P2P_DEVICE)
@@ -337,9 +351,7 @@ void rtw_cfg80211_rx_probe_request(_adapter *padapter, union recv_frame *rframe)
 
 void rtw_cfg80211_external_auth_request(_adapter *padapter, union recv_frame *rframe);
 void rtw_cfg80211_external_auth_status(struct wiphy *wiphy, struct net_device *dev,
-                                       struct rtw_external_auth_params *params);
-
-int rtw_cfg80211_set_mgnt_wpsp2pie(struct net_device *net, char *buf, int len, int type);
+	struct rtw_external_auth_params *params);
 
 bool rtw_cfg80211_pwr_mgmt(_adapter *adapter);
 #ifdef CONFIG_RTW_80211K
@@ -398,7 +410,7 @@ void rtw_cfg80211_deinit_rfkill(struct wiphy *wiphy);
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0))
 #define rtw_cfg80211_ft_event(adapter, parm)  cfg80211_ft_event((adapter)->pnetdev, parm)
 #else
-#error "Cannot support FT for KERNEL_VERSION < 3.10\n"
+	#error "Cannot support FT for KERNEL_VERSION < 3.10\n"
 #endif
 #endif
 
@@ -410,6 +422,11 @@ void rtw_cfg80211_deinit_rfkill(struct wiphy *wiphy);
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(3, 5, 0))
 u8 rtw_cfg80211_ch_switch_notify(_adapter *adapter, u8 ch, u8 bw, u8 offset, u8 ht, bool started);
+#endif
+
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) && (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 31))
+#define IEEE80211_CHAN_NO_HT40PLUS IEEE80211_CHAN_NO_FAT_ABOVE
+#define IEEE80211_CHAN_NO_HT40MINUS IEEE80211_CHAN_NO_FAT_BELOW
 #endif
 
 #if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 26)) && (LINUX_VERSION_CODE < KERNEL_VERSION(4, 7, 0))
@@ -425,6 +442,13 @@ u8 rtw_cfg80211_ch_switch_notify(_adapter *adapter, u8 ch, u8 bw, u8 offset, u8 
 	(band == BAND_ON_2_4G) ? NL80211_BAND_2GHZ : \
 	(band == BAND_ON_5G) ? NL80211_BAND_5GHZ : NUM_NL80211_BANDS
 
+#if (LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 36))
+#define NL80211_TX_POWER_AUTOMATIC	TX_POWER_AUTOMATIC
+#define NL80211_TX_POWER_LIMITED	TX_POWER_LIMITED
+#define NL80211_TX_POWER_FIXED		TX_POWER_FIXED
+#endif
+
+#include "wifi_regd.h"
 #include "rtw_cfgvendor.h"
 
 #endif /* __IOCTL_CFG80211_H__ */

@@ -49,26 +49,26 @@
 
 static __inline void RF_DBG(PDM_ODM_T dm, int comp, char *fmt, ...)
 {
-    RT_STATUS rt_status;
-    va_list args;
-    char buf[PRINT_MAX_SIZE] = {0};
+	RT_STATUS rt_status;
+	va_list args;
+	char buf[PRINT_MAX_SIZE] = {0};
 
-    if ((comp & dm->rf_table.rf_dbg_comp) == 0)
-        return;
+	if ((comp & dm->rf_table.rf_dbg_comp) == 0)
+		return;
 
-    if (fmt == NULL)
-        return;
+	if (fmt == NULL)
+		return;
 
-    va_start(args, fmt);
-    rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
-    va_end(args);
+	va_start(args, fmt);
+	rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, PRINT_MAX_SIZE, fmt, args);
+	va_end(args);
 
-    if (rt_status != RT_STATUS_SUCCESS) {
-        DbgPrint("Failed (%d) to print message to buffer\n", rt_status);
-        return;
-    }
+	if (rt_status != RT_STATUS_SUCCESS) {
+		DbgPrint("Failed (%d) to print message to buffer\n", rt_status);
+		return;
+	}
 
-    DbgPrint("[RF] %s", buf);
+	DbgPrint("[RF] %s", buf);
 }
 
 #elif (DM_ODM_SUPPORT_TYPE == ODM_IOT)
@@ -96,6 +96,23 @@ static __inline void RF_DBG(PDM_ODM_T dm, int comp, char *fmt, ...)
 #if (DM_ODM_SUPPORT_TYPE == ODM_WIN)
 static __inline void RF_DBG(struct dm_struct *dm, int comp, char *fmt, ...)
 {
+#if 0
+	RT_STATUS rt_status;
+	va_list args;
+	char buf[128] = {0};/*PRINT_MAX_SIZE*/
+
+	if ((comp & dm->rf_table.rf_dbg_comp) == 0)
+		return;
+
+	if (NULL != fmt) {
+		va_start(args, fmt);
+		rt_status = (RT_STATUS)RtlStringCbVPrintfA(buf, sizeof(buf), fmt, args);
+		va_end(args);
+		if (rt_status == RT_STATUS_SUCCESS) {
+			halrf_rt_trace(buf);
+		}
+	}
+#endif
 }
 #else
 #define RF_DBG(dm, comp, fmt, args...)
@@ -116,7 +133,7 @@ static __inline void RF_DBG(struct dm_struct *dm, int comp, char *fmt, ...)
 /*@============================================================*/
 
 void halrf_cmd_parser(void *dm_void, char input[][16], u32 *_used, char *output,
-                      u32 *_out_len, u32 input_num);
+		      u32 *_out_len, u32 input_num);
 
 void halrf_init_debug_setting(void *dm_void);
 

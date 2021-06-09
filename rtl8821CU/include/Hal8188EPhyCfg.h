@@ -24,9 +24,9 @@
 #define Reset_Cnt_Limit			3
 
 #ifdef CONFIG_PCI_HCI
-#define MAX_AGGR_NUM	0x0B
+	#define MAX_AGGR_NUM	0x0B
 #else
-#define MAX_AGGR_NUM	0x07
+	#define MAX_AGGR_NUM	0x07
 #endif /* CONFIG_PCI_HCI */
 
 
@@ -56,21 +56,21 @@
  * BB and RF register read/write
  *   */
 u32	PHY_QueryBBReg8188E(PADAPTER	Adapter,
-                        u32		RegAddr,
-                        u32		BitMask);
+				u32		RegAddr,
+				u32		BitMask);
 void	PHY_SetBBReg8188E(PADAPTER	Adapter,
-                          u32		RegAddr,
-                          u32		BitMask,
-                          u32		Data);
+				u32		RegAddr,
+				u32		BitMask,
+				u32		Data);
 u32	PHY_QueryRFReg8188E(PADAPTER	Adapter,
-                        enum rf_path		eRFPath,
-                        u32				RegAddr,
-                        u32				BitMask);
+				enum rf_path		eRFPath,
+				u32				RegAddr,
+				u32				BitMask);
 void	PHY_SetRFReg8188E(PADAPTER		Adapter,
-                          enum rf_path		eRFPath,
-                          u32				RegAddr,
-                          u32				BitMask,
-                          u32				Data);
+				enum rf_path		eRFPath,
+				u32				RegAddr,
+				u32				BitMask,
+				u32				Data);
 
 /*
  * Initialization related function
@@ -93,26 +93,26 @@ int	rtl8188e_PHY_ConfigRFWithParaFile( PADAPTER Adapter, u8 *pFileName, enum rf_
  * BB TX Power R/W
  *   */
 void	PHY_SetTxPowerLevel8188E(PADAPTER		Adapter,
-                                 u8			channel);
+					u8			channel);
 
 void
 PHY_SetTxPowerIndex_8188E(
-    PADAPTER			Adapter,
-    u32					PowerIndex,
-    enum rf_path			RFPath,
-    u8					Rate
+		PADAPTER			Adapter,
+		u32					PowerIndex,
+		enum rf_path			RFPath,
+		u8					Rate
 );
 
 s8 phy_get_txpwr_target_extra_bias_8188e(_adapter *adapter, enum rf_path rfpath
-        , RATE_SECTION rs, enum MGN_RATE rate, enum channel_width bw, BAND_TYPE band, u8 cch);
+	, RATE_SECTION rs, enum MGN_RATE rate, enum channel_width bw, BAND_TYPE band, u8 cch);
 
 /*
  * Switch bandwidth for 8192S
  */
 /* extern	void	PHY_SetBWModeCallback8192C(PRT_TIMER		pTimer	); */
 void	PHY_SetBWMode8188E(PADAPTER			pAdapter,
-                           enum channel_width	ChnlWidth,
-                           unsigned char	Offset);
+				enum channel_width	ChnlWidth,
+				unsigned char	Offset);
 
 /*
  * Set FW CMD IO for 8192S.
@@ -124,8 +124,8 @@ void	PHY_SetBWMode8188E(PADAPTER			pAdapter,
  * Set A2 entry to fw for 8192S
  *   */
 extern	void FillA2Entry8192C(PADAPTER			Adapter,
-                              u8				index,
-                              u8				*val);
+				u8				index,
+				u8				*val);
 
 
 /*
@@ -133,20 +133,20 @@ extern	void FillA2Entry8192C(PADAPTER			Adapter,
  */
 /* extern	void	PHY_SwChnlCallback8192C(PRT_TIMER		pTimer	); */
 void	PHY_SwChnl8188E(PADAPTER		pAdapter,
-                        u8			channel);
+				u8			channel);
 
 void
 PHY_SetSwChnlBWMode8188E(
-    PADAPTER			Adapter,
-    u8					channel,
-    enum channel_width	Bandwidth,
-    u8					Offset40,
-    u8					Offset80
+		PADAPTER			Adapter,
+		u8					channel,
+		enum channel_width	Bandwidth,
+		u8					Offset40,
+		u8					Offset80
 );
 
 void
 PHY_SetRFEReg_8188E(
-    PADAPTER		Adapter
+		PADAPTER		Adapter
 );
 /*
  * BB/MAC/RF other monitor API
@@ -155,18 +155,18 @@ void phy_set_rf_path_switch_8188e(struct dm_struct	*phydm, bool		bMain);
 
 extern	void
 PHY_SwitchEphyParameter(
-    PADAPTER			Adapter
+		PADAPTER			Adapter
 );
 
 extern	void
 PHY_EnableHostClkReq(
-    PADAPTER			Adapter
+		PADAPTER			Adapter
 );
 
 BOOLEAN
 SetAntennaConfig92C(
-    PADAPTER	Adapter,
-    u8		DefaultAnt
+		PADAPTER	Adapter,
+		u8		DefaultAnt
 );
 
 /*--------------------------Exported Function prototype---------------------*/
@@ -188,11 +188,11 @@ SetAntennaConfig92C(
  * 	3) "#define RTL8190_Download_Firmware_From_Header	0"	in Precomp.h.WlanE.Windows if needed.
  *   */
 #if (RTL8188E_SUPPORT == 1) && (RTL8188E_FPGA_TRUE_PHY_VERIFICATION == 1)
-#define	SIC_ENABLE				1
-#define	SIC_HW_SUPPORT		1
+	#define	SIC_ENABLE				1
+	#define	SIC_HW_SUPPORT		1
 #else
-#define	SIC_ENABLE				0
-#define	SIC_HW_SUPPORT		0
+	#define	SIC_ENABLE				0
+	#define	SIC_HW_SUPPORT		0
 #endif
 /* ****************************************************************** */
 
@@ -200,49 +200,49 @@ SetAntennaConfig92C(
 #define	SIC_MAX_POLL_CNT		5
 
 #if (SIC_HW_SUPPORT == 1)
-#define	SIC_CMD_READY			0
-#define	SIC_CMD_PREWRITE		0x1
-#if (RTL8188E_SUPPORT == 1)
-#define	SIC_CMD_WRITE			0x40
-#define	SIC_CMD_PREREAD		0x2
-#define	SIC_CMD_READ			0x80
-#define	SIC_CMD_INIT			0xf0
-#define	SIC_INIT_VAL			0xff
+	#define	SIC_CMD_READY			0
+	#define	SIC_CMD_PREWRITE		0x1
+	#if (RTL8188E_SUPPORT == 1)
+		#define	SIC_CMD_WRITE			0x40
+		#define	SIC_CMD_PREREAD		0x2
+		#define	SIC_CMD_READ			0x80
+		#define	SIC_CMD_INIT			0xf0
+		#define	SIC_INIT_VAL			0xff
 
-#define	SIC_INIT_REG			0x1b7
-#define	SIC_CMD_REG			0x1EB		/* 1byte */
-#define	SIC_ADDR_REG			0x1E8		/* 1b4~1b5, 2 bytes */
-#define	SIC_DATA_REG			0x1EC		/* 1b0~1b3 */
-#else
-#define	SIC_CMD_WRITE			0x11
-#define	SIC_CMD_PREREAD		0x2
-#define	SIC_CMD_READ			0x12
-#define	SIC_CMD_INIT			0x1f
-#define	SIC_INIT_VAL			0xff
+		#define	SIC_INIT_REG			0x1b7
+		#define	SIC_CMD_REG			0x1EB		/* 1byte */
+		#define	SIC_ADDR_REG			0x1E8		/* 1b4~1b5, 2 bytes */
+		#define	SIC_DATA_REG			0x1EC		/* 1b0~1b3 */
+	#else
+		#define	SIC_CMD_WRITE			0x11
+		#define	SIC_CMD_PREREAD		0x2
+		#define	SIC_CMD_READ			0x12
+		#define	SIC_CMD_INIT			0x1f
+		#define	SIC_INIT_VAL			0xff
 
-#define	SIC_INIT_REG			0x1b7
-#define	SIC_CMD_REG			0x1b6		/* 1byte */
-#define	SIC_ADDR_REG			0x1b4		/* 1b4~1b5, 2 bytes */
-#define	SIC_DATA_REG			0x1b0		/* 1b0~1b3 */
-#endif
+		#define	SIC_INIT_REG			0x1b7
+		#define	SIC_CMD_REG			0x1b6		/* 1byte */
+		#define	SIC_ADDR_REG			0x1b4		/* 1b4~1b5, 2 bytes */
+		#define	SIC_DATA_REG			0x1b0		/* 1b0~1b3 */
+	#endif
 #else
-#define	SIC_CMD_READY			0
-#define	SIC_CMD_WRITE			1
-#define	SIC_CMD_READ			2
+	#define	SIC_CMD_READY			0
+	#define	SIC_CMD_WRITE			1
+	#define	SIC_CMD_READ			2
 
-#if (RTL8188E_SUPPORT == 1)
-#define	SIC_CMD_REG			0x1EB		/* 1byte */
-#define	SIC_ADDR_REG			0x1E8		/* 1b9~1ba, 2 bytes */
-#define	SIC_DATA_REG			0x1EC		/* 1bc~1bf */
-#else
-#define	SIC_CMD_REG			0x1b8		/* 1byte */
-#define	SIC_ADDR_REG			0x1b9		/* 1b9~1ba, 2 bytes */
-#define	SIC_DATA_REG			0x1bc		/* 1bc~1bf */
-#endif
+	#if (RTL8188E_SUPPORT == 1)
+		#define	SIC_CMD_REG			0x1EB		/* 1byte */
+		#define	SIC_ADDR_REG			0x1E8		/* 1b9~1ba, 2 bytes */
+		#define	SIC_DATA_REG			0x1EC		/* 1bc~1bf */
+	#else
+		#define	SIC_CMD_REG			0x1b8		/* 1byte */
+		#define	SIC_ADDR_REG			0x1b9		/* 1b9~1ba, 2 bytes */
+		#define	SIC_DATA_REG			0x1bc		/* 1bc~1bf */
+	#endif
 #endif
 
 #if (SIC_ENABLE == 1)
-void SIC_Init( PADAPTER Adapter);
+	void SIC_Init( PADAPTER Adapter);
 #endif
 
 

@@ -22,18 +22,18 @@
 
 enum halmac_ret_status
 cfg_drv_info_8821c(struct halmac_adapter *adapter,
-                   enum halmac_drv_info drv_info);
+		   enum halmac_drv_info drv_info);
 
 enum halmac_ret_status
 init_low_pwr_8821c(struct halmac_adapter *adapter);
 
 void
 cfg_rx_ignore_8821c(struct halmac_adapter *adapter,
-                    struct halmac_mac_rx_ignore_cfg *cfg);
+		    struct halmac_mac_rx_ignore_cfg *cfg);
 
 enum halmac_ret_status
 cfg_ampdu_8821c(struct halmac_adapter *adapter,
-                struct halmac_ampdu_config *cfg);
+		struct halmac_ampdu_config *cfg);
 
 #endif/* HALMAC_8821C_SUPPORT */
 

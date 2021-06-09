@@ -30,24 +30,24 @@
 #include "Hal8814PhyReg.h"
 #include "Hal8814PhyCfg.h"
 #ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8814a_sreset.h"
+	#include "rtl8814a_sreset.h"
 #endif /* DBG_CONFIG_ERROR_DETECT */
 
 enum {
-    VOLTAGE_V25						= 0x03,
-    LDOE25_SHIFT					= 28 ,
+	VOLTAGE_V25						= 0x03,
+	LDOE25_SHIFT					= 28 ,
 };
 /* max. iram is 64k , max dmen is 32k. Total = 96k = 0x18000*/
 #define FW_SIZE							0x18000
 #define FW_START_ADDRESS   0x1000
 typedef struct _RT_FIRMWARE_8814 {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_SIZE];
+	u8			szFwBuffer[FW_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8814, *PRT_FIRMWARE_8814;
 
 #define PAGE_SIZE_TX_8814	PAGE_SIZE_128
@@ -124,31 +124,31 @@ typedef struct _RT_FIRMWARE_8814 {
  * 2013/08/16 MH MOve from SDIO.h for common use.
  *   */
 #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_USB_HCI)
-#define TRX_SHARE_MODE_8814A				0	/* TRX Buffer Share Index */
-#define BASIC_RXFF_SIZE_8814A				24576/* Basic RXFF Size is 24K = 24*1024 Unit: Byte */
-#define TRX_SHARE_BUFF_UNIT_8814A			65536/* TRX Share Buffer unit Size 64K = 64*1024 Unit: Byte */
-#define TRX_SHARE_BUFF_UNIT_PAGE_8814A	(TRX_SHARE_BUFF_UNIT_8814A/PAGE_SIZE_8814A)/* 512 Pages */
+	#define TRX_SHARE_MODE_8814A				0	/* TRX Buffer Share Index */
+	#define BASIC_RXFF_SIZE_8814A				24576/* Basic RXFF Size is 24K = 24*1024 Unit: Byte */
+	#define TRX_SHARE_BUFF_UNIT_8814A			65536/* TRX Share Buffer unit Size 64K = 64*1024 Unit: Byte */
+	#define TRX_SHARE_BUFF_UNIT_PAGE_8814A	(TRX_SHARE_BUFF_UNIT_8814A/PAGE_SIZE_8814A)/* 512 Pages */
 
-/* Origin: */
-#define  HPQ_PGNUM_8814A					0x20	/* High Queue */
-#define  LPQ_PGNUM_8814A					0x20	/* Low Queue */
-#define  NPQ_PGNUM_8814A					0x20	/* Normal Queue */
-#define  EPQ_PGNUM_8814A					0x20	/* Extra Queue */
+	/* Origin: */
+	#define  HPQ_PGNUM_8814A					0x20	/* High Queue */
+	#define  LPQ_PGNUM_8814A					0x20	/* Low Queue */
+	#define  NPQ_PGNUM_8814A					0x20	/* Normal Queue */
+	#define  EPQ_PGNUM_8814A					0x20	/* Extra Queue */
 
 #else	/*  #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_USB_HCI) */
 
-#define  HPQ_PGNUM_8814A		20
-#define  NPQ_PGNUM_8814A		20
-#define  LPQ_PGNUM_8814A		20 /* 1972 */
-#define  EPQ_PGNUM_8814A		20
-#define  BCQ_PGNUM_8814A		32
+	#define  HPQ_PGNUM_8814A		20
+	#define  NPQ_PGNUM_8814A		20
+	#define  LPQ_PGNUM_8814A		20 /* 1972 */
+	#define  EPQ_PGNUM_8814A		20
+	#define  BCQ_PGNUM_8814A		32
 
 #endif /* #if defined(CONFIG_SDIO_HCI) || defined(CONFIG_USB_HCI) */
 
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8814	0x06
+	#define WOWLAN_PAGE_NUM_8814	0x06
 #else
-#define WOWLAN_PAGE_NUM_8814	0x00
+	#define WOWLAN_PAGE_NUM_8814	0x00
 #endif
 
 #define PAGE_SIZE_8814A						128/* TXFF Page Size, Unit: Byte */
@@ -157,9 +157,9 @@ typedef struct _RT_FIRMWARE_8814 {
 #define TX_PAGE_BOUNDARY_WOWLAN_8814A	TXPKT_PGNUM_8814A	/* TODO: 20130415 KaiYuan Check this value later */
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8814A	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8814A	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8814A	0x0	/* 0B */
+	#define RX_DMA_RESERVED_SIZE_8814A	0x0	/* 0B */
 #endif
 #define RX_DMA_BOUNDARY_8814A		(MAX_RX_DMA_BUFFER_SIZE_8814A - RX_DMA_RESERVED_SIZE_8814A - 1)
 
@@ -198,18 +198,18 @@ Chip specific
 
 /* pic buffer descriptor */
 #if 1 /* according to the define in the rtw_xmit.h, rtw_recv.h */
-#define RTL8814AE_SEG_NUM  TX_BUFFER_SEG_NUM /* 0:2 seg, 1: 4 seg, 2: 8 seg */
-#define TX_DESC_NUM_8814A  TX_BD_NUM   /* 128 */
-#define RX_DESC_NUM_8814A  PCI_MAX_RX_COUNT /* 128 */
-#ifdef CONFIG_CONCURRENT_MODE
-#define BE_QUEUE_TX_DESC_NUM_8814A  (TX_BD_NUM<<1)    /* 256 */
+	#define RTL8814AE_SEG_NUM  TX_BUFFER_SEG_NUM /* 0:2 seg, 1: 4 seg, 2: 8 seg */
+	#define TX_DESC_NUM_8814A  TX_BD_NUM   /* 128 */
+	#define RX_DESC_NUM_8814A  PCI_MAX_RX_COUNT /* 128 */
+	#ifdef CONFIG_CONCURRENT_MODE
+		#define BE_QUEUE_TX_DESC_NUM_8814A  (TX_BD_NUM<<1)    /* 256 */
+	#else
+		#define BE_QUEUE_TX_DESC_NUM_8814A  (TX_BD_NUM+(TX_BD_NUM>>1)) /* 192 */
+	#endif
 #else
-#define BE_QUEUE_TX_DESC_NUM_8814A  (TX_BD_NUM+(TX_BD_NUM>>1)) /* 192 */
-#endif
-#else
-#define RTL8814AE_SEG_NUM  TX_BUFFER_SEG_NUM /* 0:2 seg, 1: 4 seg, 2: 8 seg */
-#define TX_DESC_NUM_8814A  128 /* 1024//2048 change by ylb 20130624 */
-#define RX_DESC_NUM_8814A  128 /* 1024 //512 change by ylb 20130624 */
+	#define RTL8814AE_SEG_NUM  TX_BUFFER_SEG_NUM /* 0:2 seg, 1: 4 seg, 2: 8 seg */
+	#define TX_DESC_NUM_8814A  128 /* 1024//2048 change by ylb 20130624 */
+	#define RX_DESC_NUM_8814A  128 /* 1024 //512 change by ylb 20130624 */
 #endif
 
 /* <Roger_Notes> To prevent out of boundary programming case, leave 1byte and program full section
@@ -236,11 +236,11 @@ void	InitializeFirmwareVars8814(PADAPTER padapter);
 
 void
 Hal_InitEfuseVars_8814A(
-    PADAPTER	Adapter
+		PADAPTER	Adapter
 );
 
 s32 InitLLTTable8814A(
-    PADAPTER	Adapter
+		PADAPTER	Adapter
 );
 
 
@@ -251,8 +251,8 @@ void InitRDGSetting8814A(PADAPTER padapter);
 /* EFuse */
 u8	GetEEPROMSize8814A(PADAPTER padapter);
 void hal_InitPGData_8814A(
-    PADAPTER padapter,
-    u8 *PROMContent
+		PADAPTER padapter,
+		u8 *PROMContent
 );
 
 void	hal_ReadPROMVersion8814A(PADAPTER padapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
@@ -264,25 +264,25 @@ void	hal_EfuseParseXtal_8814A(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFai
 void	hal_ReadAntennaDiversity8814A(PADAPTER pAdapter, u8 *PROMContent, BOOLEAN AutoLoadFail);
 void	hal_Read_TRX_antenna_8814A(PADAPTER	Adapter, u8 *PROMContent, BOOLEAN AutoloadFail);
 void hal_ReadAmplifierType_8814A(
-    PADAPTER		Adapter
+		PADAPTER		Adapter
 );
 void hal_ReadPAType_8814A(
-    PADAPTER	Adapter,
-    u8			*PROMContent,
-    BOOLEAN		AutoloadFail,
-    u8		*pPAType,
-    u8		*pLNAType
+		PADAPTER	Adapter,
+		u8			*PROMContent,
+		BOOLEAN		AutoloadFail,
+		u8		*pPAType,
+		u8		*pLNAType
 );
 
 void hal_GetRxGainOffset_8814A(
-    PADAPTER	Adapter,
-    u8 			*PROMContent,
-    BOOLEAN		AutoloadFail
+	PADAPTER	Adapter,
+	u8 			*PROMContent,
+	BOOLEAN		AutoloadFail
 );
 void Hal_EfuseParseKFreeData_8814A(
-    PADAPTER		Adapter,
-    u8				*PROMContent,
-    BOOLEAN			AutoloadFail);
+			PADAPTER		Adapter,
+			u8				*PROMContent,
+			BOOLEAN			AutoloadFail);
 void	hal_ReadRFEType_8814A(PADAPTER Adapter, u8 *PROMContent, BOOLEAN AutoloadFail);
 void	hal_EfuseParseBTCoexistInfo8814A(PADAPTER Adapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
 
@@ -294,7 +294,7 @@ u8	MgntQuery_NssTxRate(u16 Rate);
 /* BOOLEAN HalDetectPwrDownMode8812(PADAPTER Adapter); */
 
 #ifdef CONFIG_WOWLAN
-void Hal_DetectWoWMode(PADAPTER pAdapter);
+	void Hal_DetectWoWMode(PADAPTER pAdapter);
 #endif /* CONFIG_WOWLAN */
 
 void _InitBeaconParameters_8814A(PADAPTER padapter);
@@ -315,14 +315,15 @@ void rtl8814_stop_thread(PADAPTER padapter);
 
 
 #ifdef CONFIG_PCI_HCI
-BOOLEAN	InterruptRecognized8814AE(PADAPTER Adapter);
-void	UpdateInterruptMask8814AE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
-void	InitMAC_TRXBD_8814AE(PADAPTER Adapter);
-u16	get_txbd_rw_reg(u16 ff_hwaddr);
+	BOOLEAN	InterruptRecognized8814AE(PADAPTER Adapter);
+	void	UpdateInterruptMask8814AE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
+	void	InitMAC_TRXBD_8814AE(PADAPTER Adapter);
+	void rtl8814ae_reset_desc_ring(_adapter *padapter);
+	u16	get_txbd_rw_reg(u16 ff_hwaddr);
 #endif
 
 #ifdef CONFIG_BT_COEXIST
-void rtl8814a_combo_card_WifiOnlyHwInit(PADAPTER Adapter);
+	void rtl8814a_combo_card_WifiOnlyHwInit(PADAPTER Adapter);
 #endif
 
 #endif /* __RTL8188E_HAL_H__ */

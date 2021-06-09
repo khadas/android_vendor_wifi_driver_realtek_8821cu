@@ -31,23 +31,23 @@ extern void acts_wifi_cleanup(void);
  */
 int platform_wifi_power_on(void)
 {
-    int ret = 0;
+	int ret = 0;
 
 #ifdef CONFIG_PLATFORM_ACTIONS_ATM705X
-    ret = acts_wifi_init();
-    if (unlikely(ret < 0)) {
-        pr_err("%s Failed to register the power control driver.\n", __FUNCTION__);
-        goto exit;
-    }
+	ret = acts_wifi_init();
+	if (unlikely(ret < 0)) {
+		pr_err("%s Failed to register the power control driver.\n", __FUNCTION__);
+		goto exit;
+	}
 #endif
 
 exit:
-    return ret;
+	return ret;
 }
 
 void platform_wifi_power_off(void)
 {
 #ifdef CONFIG_PLATFORM_ACTIONS_ATM705X
-    acts_wifi_cleanup();
+	acts_wifi_cleanup();
 #endif
 }

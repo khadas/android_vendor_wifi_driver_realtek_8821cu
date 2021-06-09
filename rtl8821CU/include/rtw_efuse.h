@@ -34,13 +34,13 @@
 #define	EFUSE_BT				1
 
 enum _EFUSE_DEF_TYPE {
-    TYPE_EFUSE_MAX_SECTION				= 0,
-    TYPE_EFUSE_REAL_CONTENT_LEN			= 1,
-    TYPE_AVAILABLE_EFUSE_BYTES_BANK		= 2,
-    TYPE_AVAILABLE_EFUSE_BYTES_TOTAL	= 3,
-    TYPE_EFUSE_MAP_LEN					= 4,
-    TYPE_EFUSE_PROTECT_BYTES_BANK		= 5,
-    TYPE_EFUSE_CONTENT_LEN_BANK			= 6,
+	TYPE_EFUSE_MAX_SECTION				= 0,
+	TYPE_EFUSE_REAL_CONTENT_LEN			= 1,
+	TYPE_AVAILABLE_EFUSE_BYTES_BANK		= 2,
+	TYPE_AVAILABLE_EFUSE_BYTES_TOTAL	= 3,
+	TYPE_EFUSE_MAP_LEN					= 4,
+	TYPE_EFUSE_PROTECT_BYTES_BANK		= 5,
+	TYPE_EFUSE_CONTENT_LEN_BANK			= 6,
 };
 
 #define		EFUSE_MAX_MAP_LEN		1024
@@ -53,17 +53,25 @@ enum _EFUSE_DEF_TYPE {
 /*RTL8822B 8821C BT EFUSE Define 1 BANK 128 size logical map 1024*/
 #ifdef RTW_HALMAC
 #define BANK_NUM		1
-#define EFUSE_BT_REAL_BANK_CONTENT_LEN	128
+#if defined(CONFIG_RTL8723F)
+#define EFUSE_BT_REAL_BANK_CONTENT_LEN		512
+#else
+#define EFUSE_BT_REAL_BANK_CONTENT_LEN		128
+#endif
+
 #define EFUSE_BT_REAL_CONTENT_LEN		(EFUSE_BT_REAL_BANK_CONTENT_LEN * BANK_NUM)
 #define EFUSE_BT_MAP_LEN				1024	/* 1k bytes */
 #define EFUSE_BT_MAX_SECTION			(EFUSE_BT_MAP_LEN / 8)
-#ifdef CONFIG_RTL8822C
+
+#if defined(CONFIG_RTL8822C)
 #define EFUSE_PROTECT_BYTES_BANK		54
+#elif defined(CONFIG_RTL8723F)
+#define EFUSE_PROTECT_BYTES_BANK		40
 #else
 #define EFUSE_PROTECT_BYTES_BANK		16
 #endif
 #define AVAILABLE_EFUSE_ADDR(addr)	(addr < EFUSE_BT_REAL_CONTENT_LEN - EFUSE_PROTECT_BYTES_BANK)
-#endif
+#endif /* #ifdef RTW_HALMAC */
 
 #define EXT_HEADER(header) ((header & 0x1F) == 0x0F)
 #define ALL_WORDS_DISABLED(wde)	((wde & 0x0F) == 0x0F)
@@ -106,68 +114,68 @@ enum _EFUSE_DEF_TYPE {
 
 /*------------------------------Define structure----------------------------*/
 typedef struct PG_PKT_STRUCT_A {
-    u8 offset;
-    u8 word_en;
-    u8 data[8];
-    u8 word_cnts;
+	u8 offset;
+	u8 word_en;
+	u8 data[8];
+	u8 word_cnts;
 } PGPKT_STRUCT, *PPGPKT_STRUCT;
 
 typedef enum {
-    ERR_SUCCESS = 0,
-    ERR_DRIVER_FAILURE,
-    ERR_IO_FAILURE,
-    ERR_WI_TIMEOUT,
-    ERR_WI_BUSY,
-    ERR_BAD_FORMAT,
-    ERR_INVALID_DATA,
-    ERR_NOT_ENOUGH_SPACE,
-    ERR_WRITE_PROTECT,
-    ERR_READ_BACK_FAIL,
-    ERR_OUT_OF_RANGE
+	ERR_SUCCESS = 0,
+	ERR_DRIVER_FAILURE,
+	ERR_IO_FAILURE,
+	ERR_WI_TIMEOUT,
+	ERR_WI_BUSY,
+	ERR_BAD_FORMAT,
+	ERR_INVALID_DATA,
+	ERR_NOT_ENOUGH_SPACE,
+	ERR_WRITE_PROTECT,
+	ERR_READ_BACK_FAIL,
+	ERR_OUT_OF_RANGE
 } ERROR_CODE;
 
 /*------------------------------Define structure----------------------------*/
 typedef struct _EFUSE_HAL {
-    u8	fakeEfuseBank;
-    u32	fakeEfuseUsedBytes;
-    u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE];
-    u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN];
-    u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN];
-    u32	EfuseUsedBytes;
-    u8	EfuseUsedPercentage;
+	u8	fakeEfuseBank;
+	u32	fakeEfuseUsedBytes;
+	u8	fakeEfuseContent[EFUSE_MAX_HW_SIZE];
+	u8	fakeEfuseInitMap[EFUSE_MAX_MAP_LEN];
+	u8	fakeEfuseModifiedMap[EFUSE_MAX_MAP_LEN];
+	u32	EfuseUsedBytes;
+	u8	EfuseUsedPercentage;
 
-    u16	BTEfuseUsedBytes;
-    u8	BTEfuseUsedPercentage;
-    u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-    u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
-    u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
+	u16	BTEfuseUsedBytes;
+	u8	BTEfuseUsedPercentage;
+	u8	BTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+	u8	BTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
+	u8	BTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
 
-    u16	fakeBTEfuseUsedBytes;
-    u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
-    u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
-    u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
+	u16	fakeBTEfuseUsedBytes;
+	u8	fakeBTEfuseContent[EFUSE_MAX_BT_BANK][EFUSE_MAX_HW_SIZE];
+	u8	fakeBTEfuseInitMap[EFUSE_BT_MAX_MAP_LEN];
+	u8	fakeBTEfuseModifiedMap[EFUSE_BT_MAX_MAP_LEN];
 
-    /* EFUSE Configuration, initialized in HAL_CmnInitPGData(). */
-    const u16  MaxSecNum_WiFi;
-    const u16  MaxSecNum_BT;
-    const u16  WordUnit;
-    const u16  PhysicalLen_WiFi;
-    const u16  PhysicalLen_BT;
-    const u16  LogicalLen_WiFi;
-    const u16  LogicalLen_BT;
-    const u16  BankSize;
-    const u16  TotalBankNum;
-    const u16  BankNum_WiFi;
-    const u16  BankNum_BT;
-    const u16  OOBProtectBytes;
-    const u16  ProtectBytes;
-    const u16  BankAvailBytes;
-    const u16  TotalAvailBytes_WiFi;
-    const u16  TotalAvailBytes_BT;
-    const u16  HeaderRetry;
-    const u16  DataRetry;
+	/* EFUSE Configuration, initialized in HAL_CmnInitPGData(). */
+	const u16  MaxSecNum_WiFi;
+	const u16  MaxSecNum_BT;
+	const u16  WordUnit;
+	const u16  PhysicalLen_WiFi;
+	const u16  PhysicalLen_BT;
+	const u16  LogicalLen_WiFi;
+	const u16  LogicalLen_BT;
+	const u16  BankSize;
+	const u16  TotalBankNum;
+	const u16  BankNum_WiFi;
+	const u16  BankNum_BT;
+	const u16  OOBProtectBytes;
+	const u16  ProtectBytes;
+	const u16  BankAvailBytes;
+	const u16  TotalAvailBytes_WiFi;
+	const u16  TotalAvailBytes_BT;
+	const u16  HeaderRetry;
+	const u16  DataRetry;
 
-    ERROR_CODE	  Status;
+	ERROR_CODE	  Status;
 
 } EFUSE_HAL, *PEFUSE_HAL;
 
@@ -211,7 +219,9 @@ u8	rtw_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data);
 u8	rtw_efuse_map_write(PADAPTER padapter, u16 addr, u16 cnts, u8 *data);
 u8	rtw_BT_efuse_map_read(PADAPTER padapter, u16 addr, u16 cnts, u8 *data);
 u8	rtw_BT_efuse_map_write(PADAPTER padapter, u16 addr, u16 cnts, u8 *data);
-
+#ifdef CONFIG_RTL8822C
+void	rtw_pre_bt_efuse(PADAPTER padapter);
+#endif
 u16	Efuse_GetCurrentSize(PADAPTER pAdapter, u8 efuseType, BOOLEAN bPseudoTest);
 u8	Efuse_CalculateWordCnts(u8 word_en);
 void	ReadEFuseByte(PADAPTER Adapter, u16 _offset, u8 *pbuf, BOOLEAN bPseudoTest) ;
@@ -235,17 +245,17 @@ BOOLEAN rtw_file_efuse_IsMasked(PADAPTER pAdapter, u16 Offset, u8 *maskbuf);
 BOOLEAN efuse_IsMasked(PADAPTER pAdapter, u16 Offset);
 
 void	hal_ReadEFuse_BT_logic_map(
-    PADAPTER	padapter,
-    u16			_offset,
-    u16			_size_byte,
-    u8			*pbuf
+	PADAPTER	padapter,
+	u16			_offset,
+	u16			_size_byte,
+	u8			*pbuf
 );
 u8	EfusePgPacketWrite_BT(
-    PADAPTER	pAdapter,
-    u8			offset,
-    u8			word_en,
-    u8			*pData,
-    u8			bPseudoTest);
+	PADAPTER	pAdapter,
+	u8			offset,
+	u8			word_en,
+	u8			*pData,
+	u8			bPseudoTest);
 
 u16 rtw_get_bt_efuse_mask_arraylen(PADAPTER pAdapter);
 void rtw_bt_efuse_mask_array(PADAPTER pAdapter, u8 *pArray);
@@ -264,7 +274,10 @@ extern const u8 _mac_hidden_proto_to_hal_proto_cap[];
 u8 mac_hidden_wl_func_to_hal_wl_func(u8 func);
 
 #ifdef PLATFORM_LINUX
-u8 rtw_efuse_file_read(PADAPTER padapter, u8 *filepatch, u8 *buf, u32 len);
+u8 rtw_efuse_file_read(PADAPTER padapter, u8 *filepath, u8 *buf, u32 len);
+#if !defined(CONFIG_RTW_ANDROID_GKI)
+u8 rtw_efuse_file_store(PADAPTER padapter, u8 *filepath, u8 *buf, u32 len);
+#endif /* !defined(CONFIG_RTW_ANDROID_GKI) */
 #ifdef CONFIG_EFUSE_CONFIG_FILE
 u32 rtw_read_efuse_from_file(const char *path, u8 *buf, int map_size);
 u32 rtw_read_macaddr_from_file(const char *path, u8 *buf);

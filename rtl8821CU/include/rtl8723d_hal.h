@@ -28,10 +28,10 @@
 #include "Hal8723DPhyReg.h"
 #include "Hal8723DPhyCfg.h"
 #ifdef DBG_CONFIG_ERROR_DETECT
-#include "rtl8723d_sreset.h"
+	#include "rtl8723d_sreset.h"
 #endif
 #ifdef CONFIG_LPS_POFF
-#include "rtl8723d_lps_poff.h"
+	#include "rtl8723d_lps_poff.h"
 #endif
 
 #define FW_8723D_SIZE		0x8000
@@ -42,13 +42,13 @@
 	((le16_to_cpu(_pFwHdr->Signature) & 0xFFF0) == 0x23D0)
 
 typedef struct _RT_FIRMWARE {
-    FIRMWARE_SOURCE	eFWSource;
+	FIRMWARE_SOURCE	eFWSource;
 #ifdef CONFIG_EMBEDDED_FWIMG
-    u8			*szFwBuffer;
+	u8			*szFwBuffer;
 #else
-    u8			szFwBuffer[FW_8723D_SIZE];
+	u8			szFwBuffer[FW_8723D_SIZE];
 #endif
-    u32			ulFwLength;
+	u32			ulFwLength;
 } RT_FIRMWARE_8723D, *PRT_FIRMWARE_8723D;
 
 /*
@@ -56,30 +56,30 @@ typedef struct _RT_FIRMWARE {
  *
  * Added by tynli. 2009.12.04. */
 typedef struct _RT_8723D_FIRMWARE_HDR {
-    /* 8-byte alinment required */
+	/* 8-byte alinment required */
 
-    /* --- LONG WORD 0 ---- */
-    u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
-    u8		Category;	/* AP/NIC and USB/PCI */
-    u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
-    u16		Version;		/* FW Version */
-    u16		Subversion;	/* FW Subversion, default 0x00 */
+	/* --- LONG WORD 0 ---- */
+	u16		Signature;	/* 92C0: test chip; 92C, 88C0: test chip; 88C1: MP A-cut; 92C1: MP A-cut */
+	u8		Category;	/* AP/NIC and USB/PCI */
+	u8		Function;	/* Reserved for different FW function indcation, for further use when driver needs to download different FW in different conditions */
+	u16		Version;		/* FW Version */
+	u16		Subversion;	/* FW Subversion, default 0x00 */
 
-    /* --- LONG WORD 1 ---- */
-    u8		Month;	/* Release time Month field */
-    u8		Date;	/* Release time Date field */
-    u8		Hour;	/* Release time Hour field */
-    u8		Minute;	/* Release time Minute field */
-    u16		RamCodeSize;	/* The size of RAM code */
-    u16		Rsvd2;
+	/* --- LONG WORD 1 ---- */
+	u8		Month;	/* Release time Month field */
+	u8		Date;	/* Release time Date field */
+	u8		Hour;	/* Release time Hour field */
+	u8		Minute;	/* Release time Minute field */
+	u16		RamCodeSize;	/* The size of RAM code */
+	u16		Rsvd2;
 
-    /* --- LONG WORD 2 ---- */
-    u32		SvnIdx;	/* The SVN entry index */
-    u32		Rsvd3;
+	/* --- LONG WORD 2 ---- */
+	u32		SvnIdx;	/* The SVN entry index */
+	u32		Rsvd3;
 
-    /* --- LONG WORD 3 ---- */
-    u32		Rsvd4;
-    u32		Rsvd5;
+	/* --- LONG WORD 3 ---- */
+	u32		Rsvd4;
+	u32		Rsvd5;
 } RT_8723D_FIRMWARE_HDR, *PRT_8723D_FIRMWARE_HDR;
 
 #define DRIVER_EARLY_INT_TIME_8723D		0x05
@@ -94,15 +94,15 @@ typedef struct _RT_8723D_FIRMWARE_HDR {
 #define RX_DMA_SIZE_8723D			0x4000	/* 16K(RX) */
 
 #ifdef CONFIG_WOWLAN
-#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
+	#define RESV_FMWF	(WKFMCAM_SIZE * MAX_WKFM_CAM_NUM) /* 16 entries, for each is 24 bytes*/
 #else
-#define RESV_FMWF	0
+	#define RESV_FMWF	0
 #endif
 
 #ifdef CONFIG_FW_C2H_DEBUG
-#define RX_DMA_RESERVED_SIZE_8723D	0x100	/* 256B, reserved for c2h debug message */
+	#define RX_DMA_RESERVED_SIZE_8723D	0x100	/* 256B, reserved for c2h debug message */
 #else
-#define RX_DMA_RESERVED_SIZE_8723D	0x80	/* 128B, reserved for tx report */
+	#define RX_DMA_RESERVED_SIZE_8723D	0x80	/* 128B, reserved for tx report */
 #endif
 #define RX_DMA_BOUNDARY_8723D\
 	(RX_DMA_SIZE_8723D - RX_DMA_RESERVED_SIZE_8723D - 1)
@@ -121,18 +121,18 @@ typedef struct _RT_8723D_FIRMWARE_HDR {
  * NS offload: 2 NDP info: 1
  */
 #ifdef CONFIG_WOWLAN
-#define WOWLAN_PAGE_NUM_8723D	0x0b
+	#define WOWLAN_PAGE_NUM_8723D	0x0b
 #else
-#define WOWLAN_PAGE_NUM_8723D	0x00
+	#define WOWLAN_PAGE_NUM_8723D	0x00
 #endif
 
 #ifdef CONFIG_PNO_SUPPORT
-#undef WOWLAN_PAGE_NUM_8723D
-#define WOWLAN_PAGE_NUM_8723D	0x15
+	#undef WOWLAN_PAGE_NUM_8723D
+	#define WOWLAN_PAGE_NUM_8723D	0x15
 #endif
 
 #ifdef CONFIG_AP_WOWLAN
-#define AP_WOWLAN_PAGE_NUM_8723D	0x02
+	#define AP_WOWLAN_PAGE_NUM_8723D	0x02
 #endif
 
 #define TX_TOTAL_PAGE_NUMBER_8723D\
@@ -187,11 +187,11 @@ typedef struct _RT_8723D_FIRMWARE_HDR {
 #define EFUSE_PROTECT_BYTES_BANK	16
 
 typedef enum tag_Package_Definition {
-    PACKAGE_DEFAULT,
-    PACKAGE_QFN68,
-    PACKAGE_TFBGA90,
-    PACKAGE_TFBGA80,
-    PACKAGE_TFBGA79
+	PACKAGE_DEFAULT,
+	PACKAGE_QFN68,
+	PACKAGE_TFBGA90,
+	PACKAGE_TFBGA80,
+	PACKAGE_TFBGA79
 } PACKAGE_TYPE_E;
 
 #define INCLUDE_MULTI_FUNC_BT(_Adapter) \
@@ -200,11 +200,11 @@ typedef enum tag_Package_Definition {
 	(GET_HAL_DATA(_Adapter)->MultiFunc & RT_MULTI_FUNC_GPS)
 
 #ifdef CONFIG_FILE_FWIMG
-extern char *rtw_fw_file_path;
-extern char *rtw_fw_wow_file_path;
-#ifdef CONFIG_MP_INCLUDED
-extern char *rtw_fw_mp_bt_file_path;
-#endif /* CONFIG_MP_INCLUDED */
+	extern char *rtw_fw_file_path;
+	extern char *rtw_fw_wow_file_path;
+	#ifdef CONFIG_MP_INCLUDED
+		extern char *rtw_fw_mp_bt_file_path;
+	#endif /* CONFIG_MP_INCLUDED */
 #endif /* CONFIG_FILE_FWIMG */
 
 /* rtl8723d_hal_init.c */
@@ -227,25 +227,25 @@ u8 GetEEPROMSize8723D(PADAPTER padapter);
 void Hal_InitPGData(PADAPTER padapter, u8 *PROMContent);
 void Hal_EfuseParseIDCode(PADAPTER padapter, u8 *hwinfo);
 void Hal_EfuseParseTxPowerInfo_8723D(PADAPTER padapter,
-                                     u8 *PROMContent, BOOLEAN AutoLoadFail);
+				     u8 *PROMContent, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseBTCoexistInfo_8723D(PADAPTER padapter,
-                                       u8 *hwinfo, BOOLEAN AutoLoadFail);
+				       u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseEEPROMVer_8723D(PADAPTER padapter,
-                                   u8 *hwinfo, BOOLEAN AutoLoadFail);
+				   u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseChnlPlan_8723D(PADAPTER padapter,
-                                  u8 *hwinfo, BOOLEAN AutoLoadFail);
+				  u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseCustomerID_8723D(PADAPTER padapter,
-                                    u8 *hwinfo, BOOLEAN AutoLoadFail);
+				    u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseAntennaDiversity_8723D(PADAPTER padapter,
-        u8 *hwinfo, BOOLEAN AutoLoadFail);
+		u8 *hwinfo, BOOLEAN AutoLoadFail);
 void Hal_EfuseParseXtal_8723D(PADAPTER pAdapter,
-                              u8 *hwinfo, u8 AutoLoadFail);
+			      u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseThermalMeter_8723D(PADAPTER padapter,
-                                      u8 *hwinfo, u8 AutoLoadFail);
+				      u8 *hwinfo, u8 AutoLoadFail);
 void Hal_EfuseParseVoltage_8723D(PADAPTER pAdapter,
-                                 u8 *hwinfo, BOOLEAN	AutoLoadFail);
+				 u8 *hwinfo, BOOLEAN	AutoLoadFail);
 void Hal_EfuseParseBoardType_8723D(PADAPTER Adapter,
-                                   u8	*PROMContent, BOOLEAN AutoloadFail);
+				   u8	*PROMContent, BOOLEAN AutoloadFail);
 
 void rtl8723d_set_hal_ops(struct hal_ops *pHalFunc);
 void init_hal_spec_8723d(_adapter *adapter);
@@ -260,21 +260,21 @@ void rtl8723d_InitBeaconMaxError(PADAPTER padapter, u8 InfraMode);
 void _InitMacAPLLSetting_8723D(PADAPTER Adapter);
 void _8051Reset8723(PADAPTER padapter);
 #ifdef CONFIG_WOWLAN
-void Hal_DetectWoWMode(PADAPTER pAdapter);
+	void Hal_DetectWoWMode(PADAPTER pAdapter);
 #endif /* CONFIG_WOWLAN */
 
 void rtl8723d_start_thread(_adapter *padapter);
 void rtl8723d_stop_thread(_adapter *padapter);
 
 #if defined(CONFIG_CHECK_BT_HANG) && defined(CONFIG_BT_COEXIST)
-void rtl8723ds_init_checkbthang_workqueue(_adapter *adapter);
-void rtl8723ds_free_checkbthang_workqueue(_adapter *adapter);
-void rtl8723ds_cancle_checkbthang_workqueue(_adapter *adapter);
-void rtl8723ds_hal_check_bt_hang(_adapter *adapter);
+	void rtl8723ds_init_checkbthang_workqueue(_adapter *adapter);
+	void rtl8723ds_free_checkbthang_workqueue(_adapter *adapter);
+	void rtl8723ds_cancle_checkbthang_workqueue(_adapter *adapter);
+	void rtl8723ds_hal_check_bt_hang(_adapter *adapter);
 #endif
 
 #ifdef CONFIG_GPIO_WAKEUP
-void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
+	void HalSetOutPutGPIO(PADAPTER padapter, u8 index, u8 OutPutValue);
 #endif
 #ifdef CONFIG_MP_INCLUDED
 int FirmwareDownloadBT(PADAPTER Adapter, PRT_MP_FIRMWARE pFirmware);
@@ -287,17 +287,17 @@ u8 HwRateToMRate8723D(u8 rate);
 void Hal_ReadRFGainOffset(PADAPTER pAdapter, u8 *hwinfo, BOOLEAN AutoLoadFail);
 
 #if defined(CONFIG_CHECK_BT_HANG) && defined(CONFIG_BT_COEXIST)
-void check_bt_status_work(void *data);
+	void check_bt_status_work(void *data);
 #endif
 
 #ifdef CONFIG_USB_HCI
-void rtl8723d_cal_txdesc_chksum(struct tx_desc *ptxdesc);
+	void rtl8723d_cal_txdesc_chksum(struct tx_desc *ptxdesc);
 #endif
 
 #ifdef CONFIG_PCI_HCI
-BOOLEAN	InterruptRecognized8723DE(PADAPTER Adapter);
-void	UpdateInterruptMask8723DE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
-u16 get_txbd_rw_reg(u16 ff_hwaddr);
+	BOOLEAN	InterruptRecognized8723DE(PADAPTER Adapter);
+	void	UpdateInterruptMask8723DE(PADAPTER Adapter, u32 AddMSR, u32 AddMSR1, u32 RemoveMSR, u32 RemoveMSR1);
+	u16 get_txbd_rw_reg(u16 ff_hwaddr);
 #endif
 
 #endif

@@ -234,8 +234,8 @@
 #define REG_RD_RESP_PKT_TH_8710B		0x0463
 #define REG_DATA_SC_8710B				0x0483
 #ifdef CONFIG_WOWLAN
-#define REG_TXPKTBUF_IV_LOW             0x0484
-#define REG_TXPKTBUF_IV_HIGH            0x0488
+	#define REG_TXPKTBUF_IV_LOW             0x0484
+	#define REG_TXPKTBUF_IV_HIGH            0x0488
 #endif
 #define REG_TXRPT_START_OFFSET		0x04AC
 #define REG_POWER_STAGE1_8710B		0x04B4
@@ -417,10 +417,10 @@
 /* ****************************************************************************
  *	8723 Regsiter Bit and Content definition
  * **************************************************************************** */
-
-/* -----------------------------------------------------
-* REG_SYS_SYSTEM_CFG0
-* ----------------------------------------------------- */
+ 
+ /* -----------------------------------------------------
+ * REG_SYS_SYSTEM_CFG0 
+ * ----------------------------------------------------- */
 #define BIT_RTL_ID_8710B BIT(16)
 
 #define BIT_MASK_CHIP_VER_8710B 0xf
@@ -430,36 +430,36 @@
 #define BIT_MASK_VENDOR_ID_8710B 0xf
 #define BIT_GET_VENDOR_ID_8710B(x) (((x) >> BIT_SHIFT_VENDOR_ID_8710B) & BIT_MASK_VENDOR_ID_8710B)
 
-/* -----------------------------------------------------
-* REG_SYS_SYSTEM_CFG1
-* ----------------------------------------------------- */
+ /* -----------------------------------------------------
+ * REG_SYS_SYSTEM_CFG1 
+ * ----------------------------------------------------- */
 #define BIT_SPSLDO_SEL_8710B BIT(25)
 
-/* -----------------------------------------------------
-* REG_SYS_SYSTEM_CFG2
-* ----------------------------------------------------- */
+ /* -----------------------------------------------------
+ * REG_SYS_SYSTEM_CFG2 
+ * ----------------------------------------------------- */
 #define BIT_MASK_RF_RL_ID_8710B 0xf
 #define BIT_GET_RF_RL_ID_8710B(x) ((x) & BIT_MASK_RF_RL_ID_8710B)
 
-/* -----------------------------------------------------
-* REG_SYS_SYSTEM_CFG2
-* ----------------------------------------------------- */
+ /* -----------------------------------------------------
+ * REG_SYS_SYSTEM_CFG2 
+ * ----------------------------------------------------- */
 #define BIT_EERPOMSEL_8710B BIT(4)
 #define BIT_AUTOLOAD_SUS_8710B BIT(5)
 
 
-/* -----------------------------------------------------
-* Other
-* ----------------------------------------------------- */
+ /* -----------------------------------------------------
+ * Other
+ * ----------------------------------------------------- */
 
 
 #define BIT_USB_RXDMA_AGG_EN	BIT(31)
 #define RXDMA_AGG_MODE_EN		BIT(1)
 
 #ifdef CONFIG_WOWLAN
-#define RXPKT_RELEASE_POLL		BIT(16)
-#define RXDMA_IDLE				BIT(17)
-#define RW_RELEASE_EN			BIT(18)
+	#define RXPKT_RELEASE_POLL		BIT(16)
+	#define RXDMA_IDLE				BIT(17)
+	#define RW_RELEASE_EN			BIT(18)
 #endif
 
 /* 2 HSISR
@@ -471,11 +471,11 @@
 		HSISR_GPIO9_INT)
 
 #ifdef CONFIG_RF_POWER_TRIM
-#ifdef CONFIG_RTL8710B
-#define EEPROM_RF_GAIN_OFFSET			0xC1
-#endif
+	#ifdef CONFIG_RTL8710B
+		#define EEPROM_RF_GAIN_OFFSET			0xC1
+	#endif
 
-#define EEPROM_RF_GAIN_VAL				0x1F6
+	#define EEPROM_RF_GAIN_VAL				0x1F6
 #endif /*CONFIG_RF_POWER_TRIM*/
 
 #endif /* __RTL8710B_SPEC_H__ */

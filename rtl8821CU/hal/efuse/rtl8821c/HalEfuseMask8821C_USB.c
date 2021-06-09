@@ -26,70 +26,70 @@
 ******************************************************************************/
 
 u8 Array_MP_8821C_MUSB[] = {
-    0xFF,
-    0xF3,
-    0xEF,
-    0x9E,
-    0x70,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x03,
-    0xF7,
-    0x00,
-    0x00,
-    0x00,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xFF,
-    0xC0,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
-    0x00,
+		0xFF,
+		0xF3,
+		0xEF,
+		0x9E,
+		0x70,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x03,
+		0xF7,
+		0x00,
+		0x00,
+		0x00,
+		0xFF,
+		0xFF,
+		0xFF,
+		0xFF,
+		0xC0,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
+		0x00,
 
 };
 
 u16
 EFUSE_GetArrayLen_MP_8821C_MUSB(void)
 {
-    return sizeof(Array_MP_8821C_MUSB) / sizeof(u8);
+	return sizeof(Array_MP_8821C_MUSB) / sizeof(u8);
 }
 
 void
 EFUSE_GetMaskArray_MP_8821C_MUSB(
-    u8 *Array
+		u8 *Array
 )
 {
-    u16 len = EFUSE_GetArrayLen_MP_8821C_MUSB(), i = 0;
+	u16 len = EFUSE_GetArrayLen_MP_8821C_MUSB(), i = 0;
 
-    for (i = 0; i < len; ++i)
-        Array[i] = Array_MP_8821C_MUSB[i];
+	for (i = 0; i < len; ++i)
+		Array[i] = Array_MP_8821C_MUSB[i];
 }
 BOOLEAN
 EFUSE_IsAddressMasked_MP_8821C_MUSB(
-    u16 Offset
+		u16 Offset
 )
 {
-    int r = Offset / 16;
-    int c = (Offset % 16) / 2;
-    int result = 0;
+	int r = Offset / 16;
+	int c = (Offset % 16) / 2;
+	int result = 0;
 
-    if (c < 4) /* Upper double word */
-        result = (Array_MP_8821C_MUSB[r] & (0x10 << c));
-    else
-        result = (Array_MP_8821C_MUSB[r] & (0x01 << (c - 4)));
+	if (c < 4) /* Upper double word */
+		result = (Array_MP_8821C_MUSB[r] & (0x10 << c));
+	else
+		result = (Array_MP_8821C_MUSB[r] & (0x01 << (c - 4)));
 
-    return (result > 0) ? 0 : 1;
+	return (result > 0) ? 0 : 1;
 }

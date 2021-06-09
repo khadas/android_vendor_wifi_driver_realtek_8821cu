@@ -35,12 +35,12 @@
 
 /*	for rtw self-origanization spec 1	*/
 struct rtw_rson_struct {
-    u8 ver;
-    u32 id;
-    u8 hopcnt;
-    u8 connectible;
-    u8 loading;
-    u8 res[16];
+	u8 ver;
+	u32 id;
+	u8 hopcnt;
+	u8 connectible;
+	u8 loading;
+	u8 res[16];
 } __attribute__((__packed__));
 
 void init_rtw_rson_data(struct dvobj_priv *dvobj);

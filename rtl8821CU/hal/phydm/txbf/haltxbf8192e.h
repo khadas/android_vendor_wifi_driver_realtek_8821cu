@@ -29,25 +29,25 @@
 #ifdef PHYDM_BEAMFORMING_SUPPORT
 
 void hal_txbf_8192e_set_ndpa_rate(
-    void *dm_void,
-    u8 BW,
-    u8 rate);
+	void *dm_void,
+	u8 BW,
+	u8 rate);
 
 void hal_txbf_8192e_enter(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_8192e_leave(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_8192e_status(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 
 void hal_txbf_8192e_fw_tx_bf(
-    void *dm_void,
-    u8 idx);
+	void *dm_void,
+	u8 idx);
 #else
 
 #define hal_txbf_8192e_set_ndpa_rate(dm_void, BW, rate)

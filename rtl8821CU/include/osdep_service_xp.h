@@ -15,156 +15,156 @@
 #ifndef __OSDEP_LINUX_SERVICE_H_
 #define __OSDEP_LINUX_SERVICE_H_
 
-#include <ndis.h>
-#include <ntddk.h>
-#include <ntddndis.h>
-#include <ntdef.h>
+	#include <ndis.h>
+	#include <ntddk.h>
+	#include <ntddndis.h>
+	#include <ntdef.h>
 
 #ifdef CONFIG_USB_HCI
-#include <usb.h>
-#include <usbioctl.h>
-#include <usbdlib.h>
+	#include <usb.h>
+	#include <usbioctl.h>
+	#include <usbdlib.h>
 #endif
 
-typedef KSEMAPHORE 	_sema;
-typedef	LIST_ENTRY	_list;
-typedef NDIS_STATUS _OS_STATUS;
+	typedef KSEMAPHORE 	_sema;
+	typedef	LIST_ENTRY	_list;
+	typedef NDIS_STATUS _OS_STATUS;
+	
+
+	typedef NDIS_SPIN_LOCK	_lock;
+
+	typedef KMUTEX 			_mutex;
+
+	typedef KIRQL	_irqL;
+
+	// USB_PIPE for WINCE , but handle can be use just integer under windows
+	typedef NDIS_HANDLE  _nic_hdl;
+
+	struct rtw_timer_list {
+		NDIS_MINIPORT_TIMER ndis_timer;
+		void (*function)(void *);
+		void *arg;
+	};
+
+	struct	__queue	{
+		LIST_ENTRY	queue;	
+		_lock	lock;
+	};
+
+	typedef	NDIS_PACKET	_pkt;
+	typedef NDIS_BUFFER	_buffer;
+	typedef struct	__queue	_queue;
+	
+	typedef PKTHREAD _thread_hdl_;
+	typedef void	thread_return;
+	typedef void* thread_context;
+
+	typedef NDIS_WORK_ITEM _workitem;
 
 
-typedef NDIS_SPIN_LOCK	_lock;
-
-typedef KMUTEX 			_mutex;
-
-typedef KIRQL	_irqL;
-
-// USB_PIPE for WINCE , but handle can be use just integer under windows
-typedef NDIS_HANDLE  _nic_hdl;
-
-struct rtw_timer_list {
-    NDIS_MINIPORT_TIMER ndis_timer;
-    void (*function)(void *);
-    void *arg;
-};
-
-struct	__queue	{
-    LIST_ENTRY	queue;
-    _lock	lock;
-};
-
-typedef	NDIS_PACKET	_pkt;
-typedef NDIS_BUFFER	_buffer;
-typedef struct	__queue	_queue;
-
-typedef PKTHREAD _thread_hdl_;
-typedef void	thread_return;
-typedef void* thread_context;
-
-typedef NDIS_WORK_ITEM _workitem;
-
-
-#define HZ			10000000
-#define SEMA_UPBND	(0x7FFFFFFF)   //8192
-
+	#define HZ			10000000
+	#define SEMA_UPBND	(0x7FFFFFFF)   //8192
+	
 __inline static _list *get_next(_list	*list)
 {
-    return list->Flink;
-}
+	return list->Flink;
+}	
 
 __inline static _list	*get_list_head(_queue	*queue)
 {
-    return (&(queue->queue));
+	return (&(queue->queue));
 }
-
+	
 
 #define LIST_CONTAINOR(ptr, type, member) CONTAINING_RECORD(ptr, type, member)
-
+     
 
 __inline static _enter_critical(_lock *plock, _irqL *pirqL)
 {
-    NdisAcquireSpinLock(plock);
+	NdisAcquireSpinLock(plock);	
 }
 
 __inline static _exit_critical(_lock *plock, _irqL *pirqL)
 {
-    NdisReleaseSpinLock(plock);
+	NdisReleaseSpinLock(plock);	
 }
 
 
 __inline static _enter_critical_ex(_lock *plock, _irqL *pirqL)
 {
-    NdisDprAcquireSpinLock(plock);
+	NdisDprAcquireSpinLock(plock);	
 }
 
 __inline static _exit_critical_ex(_lock *plock, _irqL *pirqL)
 {
-    NdisDprReleaseSpinLock(plock);
+	NdisDprReleaseSpinLock(plock);	
 }
 
 __inline static void _enter_critical_bh(_lock *plock, _irqL *pirqL)
 {
-    NdisDprAcquireSpinLock(plock);
+	NdisDprAcquireSpinLock(plock);
 }
 
 __inline static void _exit_critical_bh(_lock *plock, _irqL *pirqL)
 {
-    NdisDprReleaseSpinLock(plock);
+	NdisDprReleaseSpinLock(plock);
 }
 
 __inline static _enter_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
-    KeWaitForSingleObject(pmutex, Executive, KernelMode, FALSE, NULL);
+	KeWaitForSingleObject(pmutex, Executive, KernelMode, FALSE, NULL);
 }
 
 
 __inline static _exit_critical_mutex(_mutex *pmutex, _irqL *pirqL)
 {
-    KeReleaseMutex(pmutex, FALSE);
+	KeReleaseMutex(pmutex, FALSE);
 }
 
 
 __inline static void rtw_list_delete(_list *plist)
 {
-    RemoveEntryList(plist);
-    InitializeListHead(plist);
+	RemoveEntryList(plist);
+	InitializeListHead(plist);	
 }
 
 static inline void timer_hdl(
-    IN PVOID SystemSpecific1,
-    IN PVOID FunctionContext,
-    IN PVOID SystemSpecific2,
-    IN PVOID SystemSpecific3)
+	IN PVOID SystemSpecific1,
+	IN PVOID FunctionContext,
+	IN PVOID SystemSpecific2,
+	IN PVOID SystemSpecific3)
 {
-    _timer *timer = (_timer *)FunctionContext;
+	_timer *timer = (_timer *)FunctionContext;
 
-    timer->function(timer->arg);
+	timer->function(timer->arg);
 }
 
 static inline void _init_timer(_timer *ptimer, _nic_hdl nic_hdl, void *pfunc, void *cntx)
 {
-    ptimer->function = pfunc;
-    ptimer->arg = cntx;
-    NdisMInitializeTimer(&ptimer->ndis_timer, nic_hdl, timer_hdl, ptimer);
+	ptimer->function = pfunc;
+	ptimer->arg = cntx;
+	NdisMInitializeTimer(&ptimer->ndis_timer, nic_hdl, timer_hdl, ptimer);
 }
 
 static inline void _set_timer(_timer *ptimer, u32 delay_time)
 {
-    NdisMSetTimer(ptimer, delay_time);
+	NdisMSetTimer(ptimer, delay_time);
 }
 
 static inline void _cancel_timer(_timer *ptimer, u8 *bcancelled)
 {
-    NdisMCancelTimer(ptimer, bcancelled);
+	NdisMCancelTimer(ptimer, bcancelled);
 }
 
 __inline static void _init_workitem(_workitem *pwork, void *pfunc, PVOID cntx)
 {
 
-    NdisInitializeWorkItem(pwork, pfunc, cntx);
+	NdisInitializeWorkItem(pwork, pfunc, cntx);
 }
 
 __inline static void _set_workitem(_workitem *pwork)
 {
-    NdisScheduleWorkItem(pwork);
+	NdisScheduleWorkItem(pwork);
 }
 
 

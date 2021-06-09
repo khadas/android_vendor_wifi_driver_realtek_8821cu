@@ -46,7 +46,7 @@
 #define SET_VHT_CAPABILITY_ELE_TXOP_PS(_pEleStart, _val)				SET_BITS_TO_LE_1BYTE((_pEleStart)+2, 5, 1, _val)
 #define SET_VHT_CAPABILITY_ELE_HTC_VHT(_pEleStart, _val)				SET_BITS_TO_LE_1BYTE((_pEleStart)+2, 6, 1, _val)
 #define SET_VHT_CAPABILITY_ELE_MAX_RXAMPDU_FACTOR(_pEleStart, _val)		SET_BITS_TO_LE_2BYTE((_pEleStart)+2, 7, 3, _val) /* B23~B25 */
-#define SET_VHT_CAPABILITY_ELE_LINK_ADAPTION(_pEleStart, _val)				SET_BITS_TO_LE_1BYTE((_pEleStart)+2, 2, 2, _val)
+#define SET_VHT_CAPABILITY_ELE_LINK_ADAPTION(_pEleStart, _val)				SET_BITS_TO_LE_1BYTE((_pEleStart)+3, 2, 2, _val)
 #define SET_VHT_CAPABILITY_ELE_MCS_RX_MAP(_pEleStart, _val)				SET_BITS_TO_LE_2BYTE((_pEleStart)+4, 0, 16, _val)   /* B0~B15 indicate Rx MCS MAP, we write 0 to indicate MCS0~7. by page */
 #define SET_VHT_CAPABILITY_ELE_MCS_RX_HIGHEST_RATE(_pEleStart, _val)				SET_BITS_TO_LE_2BYTE((_pEleStart)+6, 0, 13, _val)
 #define SET_VHT_CAPABILITY_ELE_MCS_TX_MAP(_pEleStart, _val)				SET_BITS_TO_LE_2BYTE((_pEleStart)+8, 0, 16, _val)   /* B0~B15 indicate Tx MCS MAP, we write 0 to indicate MCS0~7. by page */
@@ -103,10 +103,12 @@ extern const u16 _vht_max_mpdu_len[];
 #define VHT_SUP_CH_WIDTH_SET_MAX 3
 extern const u8 _vht_sup_ch_width_set_to_bw_cap[];
 #define vht_sup_ch_width_set_to_bw_cap(set) (((set) >= VHT_SUP_CH_WIDTH_SET_MAX) ? _vht_sup_ch_width_set_to_bw_cap[VHT_SUP_CH_WIDTH_SET_MAX] : _vht_sup_ch_width_set_to_bw_cap[(set)])
+#define VHT_MAX_AMPDU_LEN(f) ((1 << (13 + f)) - 1)
+
+#ifdef CONFIG_RTW_DEBUG
 extern const char *const _vht_sup_ch_width_set_str[];
 #define vht_sup_ch_width_set_str(set) (((set) >= VHT_SUP_CH_WIDTH_SET_MAX) ? _vht_sup_ch_width_set_str[VHT_SUP_CH_WIDTH_SET_MAX] : _vht_sup_ch_width_set_str[(set)])
 
-#define VHT_MAX_AMPDU_LEN(f) ((1 << (13 + f)) - 1)
 void dump_vht_cap_ie(void *sel, const u8 *ie, u32 ie_len);
 
 #define VHT_OP_CH_WIDTH_MAX 4
@@ -114,40 +116,46 @@ extern const char *const _vht_op_ch_width_str[];
 #define vht_op_ch_width_str(ch_width) (((ch_width) >= VHT_OP_CH_WIDTH_MAX) ? _vht_op_ch_width_str[VHT_OP_CH_WIDTH_MAX] : _vht_op_ch_width_str[(ch_width)])
 
 void dump_vht_op_ie(void *sel, const u8 *ie, u32 ie_len);
+#endif
+
+struct vht_bf_cap {
+	u8 is_mu_bfer;
+	u8 su_sound_dim;
+};
 
 struct vht_priv {
-    u8	vht_option;
+	u8	vht_option;
 
-    u8	ldpc_cap;
-    u8	stbc_cap;
-    u16	beamform_cap;
-    u8	ap_is_mu_bfer;
+	u8	ldpc_cap;
+	u8	stbc_cap;
+	u16	beamform_cap;
+	struct	vht_bf_cap ap_bf_cap;
 
-    u8	sgi_80m;/* short GI */
-    u8	ampdu_len;
+	u8	sgi_80m;/* short GI */
+	u8	ampdu_len;
 
-    u8	vht_highest_rate;
-    u8	vht_mcs_map[2];
+	u8	vht_highest_rate;
+	u8	vht_mcs_map[2];
 
-    u8 op_present:1; /* vht_op is present */
-    u8 notify_present:1; /* vht_op_mode_notify is present */
+	u8 op_present:1; /* vht_op is present */
+	u8 notify_present:1; /* vht_op_mode_notify is present */
 
-    u8 vht_cap[32];
-    u8 vht_op[VHT_OP_IE_LEN];
-    u8 vht_op_mode_notify;
+	u8 vht_cap[32];
+	u8 vht_op[VHT_OP_IE_LEN];
+	u8 vht_op_mode_notify;
 };
 
 #ifdef ROKU_PRIVATE
 struct vht_priv_infra_ap {
 
-    /* Infra mode, only store for AP's info, not intersection of STA and AP*/
-    u8	ldpc_cap_infra_ap;
-    u8	stbc_cap_infra_ap;
-    u16	beamform_cap_infra_ap;
-    u8	vht_mcs_map_infra_ap[2];
-    u8	vht_mcs_map_tx_infra_ap[2];
-    u8	channel_width_infra_ap;
-    u8	number_of_streams_infra_ap;
+	/* Infra mode, only store for AP's info, not intersection of STA and AP*/
+	u8	ldpc_cap_infra_ap;
+	u8	stbc_cap_infra_ap;
+	u16	beamform_cap_infra_ap;
+	u8	vht_mcs_map_infra_ap[2];
+	u8	vht_mcs_map_tx_infra_ap[2];
+	u8	channel_width_infra_ap;
+	u8	number_of_streams_infra_ap;
 };
 #endif /* ROKU_PRIVATE */
 

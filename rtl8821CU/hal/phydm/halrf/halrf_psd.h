@@ -18,33 +18,33 @@
 
 
 struct _halrf_psd_data {
-    u32 point;
-    u32 start_point;
-    u32 stop_point;
-    u32 average;
-    u32 buf_size;
-    u32 psd_data[256];
-    u32 psd_progress;
+	u32 point;
+	u32 start_point;
+	u32 stop_point;
+	u32 average;
+	u32 buf_size;
+	u32 psd_data[256];
+	u32 psd_progress;
 };
 
 u32
 halrf_psd_init(
-    void *dm_void);
+	void *dm_void);
 
 u32
 halrf_psd_query(
-    void *dm_void,
-    u32 *outbuf,
-    u32 buf_size);
+	void *dm_void,
+	u32 *outbuf,
+	u32 buf_size);
 
 u32
 halrf_psd_init_query(
-    void *dm_void,
-    u32 *outbuf,
-    u32 point,
-    u32 start_point,
-    u32 stop_point,
-    u32 average,
-    u32 buf_size);
+	void *dm_void,
+	u32 *outbuf,
+	u32 point,
+	u32 start_point,
+	u32 stop_point,
+	u32 average,
+	u32 buf_size);
 
 #endif /*#__HALRF_PSD_H__*/
