@@ -173,8 +173,10 @@
 
 #else // for Linux
 
+	#ifdef CONFIG_IOCTL_CFG80211
 	#ifndef CONFIG_RTW_SCAN_RAND
 	#define CONFIG_RTW_SCAN_RAND
+	#endif
 	#endif
 
 #endif // CONFIG_RTW_ANDROID
@@ -820,10 +822,6 @@ defined(CONFIG_RTL8723F) /*|| defined(CONFIG_RTL8814A)*/
 /* Debug related compiler flags */
 #define DBG_THREAD_PID	/* Add thread pid to debug message prefix */
 #define DBG_CPU_INFO	/* Add CPU info to debug message prefix */
-#endif
-
-#ifndef RTW_AMSDU_MODE
-#define RTW_AMSDU_MODE 0 /* 0:non-SPP, 1:spp mode, 2:All drop */
 #endif
 
 #endif /* __DRV_CONF_H__ */

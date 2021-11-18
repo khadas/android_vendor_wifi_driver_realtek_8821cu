@@ -26,7 +26,7 @@
 #define RTW_SDIO_READ_PORT_FAIL	7
 #define RTW_ALREADY				8
 #define RTW_RA_RESOLVING		9
-#define RTW_BMC_NO_NEED			10
+#define RTW_ORI_NO_NEED			10
 #define RTW_XBUF_UNAVAIL		11
 #define RTW_TX_BALANCE			12
 #define RTW_TX_WAIT_MORE_FRAME	13

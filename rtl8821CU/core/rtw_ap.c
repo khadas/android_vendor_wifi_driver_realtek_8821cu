@@ -2227,11 +2227,7 @@ int rtw_check_beacon_data(_adapter *padapter, u8 *pbuf,  int len)
 	}
 	psecuritypriv->mfp_opt = mfp_opt;
 
-#ifdef CONFIG_RTW_80211K
-	/* RRM */
-	update_rm_cap(pbuf, padapter, len, _BEACON_IE_OFFSET_);
-
-#endif /* CONFIG_RTW_80211K */
+	rm_update_cap(pbuf, padapter, len, _BEACON_IE_OFFSET_);
 
 	/* wmm */
 	ie_len = 0;
@@ -4025,7 +4021,7 @@ int rtw_sta_flush(_adapter *padapter, bool enqueue)
 		#endif
 	}
 
-	if (!MLME_IS_MESH(padapter))
+	if (MLME_IS_ASOC(padapter) && !MLME_IS_MESH(padapter))
 		issue_deauth(padapter, bc_addr, WLAN_REASON_DEAUTH_LEAVING);
 
 	associated_clients_update(padapter, _TRUE, STA_INFO_UPDATE_ALL);
@@ -4246,10 +4242,6 @@ void stop_ap_mode(_adapter *padapter)
 	padapter->securitypriv.ndisauthtype = Ndis802_11AuthModeOpen;
 	padapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
 
-#ifdef CONFIG_DFS_MASTER
-	rtw_dfs_rd_en_decision(padapter, self_action, 0);
-#endif
-
 	rtw_rfctl_update_op_mode(adapter_to_rfctl(padapter), BIT(padapter->iface_id), 0);
 
 	/* free scan queue */
@@ -4328,6 +4320,10 @@ void stop_ap_mode(_adapter *padapter)
 #ifdef CONFIG_RTW_WDS
 	if (MLME_IS_AP(padapter))
 		rtw_wds_pathtbl_unregister(padapter);
+#endif
+
+#ifdef CONFIG_DFS_MASTER
+	rtw_dfs_rd_en_decision(padapter, self_action, 0);
 #endif
 }
 
@@ -5651,11 +5647,12 @@ static int rtw_ap_nexthop_resolve(_adapter *adapter, struct xmit_frame *xframe)
 	int ret = _SUCCESS;
 
 #ifdef CONFIG_RTW_WDS
-	if (adapter_use_wds(adapter)
-		&& rtw_wds_nexthop_lookup(adapter, attrib->dst, attrib->ra) == 0
-	) {
-		if (_rtw_memcmp(attrib->dst, attrib->ra, ETH_ALEN) == _FALSE)
-			attrib->wds = 1;
+	if (adapter_use_wds(adapter)) {
+		if (rtw_wds_nexthop_lookup(adapter, attrib->dst, attrib->ra) == 0) {
+			if (_rtw_memcmp(attrib->dst, attrib->ra, ETH_ALEN) == _FALSE)
+				attrib->wds = 1;
+		} else
+			ret = _FAIL;
 	} else
 #endif
 		_rtw_memcpy(attrib->ra, attrib->dst, ETH_ALEN);
@@ -5663,7 +5660,73 @@ static int rtw_ap_nexthop_resolve(_adapter *adapter, struct xmit_frame *xframe)
 	return ret;
 }
 
-int rtw_ap_addr_resolve(_adapter *adapter, u16 os_qid, struct xmit_frame *xframe, _pkt *pkt, _list *b2u_list)
+#ifdef CONFIG_RTW_WDS
+static void rtw_ap_data_flood_for_unknown_da(_adapter *adapter
+	, const u8 *da, const u8 *sa, const u8 *ori_ta
+	, u16 os_qid, _list *f_list)
+{
+	struct sta_priv *stapriv = &adapter->stapriv;
+	struct xmit_priv *xmitpriv = &adapter->xmitpriv;
+	_irqL irqL;
+	_list *head, *list;
+	struct sta_info *sta;
+	char sta_id[NUM_STA];
+	u8 sta_num = 0;
+	int i;
+
+	_enter_critical_bh(&stapriv->asoc_list_lock, &irqL);
+	head = &stapriv->asoc_list;
+	list = get_next(head);
+
+	while ((rtw_end_of_queue_search(head, list)) == _FALSE) {
+		int stainfo_offset;
+
+		sta = LIST_CONTAINOR(list, struct sta_info, asoc_list);
+		list = get_next(list);
+
+		stainfo_offset = rtw_stainfo_offset(stapriv, sta);
+		if (stainfo_offset_valid(stainfo_offset))
+			sta_id[sta_num++] = stainfo_offset;
+	}
+	_exit_critical_bh(&stapriv->asoc_list_lock, &irqL);
+
+	if (!sta_num)
+		goto exit;
+
+	for (i = 0; i < sta_num; i++) {
+		struct xmit_frame *frame;
+		struct pkt_attrib *attrib;
+
+		sta = rtw_get_stainfo_by_offset(stapriv, sta_id[i]);
+		if (!(sta->state & WIFI_ASOC_STATE)
+			|| !(sta->flags & WLAN_STA_WDS)
+			|| _rtw_memcmp(sta->cmn.mac_addr, sa, ETH_ALEN) == _TRUE
+			|| (ori_ta && _rtw_memcmp(sta->cmn.mac_addr, ori_ta, ETH_ALEN) == _TRUE)
+			|| is_broadcast_mac_addr(sta->cmn.mac_addr)
+			|| is_zero_mac_addr(sta->cmn.mac_addr))
+			continue;
+
+		frame = rtw_alloc_xmitframe(xmitpriv, os_qid);
+		if (!frame)
+			break;
+
+		attrib = &frame->attrib;
+
+		_rtw_memcpy(attrib->ra, sta->cmn.mac_addr, ETH_ALEN);
+		_rtw_memcpy(attrib->ta, adapter_mac_addr(adapter), ETH_ALEN);
+		_rtw_memcpy(attrib->dst, da, ETH_ALEN);
+		_rtw_memcpy(attrib->src, sa, ETH_ALEN);
+		attrib->wds = 1;
+
+		rtw_list_insert_tail(&frame->list, f_list);
+	}
+
+exit:
+	return;
+}
+#endif /* CONFIG_RTW_WDS */
+
+int rtw_ap_addr_resolve(_adapter *adapter, u16 os_qid, struct xmit_frame *xframe, _pkt *pkt, _list *f_list)
 {
 	struct pkt_file pktfile;
 	struct ethhdr etherhdr;
@@ -5671,9 +5734,6 @@ int rtw_ap_addr_resolve(_adapter *adapter, u16 os_qid, struct xmit_frame *xframe
 	struct rtw_mesh_path *mpath = NULL, *mppath = NULL;
 	u8 is_da_mcast;
 	u8 addr4_need;
-#if CONFIG_RTW_AP_DATA_BMC_TO_UC
-	bool bmc_need = _TRUE;
-#endif
 	int res = _SUCCESS;
 
 	_rtw_open_pktfile(pkt, &pktfile);
@@ -5681,10 +5741,10 @@ int rtw_ap_addr_resolve(_adapter *adapter, u16 os_qid, struct xmit_frame *xframe
 		res = _FAIL;
 		goto exit;
 	}
-	
+
 	xframe->pkt = pkt;
-#if CONFIG_RTW_AP_DATA_BMC_TO_UC
-	_rtw_init_listhead(b2u_list);
+#if defined(CONFIG_RTW_WDS) || CONFIG_RTW_AP_DATA_BMC_TO_UC
+	_rtw_init_listhead(f_list);
 #endif
 
 	is_da_mcast = IS_MCAST(etherhdr.h_dest);
@@ -5694,10 +5754,10 @@ int rtw_ap_addr_resolve(_adapter *adapter, u16 os_qid, struct xmit_frame *xframe
 			&& adapter->registrypriv.wifi_spec == 0
 			&& adapter->xmitpriv.free_xmitframe_cnt > (NR_XMITFRAME / 4)
 		) {
-			bmc_need = rtw_ap_data_bmc_to_uc(adapter
-				, etherhdr.h_dest, etherhdr.h_source, NULL, os_qid, b2u_list);
-			if (bmc_need == _FALSE) {
-				res = RTW_BMC_NO_NEED;
+			if (rtw_ap_data_bmc_to_uc(adapter
+				, etherhdr.h_dest, etherhdr.h_source, NULL, os_qid, f_list) == 0
+			) {
+				res = RTW_ORI_NO_NEED;
 				goto exit;
 			}
 		}
@@ -5712,8 +5772,17 @@ int rtw_ap_addr_resolve(_adapter *adapter, u16 os_qid, struct xmit_frame *xframe
 
 	if (is_da_mcast)
 		_rtw_memcpy(attrib->ra, attrib->dst, ETH_ALEN);
-	else
+	else {
 		res = rtw_ap_nexthop_resolve(adapter, xframe);
+		#ifdef CONFIG_RTW_WDS
+		if (res != _SUCCESS) {
+			/* unknown DA, flood frame to every WDS STA */
+			rtw_ap_data_flood_for_unknown_da(adapter
+				, etherhdr.h_dest, etherhdr.h_source, NULL, os_qid, f_list);
+			res = RTW_ORI_NO_NEED;
+		}
+		#endif
+	}
 
 exit:
 	return res;
@@ -5773,10 +5842,10 @@ int rtw_ap_rx_data_validate_hdr(_adapter *adapter, union recv_frame *rframe, str
 #endif
 
 	process_pwrbit_data(adapter, rframe, *sta);
-	
+
 	if ((get_frame_sub_type(whdr) & WIFI_QOS_DATA_TYPE) == WIFI_QOS_DATA_TYPE)
 		process_wmmps_data(adapter, rframe, *sta);
-	
+
 	if (get_frame_sub_type(whdr) & BIT(6)) {
 		/* No data, will not indicate to upper layer, temporily count it here */
 		count_rx_stats(adapter, rframe, *sta);
@@ -5793,12 +5862,12 @@ exit:
 int rtw_ap_rx_msdu_act_check(union recv_frame *rframe
 	, const u8 *da, const u8 *sa
 	, u8 *msdu, enum rtw_rx_llc_hdl llc_hdl
-	, struct xmit_frame **fwd_frame, _list *b2u_list)
+	, struct xmit_frame **fwd_frame, _list *f_list)
 {
 	_adapter *adapter = rframe->u.hdr.adapter;
 	struct rx_pkt_attrib *rattrib = &rframe->u.hdr.attrib;
 	struct rtw_wds_path *wpath;
-	u8 is_da_bmc = IS_MCAST(da); 
+	u8 is_da_bmc = IS_MCAST(da);
 	u8 is_da_self = !is_da_bmc && _rtw_memcmp(da, adapter_mac_addr(adapter), ETH_ALEN);
 	u8 is_da_peer = 0;
 	int in_wds_tbl = 0;
@@ -5807,9 +5876,6 @@ int rtw_ap_rx_msdu_act_check(union recv_frame *rframe
 	struct pkt_attrib *xattrib;
 	u8 fwd_ra[ETH_ALEN] = {0};
 	int act = 0;
-#if CONFIG_RTW_AP_DATA_BMC_TO_UC
-	bool bmc_need = _TRUE;
-#endif
 
 #ifdef CONFIG_RTW_WDS
 	/* update/create wds info for SA, RA */
@@ -5870,7 +5936,13 @@ int rtw_ap_rx_msdu_act_check(union recv_frame *rframe
 
 	/* DA is unknown*/
 	act |= RTW_RX_MSDU_ACT_INDICATE;
-	goto exit;
+	if (adapter->mlmepriv.ap_isolate) {
+		/*
+		* unknown DA and ap_isolate, indicate only
+		* (bridge will not forward packets to originating port)
+		*/
+		goto exit;
+	}
 
 fwd_chk:
 
@@ -5879,48 +5951,70 @@ fwd_chk:
 
 	os_qid = rtw_os_recv_select_queue(msdu, llc_hdl);
 
-#if CONFIG_RTW_AP_DATA_BMC_TO_UC
-	_rtw_init_listhead(b2u_list);
-
-	if (is_da_bmc
-		&& rtw_ap_fwd_b2u_policy_chk(adapter->b2u_flags_ap_fwd, da, rattrib->to_fr_ds == 3 && !IS_MCAST(rattrib->ra))
-		&& adapter->registrypriv.wifi_spec == 0
-		&& adapter->xmitpriv.free_xmitframe_cnt > (NR_XMITFRAME / 4)
-	) {
-		bmc_need = rtw_ap_data_bmc_to_uc(adapter
-			, da, sa, rframe->u.hdr.psta->cmn.mac_addr
-			, os_qid, b2u_list);
-	}
-
-	if (bmc_need == _TRUE)
+#if defined(CONFIG_RTW_WDS) || CONFIG_RTW_AP_DATA_BMC_TO_UC
+	_rtw_init_listhead(f_list);
 #endif
-	{
-		xframe = rtw_alloc_xmitframe(&adapter->xmitpriv, os_qid);
-		if (!xframe) {
-			#ifdef DBG_TX_DROP_FRAME
-			RTW_INFO("DBG_TX_DROP_FRAME "FUNC_ADPT_FMT" rtw_alloc_xmitframe fail\n"
-				, FUNC_ADPT_ARG(adapter));
-			#endif
-			goto exit;
+
+#if CONFIG_RTW_AP_DATA_BMC_TO_UC
+	if (is_da_bmc) {
+		if (rtw_ap_fwd_b2u_policy_chk(adapter->b2u_flags_ap_fwd, da, rattrib->to_fr_ds == 3 && !IS_MCAST(rattrib->ra))
+			&& adapter->registrypriv.wifi_spec == 0
+			&& adapter->xmitpriv.free_xmitframe_cnt > (NR_XMITFRAME / 4)
+		) {
+			if (rtw_ap_data_bmc_to_uc(adapter
+				, da, sa, rframe->u.hdr.psta->cmn.mac_addr
+				, os_qid, f_list) == 0
+			) {
+				if (!rtw_is_list_empty(f_list))
+					goto set_act_fwd;
+				else
+					goto exit;
+			}
 		}
+	} else
+#endif
+#ifdef CONFIG_RTW_WDS
+	if (adapter_use_wds(adapter) && !in_wds_tbl && !is_da_peer) {
+		/* unknown DA, flood frame to every WDS STA except receiving one */
+		rtw_ap_data_flood_for_unknown_da(adapter
+			, da, sa, rframe->u.hdr.psta->cmn.mac_addr
+			, os_qid, f_list);
+		if (!rtw_is_list_empty(f_list))
+			goto set_act_fwd;
+		else
+			goto exit;
+	} else
+#endif
+	;
 
-		xattrib = &xframe->attrib;
-
-		_rtw_memcpy(xattrib->dst, da, ETH_ALEN);
-		_rtw_memcpy(xattrib->src, sa, ETH_ALEN);
-		_rtw_memcpy(xattrib->ta, adapter_mac_addr(adapter), ETH_ALEN);
-
-		#ifdef CONFIG_RTW_WDS
-		if (in_wds_tbl && _rtw_memcmp(da, fwd_ra, ETH_ALEN) == _FALSE) {
-			_rtw_memcpy(xattrib->ra, fwd_ra, ETH_ALEN);
-			xattrib->wds = 1;			
-		} else
+	xframe = rtw_alloc_xmitframe(&adapter->xmitpriv, os_qid);
+	if (!xframe) {
+		#ifdef DBG_TX_DROP_FRAME
+		RTW_INFO("DBG_TX_DROP_FRAME "FUNC_ADPT_FMT" rtw_alloc_xmitframe fail\n"
+			, FUNC_ADPT_ARG(adapter));
 		#endif
-			_rtw_memcpy(xattrib->ra, da, ETH_ALEN);
-
-		*fwd_frame = xframe;
+		goto exit;
 	}
 
+	xattrib = &xframe->attrib;
+
+	_rtw_memcpy(xattrib->dst, da, ETH_ALEN);
+	_rtw_memcpy(xattrib->src, sa, ETH_ALEN);
+	_rtw_memcpy(xattrib->ta, adapter_mac_addr(adapter), ETH_ALEN);
+
+	#ifdef CONFIG_RTW_WDS
+	if (in_wds_tbl && _rtw_memcmp(da, fwd_ra, ETH_ALEN) == _FALSE) {
+		_rtw_memcpy(xattrib->ra, fwd_ra, ETH_ALEN);
+		xattrib->wds = 1;
+	} else
+	#endif
+		_rtw_memcpy(xattrib->ra, da, ETH_ALEN);
+
+	*fwd_frame = xframe;
+
+#if defined(CONFIG_RTW_WDS) || CONFIG_RTW_AP_DATA_BMC_TO_UC
+set_act_fwd:
+#endif
 	act |= RTW_RX_MSDU_ACT_FORWARD;
 
 exit:

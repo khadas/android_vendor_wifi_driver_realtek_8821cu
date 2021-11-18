@@ -2607,6 +2607,9 @@ int proc_get_trx_info(struct seq_file *m, void *v)
 
 #ifdef CONFIG_USB_HCI
 	RTW_PRINT_SEL(m, "rx_urb_pending_cn=%d\n", ATOMIC_READ(&(precvpriv->rx_pending_cnt)));
+#ifdef CONFIG_USB_PROTECT_RX_CLONED_SKB
+	RTW_PRINT_SEL(m, "rx_cloned_skb_pending_cn=%d\n", skb_queue_len(&precvpriv->rx_cloned_skb_queue));
+#endif
 #endif
 
 	dump_rx_bh_tk(m, &GET_PRIMARY_ADAPTER(padapter)->recvpriv);
@@ -5745,7 +5748,7 @@ ssize_t proc_set_wakeup_event(struct file *file, const char __user *buffer,
 	else
 		return -EFAULT;
 
-	if (num == 1 && wakeup_event <= 0x0f) {
+	if (num == 1 && wakeup_event <= 0x07) {
 		registry_par->wakeup_event = wakeup_event;
 
 		if (wakeup_event & BIT(1))

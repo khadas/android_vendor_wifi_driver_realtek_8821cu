@@ -212,6 +212,7 @@
 	#define CONFIG_PREALLOC_RECV_SKB
 	#ifdef CONFIG_PREALLOC_RECV_SKB
 		/* #define CONFIG_FIX_NR_BULKIN_BUFFER */ /* only use PREALLOC_RECV_SKB buffer, don't alloc skb at runtime */
+		#define CONFIG_USB_PROTECT_RX_CLONED_SKB
 	#endif
 #endif
 

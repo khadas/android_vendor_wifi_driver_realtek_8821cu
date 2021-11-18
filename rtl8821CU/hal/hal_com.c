@@ -5879,7 +5879,6 @@ static u8 rtw_hal_set_remote_wake_ctrl_cmd(_adapter *adapter, u8 enable)
 	struct security_priv *psecuritypriv = &(adapter->securitypriv);
 	struct pwrctrl_priv *ppwrpriv = adapter_to_pwrctl(adapter);
 	struct registry_priv *pregistrypriv = &adapter->registrypriv;
-	u8 arp_en = pregistrypriv->wakeup_event & BIT(3);
 	u8 u1H2CRemoteWakeCtrlParm[H2C_REMOTE_WAKE_CTRL_LEN] = {0};
 	u8 ret = _FAIL, count = 0, no_wake = 0;
 	struct mlme_priv	*pmlmepriv = &(adapter->mlmepriv);
@@ -5896,12 +5895,6 @@ static u8 rtw_hal_set_remote_wake_ctrl_cmd(_adapter *adapter, u8 enable)
 		if (!ppwrpriv->wowlan_pno_enable) {
 			SET_H2CCMD_REMOTE_WAKECTRL_ENABLE(
 				u1H2CRemoteWakeCtrlParm, enable);
-			if (arp_en)
-				SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_OFFLOAD_EN(
-					u1H2CRemoteWakeCtrlParm, 1);
-			else
-				SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_OFFLOAD_EN(
-					u1H2CRemoteWakeCtrlParm, 0);
 	#ifdef CONFIG_GTK_OL
 			if (psecuritypriv->binstallKCK_KEK == _TRUE &&
 				(psecuritypriv->ndisauthtype == Ndis802_11AuthModeWPA2PSK || _rtw_wow_chk_cap(adapter, WOW_CAP_TKIP_OL))) {
@@ -5938,17 +5931,6 @@ static u8 rtw_hal_set_remote_wake_ctrl_cmd(_adapter *adapter, u8 enable)
 			}
 	#endif /* CONFIG_RTL8192F */
 #endif
-			if ((psecuritypriv->dot11PrivacyAlgrthm == _AES_) ||
-				(psecuritypriv->dot11PrivacyAlgrthm == _TKIP_) ||
-				(psecuritypriv->dot11PrivacyAlgrthm == _NO_PRIVACY_)) {
-				SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_ACTION(
-					u1H2CRemoteWakeCtrlParm, 0);
-			} else { /* WEP etc. */
-				if (arp_en)
-					SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_ACTION(
-						u1H2CRemoteWakeCtrlParm, 1);
-			}
-	
 			if (psecuritypriv->dot11PrivacyAlgrthm == _TKIP_) {
 #ifdef CONFIG_GTK_OL
 				if(_rtw_wow_chk_cap(adapter, WOW_CAP_TKIP_OL))
@@ -5959,12 +5941,33 @@ static u8 rtw_hal_set_remote_wake_ctrl_cmd(_adapter *adapter, u8 enable)
 				    IS_HARDWARE_TYPE_8812(adapter)) {
 					SET_H2CCMD_REMOTE_WAKE_CTRL_TKIP_OFFLOAD_EN(
 						u1H2CRemoteWakeCtrlParm, 0);
-					if (arp_en)
-						SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_ACTION(
-							u1H2CRemoteWakeCtrlParm, 1);
 				}
 			}
-	
+
+			if (0) {
+				/* ARP wake up case */
+				SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_OFFLOAD_EN(
+					u1H2CRemoteWakeCtrlParm, 1);
+				SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_ACTION(
+					u1H2CRemoteWakeCtrlParm, 1);
+			} else if (pregistrypriv->wakeup_event) {
+				/* ARP no wake up case */
+				if ((psecuritypriv->dot11PrivacyAlgrthm == _AES_) ||
+				    (psecuritypriv->dot11PrivacyAlgrthm == _NO_PRIVACY_)) {
+					SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_OFFLOAD_EN(
+						u1H2CRemoteWakeCtrlParm, 1);
+				}
+				#ifdef CONFIG_GTK_OL
+				else if (psecuritypriv->dot11PrivacyAlgrthm == _TKIP_ &&
+					 _rtw_wow_chk_cap(adapter, WOW_CAP_TKIP_OL)) {
+					SET_H2CCMD_REMOTE_WAKE_CTRL_ARP_OFFLOAD_EN(
+						u1H2CRemoteWakeCtrlParm, 1);
+				}
+				#endif
+			} else {
+				/* ARP no wake up and no ARP response case */
+			}
+
 			SET_H2CCMD_REMOTE_WAKE_CTRL_FW_PARSING_UNTIL_WAKEUP(
 				u1H2CRemoteWakeCtrlParm, 1);
 		}

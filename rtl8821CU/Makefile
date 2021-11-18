@@ -96,8 +96,6 @@ CONFIG_IP_R_MONITOR = n #arp VOQ and high rate
 # user priority mapping rule : tos, dscp
 CONFIG_RTW_UP_MAPPING_RULE = tos
 CONFIG_RTW_MBO = n
-# AMSDU in security network
-CONFIG_SEC_AMSDU_MODE = non-spp
 ########################## Android ###########################
 # CONFIG_RTW_ANDROID - 0: no Android, 4/5/6/7/8/9/10/11 : Android version
 CONFIG_RTW_ANDROID = 9
@@ -117,8 +115,8 @@ CONFIG_PROC_DEBUG = y
 
 ######################## Wake On Lan ##########################
 CONFIG_WOWLAN = n
-#bit3: ARP enable, bit2: deauth, bit1: unicast, bit0: magic pkt.
-CONFIG_WAKEUP_TYPE = 0xf
+#bit2: deauth, bit1: unicast, bit0: magic pkt.
+CONFIG_WAKEUP_TYPE = 0x7
 CONFIG_WOW_LPS_MODE = default
 #bit0: disBBRF off, #bit1: Wireless remote controller (WRC)
 CONFIG_SUSPEND_TYPE = 0
@@ -1335,14 +1333,6 @@ EXTRA_CFLAGS += -DDM_ODM_SUPPORT_TYPE=0x04
 ifeq ($(CONFIG_RTW_MBO), y)
 EXTRA_CFLAGS += -DCONFIG_RTW_MBO -DCONFIG_RTW_80211K -DCONFIG_RTW_WNM -DCONFIG_RTW_BTM_ROAM
 EXTRA_CFLAGS += -DCONFIG_RTW_80211R
-endif
-
-ifeq ($(CONFIG_SEC_AMSDU_MODE), non-spp)
-EXTRA_CFLAGS += -DRTW_AMSDU_MODE=0
-else ifeq ($(CONFIG_SEC_AMSDU_MODE), spp)
-EXTRA_CFLAGS += -DRTW_AMSDU_MODE=1
-else ifeq ($(CONFIG_SEC_AMSDU_MODE), disable)
-EXTRA_CFLAGS += -DRTW_AMSDU_MODE=2
 endif
 
 ifeq ($(CONFIG_PLATFORM_I386_PC), y)

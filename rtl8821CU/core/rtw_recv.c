@@ -2714,14 +2714,21 @@ union recv_frame *recvframe_defrag(_adapter *adapter, _queue *defrag_q)
 			return NULL;
 		}
 
-		curfragnum++;
-
 		/* copy the 2nd~n fragment frame's payload to the first fragment */
 		/* get the 2nd~last fragment frame's payload */
 
 		wlanhdr_offset = pnfhdr->attrib.hdrlen + pnfhdr->attrib.iv_len;
 
 		recvframe_pull(pnextrframe, wlanhdr_offset);
+
+		if ((pfhdr->rx_end - pfhdr->rx_tail) < pnfhdr->len) {
+			RTW_INFO("Not enough buffer space, drop fragmented frame!\n");
+			rtw_free_recvframe(prframe, pfree_recv_queue);
+			rtw_free_recvframe_queue(defrag_q, pfree_recv_queue);
+			return NULL;
+		}
+
+		curfragnum++;
 
 		/* append  to first fragment frame's tail (if privacy frame, pull the ICV) */
 		recvframe_pull_tail(prframe, pfhdr->attrib.icv_len);
@@ -2951,31 +2958,31 @@ exit:
 }
 
 #if defined(CONFIG_AP_MODE) || defined(CONFIG_RTW_MESH)
-static void recv_free_fwd_resource(_adapter *adapter, struct xmit_frame *fwd_frame, _list *b2u_list)
+static void recv_free_fwd_resource(_adapter *adapter, struct xmit_frame *fwd_frame, _list *f_list)
 {
 	struct xmit_priv *xmitpriv = &adapter->xmitpriv;
 
 	if (fwd_frame)
 		rtw_free_xmitframe(xmitpriv, fwd_frame);
 
-#if CONFIG_RTW_DATA_BMC_TO_UC
-	if (!rtw_is_list_empty(b2u_list)) {
-		struct xmit_frame *b2uframe;
+#if defined(CONFIG_RTW_WDS) || CONFIG_RTW_DATA_BMC_TO_UC
+	if (!rtw_is_list_empty(f_list)) {
+		struct xmit_frame *fframe;
 		_list *list;
 
-		list = get_next(b2u_list);
-		while (rtw_end_of_queue_search(b2u_list, list) == _FALSE) {
-			b2uframe = LIST_CONTAINOR(list, struct xmit_frame, list);
+		list = get_next(f_list);
+		while (rtw_end_of_queue_search(f_list, list) == _FALSE) {
+			fframe = LIST_CONTAINOR(list, struct xmit_frame, list);
 			list = get_next(list);
-			rtw_list_delete(&b2uframe->list);
-			rtw_free_xmitframe(xmitpriv, b2uframe);
+			rtw_list_delete(&fframe->list);
+			rtw_free_xmitframe(xmitpriv, fframe);
 		}
 	}
 #endif
 }
 
 static void recv_fwd_pkt_hdl(_adapter *adapter, _pkt *pkt
-	, u8 act, struct xmit_frame *fwd_frame, _list *b2u_list)
+	, u8 act, struct xmit_frame *fwd_frame, _list *f_list)
 {
 	struct xmit_priv *xmitpriv = &adapter->xmitpriv;
 	_pkt *fwd_pkt = pkt;
@@ -2986,31 +2993,31 @@ static void recv_fwd_pkt_hdl(_adapter *adapter, _pkt *pkt
 			#ifdef DBG_TX_DROP_FRAME
 			RTW_INFO("DBG_TX_DROP_FRAME %s rtw_os_pkt_copy fail\n", __func__);
 			#endif
-			recv_free_fwd_resource(adapter, fwd_frame, b2u_list);
+			recv_free_fwd_resource(adapter, fwd_frame, f_list);
 			goto exit;
 		}
 	}
 
-#if CONFIG_RTW_DATA_BMC_TO_UC
-	if (!rtw_is_list_empty(b2u_list)) {
-		_list *list = get_next(b2u_list);
-		struct xmit_frame *b2uframe;
+#if defined(CONFIG_RTW_WDS) || CONFIG_RTW_DATA_BMC_TO_UC
+	if (!rtw_is_list_empty(f_list)) {
+		_list *list = get_next(f_list);
+		struct xmit_frame *fframe;
 
-		while (rtw_end_of_queue_search(b2u_list, list) == _FALSE) {
-			b2uframe = LIST_CONTAINOR(list, struct xmit_frame, list);
+		while (rtw_end_of_queue_search(f_list, list) == _FALSE) {
+			fframe = LIST_CONTAINOR(list, struct xmit_frame, list);
 			list = get_next(list);
-			rtw_list_delete(&b2uframe->list);
+			rtw_list_delete(&fframe->list);
 
-			if (!fwd_frame && rtw_is_list_empty(b2u_list)) /* the last fwd_pkt */
-				b2uframe->pkt = fwd_pkt;
+			if (!fwd_frame && rtw_is_list_empty(f_list)) /* the last fwd_pkt */
+				fframe->pkt = fwd_pkt;
 			else
-				b2uframe->pkt = rtw_os_pkt_copy(fwd_pkt);
-			if (!b2uframe->pkt) {
-				rtw_free_xmitframe(xmitpriv, b2uframe);
+				fframe->pkt = rtw_os_pkt_copy(fwd_pkt);
+			if (!fframe->pkt) {
+				rtw_free_xmitframe(xmitpriv, fframe);
 				continue;
 			}
 
-			rtw_xmit_posthandle(adapter, b2uframe, b2uframe->pkt);
+			rtw_xmit_posthandle(adapter, fframe, fframe->pkt);
 		}
 	}
 #endif
@@ -3085,7 +3092,7 @@ int amsdu_to_msdu(_adapter *padapter, union recv_frame *prframe)
 	int act;
 #if defined(CONFIG_AP_MODE) || defined(CONFIG_RTW_MESH)
 	struct xmit_frame *fwd_frame;
-	_list b2u_list;
+	_list f_list;
 #endif
 	enum rtw_rx_llc_hdl llc_hdl;
 	u8 mctrl_len = 0;
@@ -3137,7 +3144,7 @@ int amsdu_to_msdu(_adapter *padapter, union recv_frame *prframe)
 			act = rtw_mesh_rx_msdu_act_check(prframe
 				, mda, msa, da, sa, mctrl
 				, pdata + ETH_HLEN + mctrl_len, llc_hdl
-				, &fwd_frame, &b2u_list);
+				, &fwd_frame, &f_list);
 		} else
 		#endif
 		{
@@ -3153,7 +3160,7 @@ int amsdu_to_msdu(_adapter *padapter, union recv_frame *prframe)
 			#ifdef CONFIG_AP_MODE
 			if (MLME_IS_AP(padapter)) {
 				act = rtw_ap_rx_msdu_act_check(prframe, da, sa
-					, pdata + ETH_HLEN, llc_hdl, &fwd_frame, &b2u_list);
+					, pdata + ETH_HLEN, llc_hdl, &fwd_frame, &f_list);
 			} else
 			#endif
 			if (MLME_IS_STA(padapter))
@@ -3178,7 +3185,7 @@ int amsdu_to_msdu(_adapter *padapter, union recv_frame *prframe)
 				#ifdef DBG_TX_DROP_FRAME
 				RTW_INFO("DBG_TX_DROP_FRAME %s rtw_os_alloc_msdu_pkt fail\n", __func__);
 				#endif
-				recv_free_fwd_resource(padapter, fwd_frame, &b2u_list);
+				recv_free_fwd_resource(padapter, fwd_frame, &f_list);
 			}
 			#endif
 			break;
@@ -3186,7 +3193,7 @@ int amsdu_to_msdu(_adapter *padapter, union recv_frame *prframe)
 
 		#if defined(CONFIG_AP_MODE) || defined(CONFIG_RTW_MESH)
 		if (act & RTW_RX_MSDU_ACT_FORWARD) {
-			recv_fwd_pkt_hdl(padapter, sub_pkt, act, fwd_frame, &b2u_list);
+			recv_fwd_pkt_hdl(padapter, sub_pkt, act, fwd_frame, &f_list);
 			if (!(act & RTW_RX_MSDU_ACT_INDICATE))
 				goto move_to_next;
 		}
@@ -3264,7 +3271,7 @@ static int recv_process_mpdu(_adapter *padapter, union recv_frame *prframe)
 
 		#if defined(CONFIG_AP_MODE) || defined(CONFIG_RTW_MESH)
 		struct xmit_frame *fwd_frame = NULL;
-		_list b2u_list;
+		_list f_list;
 
 		#ifdef CONFIG_RTW_MESH
 		if (MLME_IS_MESH(padapter)) {
@@ -3274,12 +3281,12 @@ static int recv_process_mpdu(_adapter *padapter, union recv_frame *prframe)
 					, pattrib->dst, pattrib->src
 					, (struct rtw_ieee80211s_hdr *)(msdu - RATTRIB_GET_MCTRL_LEN(pattrib))
 					, msdu, llc_hdl
-					, &fwd_frame, &b2u_list);
+					, &fwd_frame, &f_list);
 		} else
 		#endif
 		if (MLME_IS_AP(padapter))
 			act = rtw_ap_rx_msdu_act_check(prframe, pattrib->dst, pattrib->src
-					, msdu, llc_hdl, &fwd_frame, &b2u_list);
+					, msdu, llc_hdl, &fwd_frame, &f_list);
 		#endif
 
 		#if defined(CONFIG_AP_MODE) || defined(CONFIG_RTW_MESH)
@@ -3305,7 +3312,7 @@ static int recv_process_mpdu(_adapter *padapter, union recv_frame *prframe)
 				#ifdef DBG_TX_DROP_FRAME
 				RTW_INFO("DBG_TX_DROP_FRAME %s wlanhdr_to_ethhdr fail\n", __func__);
 				#endif
-				recv_free_fwd_resource(padapter, fwd_frame, &b2u_list);
+				recv_free_fwd_resource(padapter, fwd_frame, &f_list);
 			}
 			#endif
 			rtw_free_recvframe(prframe, pfree_recv_queue);
@@ -3314,7 +3321,7 @@ static int recv_process_mpdu(_adapter *padapter, union recv_frame *prframe)
 
 		#if defined(CONFIG_AP_MODE) || defined(CONFIG_RTW_MESH)
 		if (act & RTW_RX_MSDU_ACT_FORWARD) {
-			recv_fwd_pkt_hdl(padapter, prframe->u.hdr.pkt, act, fwd_frame, &b2u_list);
+			recv_fwd_pkt_hdl(padapter, prframe->u.hdr.pkt, act, fwd_frame, &f_list);
 			if (!(act & RTW_RX_MSDU_ACT_INDICATE)) {
 				prframe->u.hdr.pkt = NULL;
 				rtw_free_recvframe(prframe, pfree_recv_queue);
