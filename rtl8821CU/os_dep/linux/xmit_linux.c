@@ -510,7 +510,11 @@ fail:
 }
 #endif
 
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 32))
+netdev_tx_t rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev)
+#else
 int rtw_xmit_entry(_pkt *pkt, _nic_hdl pnetdev)
+#endif
 {
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(pnetdev);
 	struct	mlme_priv	*pmlmepriv = &(padapter->mlmepriv);
