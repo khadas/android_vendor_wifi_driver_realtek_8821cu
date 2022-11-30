@@ -387,6 +387,9 @@ void halrf_iqk_dbg(void *dm_void)
 	struct dm_iqk_info *iqk_info = &dm->IQK_info;
 	struct _hal_rf_ *rf = &dm->rf_table;
 
+	/* fix BRK issue */
+	return;
+
 	/* IQK INFO */
 	RF_DBG(dm, DBG_RF_IQK, "%-20s\n", "====== IQK Info ======");
 

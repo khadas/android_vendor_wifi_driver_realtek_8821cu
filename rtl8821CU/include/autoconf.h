@@ -165,7 +165,7 @@
 
 #define CONFIG_SKB_COPY	/* amsdu */
 
-#define CONFIG_RTW_LED
+//#define CONFIG_RTW_LED
 #ifdef CONFIG_RTW_LED
 	#define CONFIG_RTW_SW_LED
 	#ifdef CONFIG_RTW_SW_LED
