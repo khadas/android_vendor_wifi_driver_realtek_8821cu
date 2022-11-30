@@ -287,6 +287,10 @@ void sreset_reset(_adapter *padapter)
 
 	psrtpriv->Wifi_Error_Status = WIFI_STATUS_SUCCESS;
 
+	if (!rtw_is_hw_init_completed(padapter)){
+                RTW_INFO("hardware init not yet done\n");
+                return;
+        }
 
 #ifdef CONFIG_LPS
 	rtw_set_ps_mode(padapter, PS_MODE_ACTIVE, 0, 0, "SRESET");

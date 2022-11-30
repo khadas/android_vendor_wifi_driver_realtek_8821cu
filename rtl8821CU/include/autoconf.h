@@ -165,7 +165,7 @@
 
 #define CONFIG_SKB_COPY	/* amsdu */
 
-//#define CONFIG_RTW_LED
+#define CONFIG_RTW_LED
 #ifdef CONFIG_RTW_LED
 	#define CONFIG_RTW_SW_LED
 	#ifdef CONFIG_RTW_SW_LED
@@ -242,7 +242,7 @@
 /*
  * HAL  Related Config
  */
-/*#define CONFIG_RX_PACKET_APPEND_FCS*/
+#define CONFIG_RX_PACKET_APPEND_FCS
 
 /*#define CONFIG_ADHOC_WORKAROUND_SETTING*/
 

@@ -2954,7 +2954,7 @@ exit:
 	return annc_cnt;
 }
 
-static void mpath_tx_tasklet_hdl(void *priv)
+static void mpath_tx_tasklet_hdl(unsigned long priv)
 {
 	_adapter *adapter = (_adapter *)priv;
 	struct rtw_mesh_info *minfo = &adapter->mesh_info;
@@ -3377,7 +3377,7 @@ void rtw_mesh_init_mesh_info(_adapter *adapter)
 
 	_rtw_init_queue(&minfo->mpath_tx_queue);
 	tasklet_init(&minfo->mpath_tx_tasklet
-		, (void(*)(unsigned long))mpath_tx_tasklet_hdl
+		, mpath_tx_tasklet_hdl
 		, (unsigned long)adapter);
 
 	rtw_mrc_init(adapter);
@@ -3916,7 +3916,7 @@ int rtw_mesh_rx_data_validate_hdr(_adapter *adapter, union recv_frame *rframe, s
 			stop_sta_xmit(adapter, *sta);
 	} else {
 		if ((*sta)->state & WIFI_SLEEP_STATE)
-			wakeup_sta_to_xmit(adapter, *sta);
+			wakeup_sta_to_xmit(adapter, *sta, ALL_FRAME);
 	}
 
 	if (is_ra_bmc)

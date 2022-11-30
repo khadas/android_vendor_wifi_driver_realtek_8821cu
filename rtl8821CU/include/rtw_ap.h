@@ -18,6 +18,13 @@
 
 #ifdef CONFIG_AP_MODE
 
+#define AP_CSA_DISABLE 0
+#define AP_SWITCH_CH_CSA 1
+#define STA_RX_CSA 2
+#define CSA_STA_JOINBSS 3
+#define CSA_IE_REMOVE 0xff
+#define DEFAULT_CSA_CNT 3
+
 /* external function */
 extern void rtw_indicate_sta_assoc_event(_adapter *padapter, struct sta_info *psta);
 extern void rtw_indicate_sta_disassoc_event(_adapter *padapter, struct sta_info *psta);

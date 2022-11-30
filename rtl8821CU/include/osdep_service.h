@@ -30,7 +30,9 @@
 #define RTW_XBUF_UNAVAIL		11
 #define RTW_TX_BALANCE			12
 #define RTW_TX_WAIT_MORE_FRAME	13
-#define RTW_QUEUE_MGMT 14
+#define RTW_QUEUE_MGMT			14
+#define RTW_NOT_SUPPORT			15
+#define RTW_BUSY				16
 
 /* #define RTW_STATUS_TIMEDOUT -110 */
 
@@ -517,10 +519,8 @@ static inline void rtw_thread_wait_stop(void)
 __inline static void flush_signals_thread(void)
 {
 #ifdef PLATFORM_LINUX
-#if (LINUX_VERSION_CODE < KERNEL_VERSION(5, 15, 0))
 	if (signal_pending(current))
 		flush_signals(current);
-#endif
 #endif
 }
 
@@ -669,9 +669,9 @@ static inline int largest_bit_64(u64 bitmask)
 	return i;
 }
 
-#define rtw_abs(a) (a < 0 ? -a : a)
-#define rtw_min(a, b) ((a > b) ? b : a)
-#define rtw_max(a, b) ((a > b) ? a : b)
+#define rtw_abs(a) ((a) < 0 ? -(a) : (a))
+#define rtw_min(a, b) (((a) > (b)) ? (b) : (a))
+#define rtw_max(a, b) (((a) > (b)) ? (a) : (b))
 #define rtw_is_range_a_in_b(hi_a, lo_a, hi_b, lo_b) (((hi_a) <= (hi_b)) && ((lo_a) >= (lo_b)))
 #define rtw_is_range_overlap(hi_a, lo_a, hi_b, lo_b) (((hi_a) > (lo_b)) && ((lo_a) < (hi_b)))
 
@@ -811,7 +811,7 @@ extern u32 rtw_random32(void);
 	} while (0)
 
 void rtw_buf_free(u8 **buf, u32 *buf_len);
-void rtw_buf_update(u8 **buf, u32 *buf_len, u8 *src, u32 src_len);
+void rtw_buf_update(u8 **buf, u32 *buf_len, const u8 *src, u32 src_len);
 
 struct rtw_cbuf {
 	u32 write;
@@ -872,6 +872,7 @@ BOOLEAN is_null(char c);
 BOOLEAN is_all_null(char *c, int len);
 BOOLEAN is_eol(char c);
 BOOLEAN is_space(char c);
+BOOLEAN is_decimal(char chTmp);
 BOOLEAN IsHexDigit(char chTmp);
 BOOLEAN is_alpha(char chTmp);
 char alpha_to_upper(char c);

@@ -72,8 +72,17 @@
 
 #endif
 
+#ifdef CONFIG_LAYER2_ROAMING
+/*#define CONFIG_RTW_ROAM_QUICKSCAN	*/	/* active_roaming is required. i.e CONFIG_ROAMING_FLAG[bit2] MUST be enabled */
+/*#define CONFIG_RTW_ROAM_QUICKSCAN_TH           60*/
+#endif
+
 /* Default enable single wiphy if driver ver >= 5.9 */
 #define RTW_SINGLE_WIPHY
+
+#if (defined(__ANDROID_COMMON_KERNEL__) && !defined(CONFIG_RTW_ANDROID))
+	#error "Set CONFIG_RTW_ANDROID in Makefile while build with Android Common Kernel!!"
+#endif
 
 #ifdef CONFIG_RTW_ANDROID
 
@@ -127,8 +136,10 @@
 	#ifndef CONFIG_RTW_WIFI_HAL_DEBUG
 	//#define CONFIG_RTW_WIFI_HAL_DEBUG
 	#endif
+	#if (CONFIG_RTW_ANDROID < 11)
 	#ifndef CONFIG_RTW_CFGVENDOR_LLSTATS
 	#define CONFIG_RTW_CFGVENDOR_LLSTATS
+	#endif
 	#endif
 	#if (CONFIG_RTW_ANDROID < 11)
 	#ifndef CONFIG_RTW_CFGVENDOR_RANDOM_MAC_OUI
@@ -139,9 +150,9 @@
 	#define CONFIG_RTW_SCAN_RAND
 	#endif
 	#endif
-	/*#ifndef CONFIG_RTW_CFGVENDOR_RSSIMONITOR
+	#ifndef CONFIG_RTW_CFGVENDOR_RSSIMONITOR
 	#define CONFIG_RTW_CFGVENDOR_RSSIMONITOR
-	#endif*/
+	#endif
 	#ifndef CONFIG_RTW_CFGVENDOR_WIFI_LOGGER
 	#define CONFIG_RTW_CFGVENDOR_WIFI_LOGGER
 	#endif
@@ -154,9 +165,6 @@
 	#endif
 	#ifndef CONFIG_KERNEL_PATCH_EXTERNAL_AUTH
 	#define CONFIG_KERNEL_PATCH_EXTERNAL_AUTH
-	#endif
-	#ifndef CONFIG_RTW_ABORT_SCAN
-	#define CONFIG_RTW_ABORT_SCAN
 	#endif
 	#endif
 	#endif // CONFIG_RTW_WIFI_HAL
@@ -173,10 +181,8 @@
 
 #else // for Linux
 
-	#ifdef CONFIG_IOCTL_CFG80211
 	#ifndef CONFIG_RTW_SCAN_RAND
 	#define CONFIG_RTW_SCAN_RAND
-	#endif
 	#endif
 
 #endif // CONFIG_RTW_ANDROID
@@ -252,6 +258,10 @@
 	#ifndef CONFIG_RTW_AP_FWD_B2U_FLAGS
 	#define CONFIG_RTW_AP_FWD_B2U_FLAGS 0x8 /* see RTW_AP_B2U_XXX */
 	#endif
+
+	#ifndef CONFIG_ACTIVE_TPC_REPORT
+	#define CONFIG_ACTIVE_TPC_REPORT
+	#endif
 #endif
 
 #ifdef CONFIG_RTW_MULTI_AP
@@ -325,7 +335,6 @@
 
 #define RTW_SCAN_SPARSE_MIRACAST 1
 #define RTW_SCAN_SPARSE_BG 0
-#define RTW_SCAN_SPARSE_ROAMING_ACTIVE 1
 
 #ifndef CONFIG_TX_AC_LIFETIME
 #define CONFIG_TX_AC_LIFETIME 1
@@ -367,6 +376,18 @@
 	#define CONFIG_RTW_EXCL_CHS {0}
 #endif
 
+#ifndef CONFIG_RTW_EXCL_CHS_6G
+	#define CONFIG_RTW_EXCL_CHS_6G {0}
+#endif
+
+#ifndef CONFIG_RTW_COUNTRY_IE_SLAVE_EN_ROLE
+#define CONFIG_RTW_COUNTRY_IE_SLAVE_EN_ROLE 0x03 /* BIT0 for pure STA mode, BIT1 for P2P group client */
+#endif
+
+#ifndef CONFIG_RTW_COUNTRY_IE_SLAVE_EN_IFBMP
+#define CONFIG_RTW_COUNTRY_IE_SLAVE_EN_IFBMP 0xFF /* all iface */
+#endif
+
 #ifndef CONFIG_IEEE80211_BAND_5GHZ
 	#if defined(CONFIG_RTL8821A) || defined(CONFIG_RTL8821C) \
 		|| defined(CONFIG_RTL8812A) || defined(CONFIG_RTL8822B) || defined(CONFIG_RTL8822C) \
@@ -375,6 +396,10 @@
 	#else
 	#define CONFIG_IEEE80211_BAND_5GHZ 0
 	#endif
+#endif
+
+#ifndef CONFIG_IEEE80211_BAND_6GHZ
+#define CONFIG_IEEE80211_BAND_6GHZ 0
 #endif
 
 #ifndef CONFIG_DFS
@@ -407,7 +432,11 @@
 #endif
 
 #ifndef CONFIG_RTW_CHPLAN
-#define CONFIG_RTW_CHPLAN 0xFF /* RTW_CHPLAN_UNSPECIFIED */
+#define CONFIG_RTW_CHPLAN 0xFFFF /* RTW_CHPLAN_IOCTL_UNSPECIFIED */
+#endif
+
+#ifndef CONFIG_RTW_CHPLAN_6G
+#define CONFIG_RTW_CHPLAN_6G 0xFFFF /* RTW_CHPLAN_IOCTL_UNSPECIFIED */
 #endif
 
 /* compatible with old fashion configuration */
@@ -441,6 +470,10 @@
 #if !CONFIG_TXPWR_LIMIT && CONFIG_TXPWR_LIMIT_EN
 	#undef CONFIG_TXPWR_LIMIT
 	#define CONFIG_TXPWR_LIMIT 1
+#endif
+
+#ifndef CONFIG_RTW_ACTIVE_TPC_REPORT
+#define CONFIG_RTW_ACTIVE_TPC_REPORT 1 /* 0:incapable, 1:capable, 2:auto enable */
 #endif
 
 #ifndef CONFIG_RTW_REGD_SRC
@@ -691,8 +724,15 @@ defined(CONFIG_RTL8723F) /*|| defined(CONFIG_RTL8814A)*/
 /*#define CONFIG_DOSCAN_IN_BUSYTRAFFIC	*/
 /*#define CONFIG_PHDYM_FW_FIXRATE		*/	/*	Another way to fix tx rate	*/
 
-/*Don't release SDIO irq in suspend/resume procedure*/
-#define CONFIG_RTW_SDIO_KEEP_IRQ	0
+/*
+* CONFIG_RTW_SDIO_RELEASE_IRQ
+* == 0: static allocated
+* >= 1: release when suspend
+* >= 2: release when IPS
+*/
+#ifndef CONFIG_RTW_SDIO_RELEASE_IRQ
+#define CONFIG_RTW_SDIO_RELEASE_IRQ	2
+#endif
 
 /*
  * Add by Lucas@2016/02/15

@@ -96,7 +96,7 @@ void _rtl8821c_set_FwPwrMode_cmd(PADAPTER adapter, u8 psmode, u8 rfon_ctrl)
 	u8 h2c[RTW_HALMAC_H2C_MAX_SIZE] = {0};
 	u8 PowerState = 0, awake_intvl = 1, rlbm = 0;
 	u8 allQueueUAPSD = 0;
-	char *fw_psmode_str = "";
+	char *fw_psmode_str = "UNSPECIFIED";
 #ifdef CONFIG_P2P
 	struct wifidirect_info *wdinfo = &adapter->wdinfo;
 #endif /* CONFIG_P2P */
@@ -198,8 +198,6 @@ void _rtl8821c_set_FwPwrMode_cmd(PADAPTER adapter, u8 psmode, u8 rfon_ctrl)
 			fw_psmode_str = "LPS";
 		else if (mode == 2)
 			fw_psmode_str = "WMMPS";
-		else
-			fw_psmode_str = "UNSPECIFIED";
 
 		RTW_INFO(FUNC_ADPT_FMT": fw ps mode = %s, drv ps mode = %d, rlbm = %d ,"
 				    "smart_ps = %d, allQueueUAPSD = %d, PowerState = %d\n",
@@ -237,7 +235,7 @@ void _rtl8821c_set_FwPwrMode_cmd(PADAPTER adapter, u8 psmode, u8 rfon_ctrl)
 	}
 #endif
 
-	RTW_INFO("%s=> psmode:%02x, smart_ps:%02x, PowerState:%02x\n", __func__, psmode, smart_ps, PowerState);
+	/*RTW_INFO("%s=> psmode:%02x, smart_ps:%02x, PowerState:%02x\n", __func__, psmode, smart_ps, PowerState);*/
 
 #ifdef CONFIG_BT_COEXIST
 	rtw_btcoex_RecordPwrMode(adapter, h2c + 1, RTW_HALMAC_H2C_MAX_SIZE - 1);
@@ -373,7 +371,6 @@ void c2h_handler_rtl8821c(PADAPTER adapter, u8 *pbuf, u16 length)
 	u8 c2h_id, c2h_sn;
 	int c2h_len;
 	u8 *pc2h_hdr;
-	u8 pc2h_hdr_buf[4];
 	u8 *pc2h_data;
 	u8 c2h_sub_cmd_id = 0;
 	u32 desc_size = 0;
@@ -399,19 +396,7 @@ void c2h_handler_rtl8821c(PADAPTER adapter, u8 *pbuf, u16 length)
 		return;
 	}
 
-	memset(pc2h_hdr_buf, 0, sizeof(pc2h_hdr_buf));
-	if (length - desc_size >= 4)
-		memcpy(pc2h_hdr_buf, pbuf + desc_size, 4);
-	else {
-		/* we found the case length=27 and desc_size = 24, this will causes 'BUG: KASAN: slab-out-of-bounds',
-		 * but in fact, it won't produce errors, because in the following code 'C2H_GET_CMD_ID/C2H_GET_SEQ/C2H_HDR_GET_C2H_SUB_CMD_ID',
-		 * it is only accessed 3 bytes for 'pc2h_hdr'.
-		**/
-		RTW_WARN("%s-%d: desc_size=%d,length=%d\n", __func__, __LINE__, desc_size, (int)length);
-		//rtw_warn_on(1);
-		memcpy(pc2h_hdr_buf, pbuf + desc_size, length - desc_size);
-	}
-	pc2h_hdr = pc2h_hdr_buf;
+	pc2h_hdr = pbuf + desc_size;
 	pc2h_data = pbuf + desc_size + 2; /* cmd ID not 0xFF original C2H have 2 bytes C2H header */
 	c2h_id = C2H_GET_CMD_ID(pc2h_hdr);
 	c2h_sn = C2H_GET_SEQ(pc2h_hdr);

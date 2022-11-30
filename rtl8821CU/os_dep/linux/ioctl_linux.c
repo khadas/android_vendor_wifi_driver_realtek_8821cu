@@ -1486,7 +1486,6 @@ static int rtw_wx_set_pmkid(struct net_device *dev,
 
 				_rtw_memcpy(psecuritypriv->PMKIDList[j].PMKID, pPMK->pmkid, IW_PMKID_LEN);
 				psecuritypriv->PMKIDList[j].bUsed = _TRUE;
-				psecuritypriv->PMKIDIndex = j + 1;
 				blInserted = _TRUE;
 				break;
 			}
@@ -3435,9 +3434,11 @@ static int rtw_wx_set_channel_plan(struct net_device *dev,
 				   union iwreq_data *wrqu, char *extra)
 {
 	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
-	u8 channel_plan_req = (u8)(*((int *)wrqu));
+	u16 channel_plan_req = (u16)(*((int *)wrqu));
 
-	if (_SUCCESS != rtw_set_channel_plan(padapter, channel_plan_req))
+	rtw_chplan_ioctl_input_mapping(&channel_plan_req, NULL);
+
+	if (_SUCCESS != rtw_set_channel_plan(padapter, channel_plan_req, RTW_CHPLAN_6G_UNSPECIFIED, RTW_REGD_SET_BY_USER))
 		return -EPERM;
 
 	return 0;
@@ -3933,6 +3934,11 @@ static int rtw_p2p_set_go_nego_ssid(struct net_device *dev,
 	struct wifidirect_info *pwdinfo = &(padapter->wdinfo);
 
 	RTW_INFO("[%s] ssid = %s, len = %zu\n", __FUNCTION__, extra, strlen(extra));
+	if( strlen(extra) > WPS_MAX_DEVICE_NAME_LEN){
+		RTW_ERR("Invalid strlen(extra): %zu\n", strlen(extra));
+		rtw_warn_on(1);
+		return -1;
+	}
 	_rtw_memcpy(pwdinfo->nego_ssid, extra, strlen(extra));
 	pwdinfo->nego_ssidlen = strlen(extra);
 
@@ -4079,6 +4085,11 @@ static int rtw_p2p_setDN(struct net_device *dev,
 
 	RTW_INFO("[%s] %s %d\n", __FUNCTION__, extra, wrqu->data.length - 1);
 	_rtw_memset(pwdinfo->device_name, 0x00, WPS_MAX_DEVICE_NAME_LEN);
+	if( wrqu->data.length - 1 > WPS_MAX_DEVICE_NAME_LEN){
+		RTW_ERR("Invalid wrqu->data.length:%d\n", wrqu->data.length - 1);
+		rtw_warn_on(1);
+		return -1;
+	}	
 	_rtw_memcpy(pwdinfo->device_name, extra, wrqu->data.length - 1);
 	pwdinfo->device_name_len = wrqu->data.length - 1;
 
@@ -7869,7 +7880,7 @@ static int rtw_wx_set_priv(struct net_device *dev,
 	case ANDROID_WIFI_CMD_COUNTRY: {
 		char country_code[10];
 		sscanf(ext, "%*s %s", country_code);
-		rtw_set_country(padapter, country_code);
+		rtw_set_country(padapter, country_code, RTW_REGD_SET_BY_USER);
 		sprintf(ext, "OK");
 	}
 		break;
@@ -8461,6 +8472,31 @@ _clear_path:
 	return -EFAULT;
 }
 #endif
+
+static int rtw_get_ic_type(struct net_device *dev,
+				struct iw_request_info *info,
+				union iwreq_data *wrqu, char *extra)
+{
+	_adapter *padapter = (_adapter *)rtw_netdev_priv(dev);
+	struct pwrctrl_priv *pwrctrlpriv = adapter_to_pwrctl(padapter);
+	char *pstring = extra;
+	u8 regdata;
+
+#ifdef CONFIG_RTL8822C
+	_rtw_memset(pstring, 0, wrqu->data.length);
+
+	regdata = (rtw_read32(padapter, 0xF0) & 0xf000) >> 12;
+	RTW_INFO("%s: f0[15:12]= 0x%x\n", __FUNCTION__, regdata);
+
+	if (regdata == 0x04)
+		pstring += sprintf(pstring , ":%s\n" ,"rtl8822c-vbs");
+	else
+		pstring += sprintf(pstring , ":%s\n" ,"rtl8822c-vs");
+
+	wrqu->data.length = strlen(extra);
+#endif
+	return 0;
+}
 
 static int rtw_mp_efuse_get(struct net_device *dev,
 			    struct iw_request_info *info,
@@ -9878,14 +9914,29 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 		sprintf(extra, "write mac addr to fake map OK\n");
 	} else if(strcmp(tmp[0], "update") == 0) {
 		RTW_INFO("To Use new eFuse map ver3\n");
+
 		if (tmp[1] != 0x00) {
-			pmp_priv->efuse_update_file = _TRUE;
-			strcpy(pmp_priv->efuse_file_path , tmp[1]);
-			RTW_INFO("Got file path %s\n", pmp_priv->efuse_file_path);
+			if (strcmp(tmp[1], "fake") == 0) {
+				pmp_priv->efuse_update_on = _TRUE;
+				RTW_INFO("Set efuse update without file\n");
+			} else if (strcmp(tmp[1], "phy") == 0) {
+				pmp_priv->efuse_update_file = _FALSE;
+				pmp_priv->efuse_update_on = _FALSE;
+				RTW_INFO("Set efuse update with phy\n");
+			} else {
+				pmp_priv->efuse_update_file = _TRUE;
+				strcpy(pmp_priv->efuse_file_path , tmp[1]);
+				RTW_INFO("Got file path %s\n", pmp_priv->efuse_file_path);
+			}
 		}
 		/*step read efuse/eeprom data and get mac_addr*/
 		if (padapter->hal_func.read_adapter_info(padapter)) {
 			_rtw_memset(extra, '\0', strlen(extra));
+			#ifdef CONFIG_TXPWR_PG_WITH_PWR_IDX
+			if (pHalData->txpwr_pg_mode == TXPWR_PG_WITH_PWR_IDX)
+				hal_load_txpwr_info(padapter);
+			#endif
+			phy_load_tx_power_ext_info(padapter, 1);
 			sprintf(extra, "eFuse Update OK\n");
 			RTW_INFO("eFuse Update OK\n");
 		} else {
@@ -9893,8 +9944,8 @@ static int rtw_mp_efuse_set(struct net_device *dev,
 			sprintf(extra, "eFuse Update FAIL\n");
 			RTW_INFO("eFuse Update FAIL\n");
 		}
-		pmp_priv->efuse_update_file = _FALSE;
-		RTW_INFO("To Use new eFuse map done ver3\n");
+
+		RTW_INFO("To Use new eFuse map ver3 done\n");
 	} else if (strcmp(tmp[0], "analyze") == 0) {
 
 		rtw_efuse_analyze(padapter, EFUSE_WIFI, 0);
@@ -10570,6 +10621,10 @@ static int rtw_priv_get(struct net_device *dev,
 				rtw_vendor_ie_get(dev , info , wdata , extra);
 				break;
 #endif
+			case GET_IC_TYPE:
+				RTW_INFO("get IC Type\n");
+				rtw_get_ic_type(dev , info , wdata , extra);
+				break;
 			default:
 				return -EIO;
 			}
@@ -12392,6 +12447,7 @@ static const struct iw_priv_args rtw_private_args[] = {
 	{ MP_SD_IREAD, IW_PRIV_TYPE_CHAR | 1024, IW_PRIV_TYPE_CHAR | IW_PRIV_SIZE_MASK, "sd_iread" },
 	{ MP_SD_IWRITE, IW_PRIV_TYPE_CHAR | 1024, IW_PRIV_TYPE_CHAR | IW_PRIV_SIZE_MASK, "sd_iwrite" },
 #endif
+	{ GET_IC_TYPE, IW_PRIV_TYPE_CHAR | 1024, IW_PRIV_TYPE_CHAR | IW_PRIV_SIZE_MASK, "ic_type" },
 };
 
 
@@ -12762,7 +12818,7 @@ static int _rtw_ioctl_wext_private(struct net_device *dev, union iwreq_data *wrq
 			count = 0;
 			do {
 				str = strsep(&ptr, delim);
-				if (NULL == str)
+				if (NULL == str || count >= 4096)
 					break;
 				sscanf(str, "%i", &temp);
 				buffer[count++] = (u8)temp;
@@ -12781,7 +12837,7 @@ static int _rtw_ioctl_wext_private(struct net_device *dev, union iwreq_data *wrq
 			count = 0;
 			do {
 				str = strsep(&ptr, delim);
-				if (NULL == str)
+				if (NULL == str || count >= 1024)
 					break;
 				sscanf(str, "%i", &temp);
 				((s32 *)buffer)[count++] = (s32)temp;

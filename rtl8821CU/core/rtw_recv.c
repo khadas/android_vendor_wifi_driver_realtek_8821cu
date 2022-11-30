@@ -150,6 +150,9 @@ sint _rtw_init_recv_priv(struct recv_priv *precvpriv, _adapter *padapter)
 	rtw_set_signal_stat_timer(precvpriv);
 #endif /* CONFIG_NEW_SIGNAL_STAT_PROCESS */
 
+	_rtw_memset(&precvpriv->ip_statistic, 0,
+			sizeof(struct rtw_ip_dbg_cnt_statistic));
+
 exit:
 
 
@@ -397,16 +400,32 @@ u32 rtw_free_uc_swdec_pending_queue(_adapter *adapter)
 }
 
 
+#ifndef CONFIG_RECVBUF_QUEUE_LOCK_BH
+#ifdef CONFIG_SDIO_HCI
+#define CONFIG_RECVBUF_QUEUE_LOCK_BH 1
+#else
+#define CONFIG_RECVBUF_QUEUE_LOCK_BH 0
+#endif
+#endif /* CONFIG_RECVBUF_QUEUE_LOCK_BH */
+
 sint rtw_enqueue_recvbuf_to_head(struct recv_buf *precvbuf, _queue *queue)
 {
 	_irqL irqL;
 
+#if CONFIG_RECVBUF_QUEUE_LOCK_BH
 	_enter_critical_bh(&queue->lock, &irqL);
+#else
+	_enter_critical_ex(&queue->lock, &irqL);
+#endif
 
 	rtw_list_delete(&precvbuf->list);
 	rtw_list_insert_head(&precvbuf->list, get_list_head(queue));
 
+#if CONFIG_RECVBUF_QUEUE_LOCK_BH
 	_exit_critical_bh(&queue->lock, &irqL);
+#else
+	_exit_critical_ex(&queue->lock, &irqL);
+#endif
 
 	return _SUCCESS;
 }
@@ -414,20 +433,23 @@ sint rtw_enqueue_recvbuf_to_head(struct recv_buf *precvbuf, _queue *queue)
 sint rtw_enqueue_recvbuf(struct recv_buf *precvbuf, _queue *queue)
 {
 	_irqL irqL;
-#ifdef CONFIG_SDIO_HCI
+
+#if CONFIG_RECVBUF_QUEUE_LOCK_BH
 	_enter_critical_bh(&queue->lock, &irqL);
 #else
 	_enter_critical_ex(&queue->lock, &irqL);
-#endif/*#ifdef CONFIG_SDIO_HCI*/
+#endif
 
 	rtw_list_delete(&precvbuf->list);
 
 	rtw_list_insert_tail(&precvbuf->list, get_list_head(queue));
-#ifdef CONFIG_SDIO_HCI
+
+#if CONFIG_RECVBUF_QUEUE_LOCK_BH
 	_exit_critical_bh(&queue->lock, &irqL);
 #else
 	_exit_critical_ex(&queue->lock, &irqL);
-#endif/*#ifdef CONFIG_SDIO_HCI*/
+#endif
+
 	return _SUCCESS;
 
 }
@@ -438,11 +460,11 @@ struct recv_buf *rtw_dequeue_recvbuf(_queue *queue)
 	struct recv_buf *precvbuf;
 	_list	*plist, *phead;
 
-#ifdef CONFIG_SDIO_HCI
+#if CONFIG_RECVBUF_QUEUE_LOCK_BH
 	_enter_critical_bh(&queue->lock, &irqL);
 #else
 	_enter_critical_ex(&queue->lock, &irqL);
-#endif/*#ifdef CONFIG_SDIO_HCI*/
+#endif
 
 	if (_rtw_queue_empty(queue) == _TRUE)
 		precvbuf = NULL;
@@ -457,11 +479,11 @@ struct recv_buf *rtw_dequeue_recvbuf(_queue *queue)
 
 	}
 
-#ifdef CONFIG_SDIO_HCI
+#if CONFIG_RECVBUF_QUEUE_LOCK_BH
 	_exit_critical_bh(&queue->lock, &irqL);
 #else
 	_exit_critical_ex(&queue->lock, &irqL);
-#endif/*#ifdef CONFIG_SDIO_HCI*/
+#endif
 
 	return precvbuf;
 
@@ -936,7 +958,7 @@ void process_pwrbit_data(_adapter *padapter, union recv_frame *precv_frame, stru
 			/* psta->state ^= WIFI_SLEEP_STATE; */
 			/* rtw_tim_map_clear(padapter, pstapriv->sta_dz_bitmap, BIT(psta->cmn.aid)); */
 
-			wakeup_sta_to_xmit(padapter, psta);
+			wakeup_sta_to_xmit(padapter, psta, ALL_FRAME);
 			/* RTW_INFO_DUMP("to wakeup, sta_dz_bitmap=", pstapriv->sta_dz_bitmap, pstapriv->aid_bmp_len); */
 		}
 	}
@@ -1613,6 +1635,11 @@ sint validate_recv_ctrl_frame(_adapter *padapter, union recv_frame *precv_frame)
 	struct sta_priv *pstapriv = &padapter->stapriv;
 	u8 *pframe = precv_frame->u.hdr.rx_data;
 	struct sta_info *psta = NULL;
+	u8 dataq_null = _TRUE;
+	#ifdef CONFIG_RTW_MGMT_QUEUE
+	u8 mgmtq_null = _TRUE;
+	#endif
+
 	/* uint len = precv_frame->u.hdr.len; */
 
 	/* RTW_INFO("+validate_recv_ctrl_frame\n"); */
@@ -1665,13 +1692,11 @@ sint validate_recv_ctrl_frame(_adapter *padapter, union recv_frame *precv_frame)
 		if (wmmps_ac)
 			return _FAIL;
 
-		#ifdef CONFIG_AP_MODE
 		if (psta->state & WIFI_STA_ALIVE_CHK_STATE) {
 			RTW_INFO("%s alive check-rx ps-poll\n", __func__);
 			psta->expire_to = pstapriv->expire_to;
 			psta->state ^= WIFI_STA_ALIVE_CHK_STATE;
 		}
-		#endif
 
 		if ((psta->state & WIFI_SLEEP_STATE) && (rtw_tim_map_is_set(padapter, pstapriv->sta_dz_bitmap, psta->cmn.aid))) {
 			_irqL irqL;
@@ -1682,6 +1707,36 @@ sint validate_recv_ctrl_frame(_adapter *padapter, union recv_frame *precv_frame)
 			/* _enter_critical_bh(&psta->sleep_q.lock, &irqL); */
 			_enter_critical_bh(&pxmitpriv->lock, &irqL);
 
+#ifdef CONFIG_RTW_MGMT_QUEUE
+			xmitframe_phead = get_list_head(&psta->mgmt_sleep_q);
+			xmitframe_plist = get_next(xmitframe_phead);
+
+			if ((rtw_end_of_queue_search(xmitframe_phead, xmitframe_plist)) == _FALSE) {
+				pxmitframe = LIST_CONTAINOR(xmitframe_plist, struct xmit_frame, list);
+
+				xmitframe_plist = get_next(xmitframe_plist);
+
+				rtw_list_delete(&pxmitframe->list);
+
+				#ifdef DBG_MGMT_QUEUE
+				RTW_INFO("%s seq_num = %u, subtype = 0x%x\n",
+						__func__, pxmitframe->attrib.seqnum, pxmitframe->attrib.subtype);
+				#endif
+
+				psta->mgmt_sleepq_len--;
+
+				if (psta->mgmt_sleepq_len > 0)
+					pxmitframe->attrib.mdata = 1;
+				else
+					pxmitframe->attrib.mdata = 0;
+
+				pxmitframe->attrib.triggered = 1;
+
+				rtw_hal_mgmt_xmitframe_enqueue(padapter, pxmitframe);
+
+				mgmtq_null = _FALSE;
+			}
+#endif
 			xmitframe_phead = get_list_head(&psta->sleep_q);
 			xmitframe_plist = get_next(xmitframe_phead);
 
@@ -1712,42 +1767,51 @@ sint validate_recv_ctrl_frame(_adapter *padapter, union recv_frame *precv_frame)
 #endif
 				rtw_hal_xmitframe_enqueue(padapter, pxmitframe);
 
-				if (psta->sleepq_len == 0) {
-					rtw_tim_map_clear(padapter, pstapriv->tim_bitmap, psta->cmn.aid);
+				dataq_null = _FALSE;
+			}
 
-					/* RTW_INFO("after handling ps-poll\n"); */
-					/* RTW_INFO_DUMP("after handling, tim=", pstapriv->tim_bitmap, pstapriv->aid_bmp_len); */
+			_exit_critical_bh(&pxmitpriv->lock, &irqL);
+			/* _exit_critical_bh(&psta->sleep_q.lock, &irqL); */
 
-					/* upate BCN for TIM IE */
-					/* update_BCNTIM(padapter);		 */
-					update_beacon(padapter, _TIM_IE_, NULL, _TRUE, 0);
-				}
+			/* Error handler : TIM is setted, but data queue and management queue is empty. */
+			if (dataq_null 
+				#ifdef CONFIG_RTW_MGMT_QUEUE
+				&& mgmtq_null
+				#endif
+				&& rtw_tim_map_is_set(padapter, pstapriv->tim_bitmap, psta->cmn.aid)) {
 
-				/* _exit_critical_bh(&psta->sleep_q.lock, &irqL); */
-				_exit_critical_bh(&pxmitpriv->lock, &irqL);
+				if (psta->sleepq_len == 0
+					#ifdef CONFIG_RTW_MGMT_QUEUE
+					&& psta->mgmt_sleepq_len == 0
+					#endif
+					) {
+					RTW_INFO("No buffered packets to xmit\n");
 
-			} else {
-				/* _exit_critical_bh(&psta->sleep_q.lock, &irqL); */
-				_exit_critical_bh(&pxmitpriv->lock, &irqL);
-
-				/* RTW_INFO("no buffered packets to xmit\n"); */
-				if (rtw_tim_map_is_set(padapter, pstapriv->tim_bitmap, psta->cmn.aid)) {
-					if (psta->sleepq_len == 0) {
-						RTW_INFO("no buffered packets to xmit\n");
-
-						/* issue nulldata with More data bit = 0 to indicate we have no buffered packets */
-						issue_nulldata(padapter, psta->cmn.mac_addr, 0, 0, 0);
-					} else {
+					/* issue nulldata with More data bit = 0 to indicate we have no buffered packets */
+					issue_nulldata(padapter, psta->cmn.mac_addr, 0, 0, 0);
+				} else {
+					if (psta->sleepq_len != 0) {
 						RTW_INFO("error!psta->sleepq_len=%d\n", psta->sleepq_len);
 						psta->sleepq_len = 0;
 					}
-
-					rtw_tim_map_clear(padapter, pstapriv->tim_bitmap, psta->cmn.aid);
-
-					/* upate BCN for TIM IE */
-					/* update_BCNTIM(padapter); */
-					update_beacon(padapter, _TIM_IE_, NULL, _TRUE, 0);
+					#ifdef CONFIG_RTW_MGMT_QUEUE
+					if (psta->mgmt_sleepq_len != 0) {
+						RTW_INFO("error!psta->mgmt_sleepq_len=%d\n", psta->mgmt_sleepq_len);
+						psta->mgmt_sleepq_len = 0;
+					}
+					#endif
 				}
+			}
+
+			if (psta->sleepq_len == 0
+			#ifdef CONFIG_RTW_MGMT_QUEUE
+			&& psta->mgmt_sleepq_len == 0
+			#endif
+			) {
+				rtw_tim_map_clear(padapter, pstapriv->tim_bitmap, psta->cmn.aid);
+
+				/* upate BCN for TIM IE */
+				update_beacon(padapter, _TIM_IE_, NULL, _TRUE, 0);
 			}
 		}
 #endif /* CONFIG_AP_MODE */
@@ -3637,8 +3701,15 @@ static int recv_indicatepkt_reorder(_adapter *padapter, union recv_frame *prfram
 
 	if(rtw_test_and_clear_bit(RTW_RECV_ACK_OR_TIMEOUT, &preorder_ctrl->rec_abba_rsp_ack))
 		preorder_ctrl->indicate_seq = 0xFFFF;
+	if(rtw_test_and_clear_bit(RTW_RECV_REORDER_WOW, &preorder_ctrl->rec_abba_rsp_ack)) {
+		preorder_ctrl->indicate_seq = 0xFFFF;
+		RTW_INFO("DBG_RX_SEQ %s:preorder_ctrl->rec_abba_rsp_ack = %lu,indicate_seq = %d\n"
+		, __func__
+		, preorder_ctrl->rec_abba_rsp_ack
+		, preorder_ctrl->indicate_seq);
+	}
 	#ifdef DBG_RX_SEQ
-	RTW_INFO("DBG_RX_SEQ %s:preorder_ctrl->rec_abba_rsp_ack = %u,indicate_seq = %d\n"
+	RTW_INFO("DBG_RX_SEQ %s:preorder_ctrl->rec_abba_rsp_ack = %lu,indicate_seq = %d\n"
 		, __func__
 		, preorder_ctrl->rec_abba_rsp_ack
 		, preorder_ctrl->indicate_seq);
@@ -4852,9 +4923,13 @@ thread_return rtw_recv_thread(thread_context context)
 	s32 err = _SUCCESS;
 #ifdef RTW_RECV_THREAD_HIGH_PRIORITY
 #ifdef PLATFORM_LINUX
+#if (LINUX_VERSION_CODE >= KERNEL_VERSION(5, 9, 0))
+	sched_set_fifo_low(current);
+#else
 	struct sched_param param = { .sched_priority = 1 };
-
+				
 	sched_setscheduler(current, SCHED_FIFO, &param);
+#endif
 #endif /* PLATFORM_LINUX */
 #endif /*RTW_RECV_THREAD_HIGH_PRIORITY*/
 	thread_enter("RTW_RECV_THREAD");

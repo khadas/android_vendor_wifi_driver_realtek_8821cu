@@ -62,9 +62,6 @@ jackson@realtek.com.tw
 
 u8 _rtw_read8(_adapter *adapter, u32 addr)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	u8 r_val;
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
@@ -78,9 +75,6 @@ u8 _rtw_read8(_adapter *adapter, u32 addr)
 
 u16 _rtw_read16(_adapter *adapter, u32 addr)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	u16 r_val;
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
@@ -94,9 +88,6 @@ u16 _rtw_read16(_adapter *adapter, u32 addr)
 
 u32 _rtw_read32(_adapter *adapter, u32 addr)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	u32 r_val;
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
@@ -111,9 +102,6 @@ u32 _rtw_read32(_adapter *adapter, u32 addr)
 
 int _rtw_write8(_adapter *adapter, u32 addr, u8 val)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
 	struct	intf_hdl		*pintfhdl = &(pio_priv->intf);
@@ -127,9 +115,6 @@ int _rtw_write8(_adapter *adapter, u32 addr, u8 val)
 }
 int _rtw_write16(_adapter *adapter, u32 addr, u16 val)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
 	struct	intf_hdl		*pintfhdl = &(pio_priv->intf);
@@ -144,9 +129,6 @@ int _rtw_write16(_adapter *adapter, u32 addr, u16 val)
 }
 int _rtw_write32(_adapter *adapter, u32 addr, u32 val)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
 	struct	intf_hdl		*pintfhdl = &(pio_priv->intf);
@@ -162,9 +144,6 @@ int _rtw_write32(_adapter *adapter, u32 addr, u32 val)
 
 int _rtw_writeN(_adapter *adapter, u32 addr , u32 length , u8 *pdata)
 {
-	if (adapter == NULL)
-		RTW_INFO("Adapter pointer is NULL!\n");
-
 	/* struct	io_queue  	*pio_queue = (struct io_queue *)adapter->pio_queue; */
 	struct io_priv *pio_priv = &adapter->iopriv;
 	struct	intf_hdl	*pintfhdl = (struct intf_hdl *)(&(pio_priv->intf));
@@ -566,6 +545,12 @@ const struct rtw_io_sniff_ent write_sniff[] = {
 	RTW_IO_SNIFF_EN_ENT(MAX_CHIP_TYPE, RTW_SDIO, 0x02, 0x1FC, 1, "SDIO 0x02[8:2] not all 0"),
 	RTW_IO_SNIFF_EN_ENT(MAX_CHIP_TYPE, RTW_USB, 0x02, 0x1E0, 1, "USB 0x02[8:5] not all 0"),
 	RTW_IO_SNIFF_EN_ENT(MAX_CHIP_TYPE, RTW_PCIE, 0x02, 0x01C, 1, "PCI 0x02[4:2] not all 0"),
+#endif
+#ifdef DBG_IO_SIFS_SETTING
+	RTW_IO_SNIFF_RANGE_ENT(MAX_CHIP_TYPE, 0, 0x428, 0x429, 0, "SIFS"),
+	RTW_IO_SNIFF_RANGE_ENT(MAX_CHIP_TYPE, 0, 0x514, 0x517, 0, "SIFS"),
+	RTW_IO_SNIFF_RANGE_ENT(MAX_CHIP_TYPE, 0, 0x63a, 0x63b, 0, "SIFS"),
+	RTW_IO_SNIFF_RANGE_ENT(MAX_CHIP_TYPE, 0, 0x63c, 0x63f, 0, "SIFS"),
 #endif
 #ifdef DBG_IO_8822C_1TX_PATH_EN
 	RTW_IO_SNIFF_VALUE_ENT(RTL8822C, 0, 0x1a04, 0xc0000000, 0x02, 1, 0, "write tx_path_en_cck A enabled"),
