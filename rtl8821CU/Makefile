@@ -2331,7 +2331,7 @@ endif
 
 ############ ANDROID COMMON KERNEL ############
 export M ?= $(shell pwd)
-export OUT_DIR ?= $(shell pwd)
+#export OUT_DIR ?= $(shell pwd)
 ifneq ($(LLVM),)
 export CC_STRIP = llvm-strip
 else
